@@ -1,9 +1,16 @@
 from django import forms
+from django.contrib.auth.forms import UserCreationForm, UserChangeForm
+
+from .models import CustomUser
 
 
-class AccountForm(forms.form):
-    """
-    Also considered the login form
-    """
+class CustomUserCreationForm(UserCreationForm):
+    class Meta(UserCreationForm):
+        model = CustomUser
+        fields = ("first_name", "last_name", "email", "partner_type")
 
-    pass
+
+class CustomUserChangeForm(UserChangeForm):
+    class Meta:
+        model = CustomUser
+        fields = ("first_name", "last_name", "email", "partner_type")

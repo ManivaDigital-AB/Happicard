@@ -4,4 +4,6 @@ from .models import Payment
 
 
 class PaymentSerializer(serializers.ModelSerializer):
-    pass
+    class Meta:
+        model = Payment
+        fields = "__all__"

@@ -22,7 +22,9 @@ INSTALLED_APPS = [
     "backend.api.accounts",
     "backend.api.orders",
     "backend.api.payments",
+    "drf_yasg",
     "rest_framework",
+    "rest_auth",
     "corsheaders",
 ]
 
@@ -55,7 +57,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = "accounts.Account"
+AUTH_USER_MODEL = "accounts.CustomUser"
 
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
@@ -88,7 +90,7 @@ LOGOUT_REDIRECT_URL = "/login"
 
 LANGUAGE_CODE = "en-us"
 
-TIME_ZONE = "UTC"
+TIME_ZONE = "Europe/Stockholm"
 
 USE_I18N = True
 

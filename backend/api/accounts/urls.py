@@ -4,17 +4,12 @@ from . import views
 
 app_name = "accounts"
 urlpatterns = [
-    path("create/", views.AccountCreate.as_view(), name="create-account"),
-    path("remove/", views.AccountDestroy.as_view(), name="remove-account"),
-    path(
-        "token/obtain/",
-        jwt_views.TokenObtainPairView.as_view(),
-        name="token-create-account",
-    ),
-    path(
-        "token/refresh/",
-        jwt_views.TokenRefreshView.as_view(),
-        name="token-refresh-account",
-    ),
-    path("protected/", views.Protected.as_view(), name="protected-account"),
+    path("create/", views.UserCreate.as_view(), name="create-user"),
+    path("remove/", views.UserDestroy.as_view(), name="remove-user"),
+    path("list/", views.UserList.as_view(), name="list-user"),
+    path("detail/<int:pk>/", views.UserDetail.as_view(), name="detail-user"),
+    path("protected/", views.Protected.as_view(), name="protected-user"),
+    path("register/", views.UserRegistration.as_view(), name="register-user"),
+    path("login/", views.UserLogin.as_view(), name="login-user"),
+    path("email-verify/", views.VerifyEmail.as_view(), name="email-verify"),
 ]

@@ -4,22 +4,22 @@ from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
 
-from .serializers import PaymentSerializer
-from .models import Payment
+from .serializers import ProfileSerializer
+from .models import Profile
 
 
-class PaymentList(generics.ListAPIView):
+class ProfileList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
 
-class PaymentDetail(generics.RetrieveUpdateDestroyAPIView):
+class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Payment.objects.all()
-    serializer_class = PaymentSerializer
+    queryset = Profile.objects.all()
+    serializer_class = ProfileSerializer
 
 
 class Protected(APIView):

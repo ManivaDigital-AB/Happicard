@@ -8,7 +8,7 @@ schema_view = get_schema_view(
     openapi.Info(
         title="Happicard API",
         default_version="v1",
-        description="The access and usage of data for Happicard",
+        description="The transferral of data for Happicard",
         terms_of_service="https://www.google.com/policies/terms/",
         contact=openapi.Contact(email="drew@manivadigital.com"),
         license=openapi.License(name="BSD License"),

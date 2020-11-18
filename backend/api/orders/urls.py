@@ -4,7 +4,7 @@ from . import views
 
 app_name = "orders"
 urlpatterns = [
-    path("create/", views.OrderCreate.as_view(), name="create-order"),
-    path("remove/", views.OrderDestroy.as_view(), name="remove-order"),
+    path("list/", views.OrderList.as_view(), name="list-order"),
+    path("detail/<int:pk>/", views.OrderDetail.as_view(), name="detail-order"),
     path("protected/", views.Protected.as_view(), name="protected-order"),
 ]

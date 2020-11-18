@@ -19,11 +19,13 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
-    "backend.api.accounts",
+    "backend.api.authentification",
     "backend.api.orders",
     "backend.api.payments",
+    "backend.api.profiles",
     "drf_yasg",
     "rest_framework",
+    "rest_framework_simplejwt.token_blacklist",
     "rest_auth",
     "corsheaders",
 ]
@@ -57,10 +59,10 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = "accounts.CustomUser"
+AUTH_USER_MODEL = "authentification.CustomUser"
 
 REST_FRAMEWORK = {
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
+    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
         "rest_framework_simplejwt.authentication.JWTAuthentication",
     ),

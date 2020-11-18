@@ -6,14 +6,15 @@ from .models import CustomUser
 
 
 class CustomUserAdmin(UserAdmin):
-    add_form = CustomUserCreationForm
-    form = CustomUserChangeForm
-    model = CustomUser
+    class Meta:
+        add_form = CustomUserCreationForm
+        form = CustomUserChangeForm
+        model = CustomUser
+
     list_display = (
         "first_name",
         "last_name",
         "email",
-        "partner_type",
         "created_at",
         "updated_at",
         "is_staff",
@@ -23,7 +24,6 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
-        "partner_type",
         "created_at",
         "updated_at",
         "is_staff",
@@ -32,7 +32,7 @@ class CustomUserAdmin(UserAdmin):
     fieldsets = (
         (
             None,
-            {"fields": ("email", "password", "partner_type")},
+            {"fields": ("email", "password")},
         ),
         ("Personal information", {"fields": ("first_name", "last_name")}),
         ("Permissions", {"fields": ("is_staff", "is_active")}),
@@ -44,9 +44,8 @@ class CustomUserAdmin(UserAdmin):
                 "classes": ("wide",),
                 "fields": (
                     "email",
-                    "password1",
-                    "password2",
-                    "partner_type",
+                    "password",
+                    "partner",
                     "is_staff",
                     "is_active",
                 ),
@@ -57,7 +56,7 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
-        "partner_type",
+        "partner",
         "created_at",
         "updated_at",
     )
@@ -65,7 +64,7 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
-        "partner_type",
+        "partner",
         "created_at",
         "updated_at",
     )

@@ -1,20 +1,24 @@
 from django.shortcuts import render
 from rest_framework import permissions
-from rest_framework.generics import CreateAPIView, DestroyAPIView
+from rest_framework import generics
 from rest_framework.response import Response
 from rest_framework.views import APIView
+
 from .serializers import OrderSerializer
+from .models import Order
 
 
-class OrderCreate(CreateAPIView):
+class OrderList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
-class OrderDestroy(DestroyAPIView):
+class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 

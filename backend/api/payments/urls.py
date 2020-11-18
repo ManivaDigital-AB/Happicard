@@ -4,7 +4,7 @@ from . import views
 
 app_name = "payments"
 urlpatterns = [
-    path("create/", views.PaymentCreate.as_view(), name="create-payment"),
-    path("remove/", views.PaymentDestroy.as_view(), name="remove-payment"),
+    path("list/", views.PaymentList.as_view(), name="list-payment"),
+    path("detail/<int:pk>/", views.PaymentDetail.as_view(), name="detail-payment"),
     path("protected/", views.Protected.as_view(), name="protected-payment"),
 ]

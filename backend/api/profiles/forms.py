@@ -1,5 +1,5 @@
 from django import forms
 
 
-class PaymentForm(forms.Form):
+class ProfileForm(forms.Form):
     pass

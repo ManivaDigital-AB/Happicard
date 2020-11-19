@@ -25,6 +25,7 @@ psycopg2-binary==2.8.6
 PyJWT==1.7.1
 pyparsing==2.4.7
 python-decouple==3.3
+python-dotenv==0.15.0
 pytz==2020.4
 regex==2020.11.13
 requests==2.25.0

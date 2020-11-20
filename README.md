@@ -10,7 +10,7 @@ Tech Stack:
 Our goal for Happicard is to integrate React.js within a Django app and consume a RESTful API with React.js
 
 ## Back-End Development Workflow
-To run Django on your local computer, you will need to run the following commands to activate the local server:
+To run Django on your local computer, you will need to run the following commands:
 ```
 pip install virtualenv 
 python -m venv env

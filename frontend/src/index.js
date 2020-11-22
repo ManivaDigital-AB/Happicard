@@ -1,13 +1,17 @@
 import React from "react";
-import ReactDOM from "react-dom";
-import "./index.css";
+import { render } from "react-dom";
+import { Provider } from "react-redux";
 
-const App = () => {
-  return (
-    <div>
-      <div>Welcome to Happi card</div>
-    </div>
-  );
-};
+import { store } from "./_helpers";
+import { App } from "./App";
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+// setup fake backend
+import { configureFakeBackend } from "./_helpers";
+configureFakeBackend();
+
+render(
+  <Provider store={store}>
+    <App />
+  </Provider>,
+  document.getElementById("app")
+);

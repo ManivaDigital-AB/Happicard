@@ -41,14 +41,14 @@ class CustomRedirect(HttpResponsePermanentRedirect):
 
 
 class UserList(generics.ListAPIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = ()
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
     authentication_classes = ()
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
@@ -65,7 +65,7 @@ class UserLogin(generics.GenericAPIView):
 
 class UserRegistration(generics.GenericAPIView):
     serializer_class = CustomRegisterSerializer
-    enderer_classes = (CustomUserRenderer,)
+    renderer_classes = (CustomUserRenderer,)
 
     def post(self, request):
         user = request.data
@@ -129,7 +129,7 @@ class VerifyEmail(views.APIView):
 
 class UserLogout(views.APIView):
     serializer_class = CustomLogoutSerializer
-    permission_classes = (permissions.AllowAny,)
+    permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
 

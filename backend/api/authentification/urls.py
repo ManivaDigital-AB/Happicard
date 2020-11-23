@@ -8,7 +8,8 @@ urlpatterns = [
     path("account/<int:pk>/", views.UserDetail.as_view(), name="account"),
     path("register/", views.UserRegistration.as_view(), name="register"),
     path("email-verify/", views.VerifyEmail.as_view(), name="email-verify"),
-    path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token_refresh"),
+    path("token/", jwt_views.TokenObtainPairView.as_view(), name="token-obtain-pair"),
+    path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token-refresh"),
     path(
         "password-email-reset/",
         views.RequestPasswordResetEmail.as_view(),

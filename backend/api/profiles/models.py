@@ -35,7 +35,6 @@ class Profile(models.Model):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")
 
-    name = models.CharField(max_length=150, null=True, blank=True)
     image = models.ImageField(
         "Image", upload_to=upload_to, default="profiles/default.jpg"
     )

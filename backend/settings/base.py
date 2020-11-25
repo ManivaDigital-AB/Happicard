@@ -106,7 +106,7 @@ USE_TZ = True
 
 
 # Storage
-USE_S3 = config("USE_S3") == "TRUE"
+USE_S3 = True
 
 if USE_S3:
     # AWS settings
@@ -114,25 +114,21 @@ if USE_S3:
     AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
     AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_REGION_NAME = "eu-central-1"
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     # S3 static settings
-    AWS_LOCATION = "static"
+    AWS_LOCATION = "public/static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    STATICFILES_DIRS = [
+        os.path.join(PROJECT_ROOT, "static"),
+    ]
     STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+
 else:
     STATIC_URL = "/static/"
-    STATIC_ROOT = PROJECT_ROOT / "public" / "static"
+    STATIC_ROOT = PROJECT_ROOT / "static"
     pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
-
-STATICFILES_DIRS = [
-    PROJECT_ROOT.joinpath("static"),
-]
-
-MEDIA_URL = "/media/"
-MEDIA_ROOT = PROJECT_ROOT / "public" / "media"
-pathlib.Path(MEDIA_ROOT).mkdir(exist_ok=True, parents=True)
-
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

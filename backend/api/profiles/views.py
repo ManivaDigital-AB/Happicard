@@ -24,7 +24,7 @@ class ProfileDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class ProfileCreate(generics.CreateAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     parser_classes = (MultiPartParser, FormParser)
     serializer_class = ProfileSerializer
 

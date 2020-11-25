@@ -1,4 +1,5 @@
 from django.urls import path
+from django.conf.urls import url, include
 from rest_framework_simplejwt import views as jwt_views
 from . import views
 
@@ -10,21 +11,10 @@ urlpatterns = [
     path("email-verify/", views.VerifyEmail.as_view(), name="email-verify"),
     path("token/", jwt_views.TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token-refresh"),
-    path(
-        "password-email-reset/",
-        views.RequestPasswordResetEmail.as_view(),
-        name="password-email-reset",
-    ),
-    path(
-        "password-reset/<uidb64>/<token>/",
-        views.PasswordTokenCheck.as_view(),
-        name="password-reset-confirm",
-    ),
-    path(
-        "password-reset-complete/",
-        views.SetNewPassword.as_view(),
-        name="password-reset-complete",
-    ),
     path("login/", views.UserLogin.as_view(), name="login"),
     path("logout/", views.UserLogout.as_view(), name="logout"),
+    path(
+        "password-reset/",
+        include("django_rest_passwordreset.urls", namespace="password-reset"),
+    ),
 ]

@@ -5,7 +5,7 @@ from django.db import models
 from django import forms
 
 
-class CustomUserManager(BaseUserManager):
+class UserManager(BaseUserManager):
     """
     Custom user model manager
     """
@@ -44,18 +44,18 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(first_name, last_name, email, password, **extra_fields)
 
 
-class CustomUser(AbstractBaseUser, PermissionsMixin):
+class User(AbstractBaseUser, PermissionsMixin):
     """
     Custom user model
     """
 
     username = None
+    email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255, verbose_name="First name")
     last_name = models.CharField(max_length=255, verbose_name="Last name")
     is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    email = models.EmailField(unique=True)
     partner = models.CharField(max_length=255, verbose_name="Partner")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -63,7 +63,7 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["first_name", "last_name"]
 
-    objects = CustomUserManager()
+    objects = UserManager()
 
     def __str__(self):
         return self.email

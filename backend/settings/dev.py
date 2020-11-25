@@ -17,7 +17,6 @@ DATABASES = {
     }
 }
 
-DEFAULT_FROM_EMAIL = "drew@manivadigital.com"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "email-smtp.eu-central-1.amazonaws.com"
 EMAIL_PORT = 587

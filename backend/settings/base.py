@@ -26,6 +26,7 @@ INSTALLED_APPS = [
     "drf_yasg",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
+    "django_rest_passwordreset",
     "rest_auth",
     "corsheaders",
 ]
@@ -60,8 +61,10 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = "authentification.CustomUser"
+AUTH_USER_MODEL = "authentification.User"
 
+
+# Permission settings
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
     "DEFAULT_AUTHENTICATION_CLASSES": (
@@ -69,6 +72,7 @@ REST_FRAMEWORK = {
     ),
 }
 
+# JWT settings
 SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
@@ -90,7 +94,6 @@ LOGOUT_REDIRECT_URL = "/login"
 
 
 # Internationalization
-
 LANGUAGE_CODE = "en-us"
 
 TIME_ZONE = "Europe/Stockholm"
@@ -102,20 +105,38 @@ USE_L10N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
+# Storage
+USE_S3 = config("USE_S3") == "TRUE"
 
-STATIC_URL = "/static/"
+if USE_S3:
+    # AWS settings
+    AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
+    AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
+    AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
+    AWS_DEFAULT_ACL = "public-read"
+    AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
+    AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
+    # S3 static settings
+    AWS_LOCATION = "static"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
+    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
+else:
+    STATIC_URL = "/static/"
+    STATIC_ROOT = PROJECT_ROOT / "public" / "static"
+    pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
+
 STATICFILES_DIRS = [
     PROJECT_ROOT.joinpath("static"),
 ]
-
-STATIC_ROOT = PROJECT_ROOT / "public" / "static"
-pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = PROJECT_ROOT / "public" / "media"
 pathlib.Path(MEDIA_ROOT).mkdir(exist_ok=True, parents=True)
 
+
+# Email
+EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
+DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
 
 # Logging
 LOG_DIR = PROJECT_ROOT / "log"

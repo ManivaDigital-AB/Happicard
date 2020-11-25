@@ -2,14 +2,14 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import CustomUser
+from .models import User
 
 
 class CustomUserAdmin(UserAdmin):
     class Meta:
         add_form = CustomUserCreationForm
         form = CustomUserChangeForm
-        model = CustomUser
+        model = User
 
     list_display = (
         "first_name",
@@ -44,8 +44,9 @@ class CustomUserAdmin(UserAdmin):
                 "classes": ("wide",),
                 "fields": (
                     "email",
+                    "first_name",
+                    "last_name",
                     "password",
-                    "partner",
                     "is_staff",
                     "is_active",
                 ),
@@ -70,4 +71,4 @@ class CustomUserAdmin(UserAdmin):
     )
 
 
-admin.site.register(CustomUser, CustomUserAdmin)
+admin.site.register(User, CustomUserAdmin)

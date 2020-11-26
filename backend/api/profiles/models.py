@@ -6,7 +6,7 @@ from django.shortcuts import reverse
 from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
-
+from django.contrib.auth.decorators import login_required
 
 OPTIONS = (
     ("draft", "Draft"),
@@ -27,7 +27,7 @@ BRAND_CHOICES = (
 
 
 def upload_to(instance, filename):
-    return "profiles/{filename}".format(filename=filename)
+    return "static/profiles/{filename}".format(filename=filename)
 
 
 class Profile(models.Model):
@@ -35,9 +35,7 @@ class Profile(models.Model):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")
 
-    image = models.ImageField(
-        "Image", upload_to=upload_to, default="profiles/default.jpg"
-    )
+    image = models.ImageField("Image", upload_to=upload_to, default="default.jpg")
     slug = models.SlugField(
         max_length=250, unique_for_date="published", null=True, blank=True
     )
@@ -46,7 +44,7 @@ class Profile(models.Model):
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
         on_delete=models.CASCADE,
-        related_name="profile_pages",
+        related_name="publishers",
         null=True,
         blank=True,
     )
@@ -64,4 +62,4 @@ class Profile(models.Model):
         ordering = ("-published",)
 
     def __str__(self):
-        return self.name
+        return self.slug

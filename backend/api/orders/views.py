@@ -8,7 +8,7 @@ from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import get_object_or_404
 from django.shortcuts import redirect
 from django.utils import timezone
 from .forms import CheckoutForm, PaymentForm
@@ -49,14 +49,14 @@ def is_valid_form(values):
 
 
 class OrderList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = ()
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.IsAuthenticatedOrReadOnly,)
     authentication_classes = ()
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
@@ -81,7 +81,7 @@ class Checkout(APIView):
             if billing_address_qs.exists():
                 context.update({"default_billing_address": billing_address_qs[0]})
 
-            return render(self.request, "checkout.html", context)
+            return Response(self.request, context)
         except ObjectDoesNotExist:
             messages.info(self.request, "You do not have an active order")
             return redirect("orders:checkout")
@@ -167,7 +167,7 @@ class Checkout(APIView):
                         messages.info(
                             self.request, "No default billing address available"
                         )
-                        return redirect("core:checkout")
+                        return redirect("orders:checkout")
                 else:
                     print("User is entering a new billing address")
                     billing_address1 = form.cleaned_data.get("billing_address")
@@ -205,22 +205,24 @@ class Checkout(APIView):
                 payment_option = form.cleaned_data.get("payment_option")
 
                 if payment_option == "S":
-                    return redirect("core:payment", payment_option="stripe")
+                    return redirect("orders:payment", payment_option="stripe")
+                elif payment_option == "K":
+                    return redirect("orders:payment", payment_option="klarna")
                 elif payment_option == "P":
-                    return redirect("core:payment", payment_option="paypal")
+                    return redirect("orders:payment", payment_option="paypal")
                 else:
                     messages.warning(self.request, "Invalid payment option selected")
-                    return redirect("core:checkout")
+                    return redirect("orders:checkout")
         except ObjectDoesNotExist:
             messages.warning(self.request, "You do not have an active order")
-            return redirect("core:order-summary")
+            return redirect("orders:order-summary")
 
 
 class PaymentProcess(APIView):
     def get(self, *args, **kwargs):
         order = Order.objects.get(user=self.request.user, ordered=False)
         if order.billing_address:
-            context = {"order": order, "DISPLAY_COUPON_FORM": False}
+            context = {"order": order}
             userprofile = self.request.user.userprofile
             if userprofile.one_click_purchasing:
                 # fetch the users card list

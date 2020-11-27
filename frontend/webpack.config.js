@@ -68,7 +68,7 @@ module.exports = {
   externals: {
     // global app config object
     config: JSON.stringify({
-      apiUrl: "http://localhost:4000",
+      apiUrl: "http://ec2-3-121-116-206.eu-central-1.compute.amazonaws.com",
     }),
   },
 };

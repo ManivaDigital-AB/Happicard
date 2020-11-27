@@ -8,21 +8,6 @@ from django.conf import settings
 from django.shortcuts import reverse
 
 
-ADDRESS_CHOICES = (
-    ("B", "Billing"),
-    ("S", "Shipping"),
-)
-
-
-class UserShopProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
-    one_click_purchasing = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.email
-
-
 class Item(models.Model):
     profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     title = models.CharField(max_length=100)
@@ -63,76 +48,18 @@ class Order(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
     )
-    ref_code = models.CharField(max_length=20, blank=True, null=True)
-    items = models.ManyToManyField(OrderItem)
-    start_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
-    ordered_date = models.DateTimeField(default=timezone.now)
-    ordered = models.BooleanField(default=False)
-    shipping_address = models.ForeignKey(
-        "Address",
-        related_name="shipping_address",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
+    order_id = models.CharField(max_length=56, null=False, editable=False)
+    status = models.CharField(max_length=56, null=False, default="created")
+    first_name = models.CharField(max_length=50, null=False, blank=False)
+    last_name = models.CharField(max_length=50, null=False, blank=False)
+    email = models.EmailField(max_length=254, null=False, blank=False)
+    phone_number = models.CharField(max_length=20, null=False, blank=False)
+    country = CountryField(blank_label="Country *", null=False, blank=False)
+    postcode = models.CharField(max_length=20, null=True, blank=True)
+    town_or_city = models.CharField(max_length=40, null=False, blank=False)
+    street_address1 = models.CharField(max_length=80, null=False, blank=False)
+    date = models.DateTimeField(auto_now_add=True)
+    order_total = models.DecimalField(
+        max_digits=10, decimal_places=2, null=False, default=0
     )
-    billing_address = models.ForeignKey(
-        "Address",
-        related_name="billing_address",
-        on_delete=models.SET_NULL,
-        blank=True,
-        null=True,
-    )
-    payment = models.ForeignKey(
-        "Payment", on_delete=models.SET_NULL, blank=True, null=True
-    )
-    being_delivered = models.BooleanField(default=False)
-    received = models.BooleanField(default=False)
-    refund_requested = models.BooleanField(default=False)
-    refund_granted = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.email
-
-    def get_total(self):
-        total = 0
-        for order_item in self.items.all():
-            total += order_item.get_final_price()
-        if self.coupon:
-            total -= self.coupon.amount
-        return total
-
-
-class Payment(models.Model):
-    stripe_charge_id = models.CharField(max_length=50)
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.SET_NULL, blank=True, null=True
-    )
-    amount = models.FloatField()
-    timestamp = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return self.user
-
-
-class Address(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    street_address = models.CharField(max_length=100)
-    apartment_address = models.CharField(max_length=100)
-    country = CountryField(multiple=False)
-    zip = models.CharField(max_length=100)
-    address_type = models.CharField(max_length=1, choices=ADDRESS_CHOICES)
-    default = models.BooleanField(default=False)
-
-    def __str__(self):
-        return self.user.email
-
-    class Meta:
-        verbose_name_plural = "Addresses"
-
-
-def userprofile_receiver(sender, instance, created, *args, **kwargs):
-    if created:
-        userprofile = UserShopProfile.objects.create(user=instance)
-
-
-post_save.connect(userprofile_receiver, sender=settings.AUTH_USER_MODEL)
+    klarna_line_items = models.TextField(null=False, blank=False, default="")

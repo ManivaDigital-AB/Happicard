@@ -63,7 +63,6 @@ TEMPLATES = [
 
 AUTH_USER_MODEL = "authentification.User"
 
-
 # Permission settings
 REST_FRAMEWORK = {
     "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.AllowAny",),
@@ -133,6 +132,10 @@ else:
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+
+# Klarna
+KLARNA_UN = config("KLARNA_UN")
+KLARNA_PW = config("KLARNA_PW")
 
 # Logging
 LOG_DIR = PROJECT_ROOT / "log"

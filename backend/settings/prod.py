@@ -6,6 +6,8 @@ ALLOWED_HOSTS = ["http://ourdomain.com"]
 
 WSGI_APPLICATION = "backend.settings.wsgi.prod.application"
 
+KLARNA_BASE_URL = "https://api.klarna.com"
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql_psycopg2",

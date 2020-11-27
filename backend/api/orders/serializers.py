@@ -1,7 +1,7 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
-from .models import Order, OrderItem, Item, Address, Payment
+from .models import Order, OrderItem, Item
 
 
 class StringSerializer(serializers.StringRelatedField):
@@ -36,42 +36,12 @@ class OrderItemSerializer(serializers.ModelSerializer):
 
 
 class OrderSerializer(serializers.ModelSerializer):
-    order_items = serializers.SerializerMethodField()
-    total = serializers.SerializerMethodField()
-
     class Meta:
         model = Order
-        fields = (
-            "id",
-            "order_items",
-            "total",
-        )
+        fields = ("order_id", "order_total", "klarna_line_items")
 
     def get_order_items(self, obj):
         return OrderItemSerializer(obj.items.all(), many=True).data
 
     def get_total(self, obj):
         return obj.get_total()
-
-
-class AddressSerializer(serializers.ModelSerializer):
-    country = CountryField()
-
-    class Meta:
-        model = Address
-        fields = (
-            "id",
-            "user",
-            "street_address",
-            "apartment_address",
-            "country",
-            "zip",
-            "address_type",
-            "default",
-        )
-
-
-class PaymentSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Payment
-        fields = ("id", "amount", "timestamp")

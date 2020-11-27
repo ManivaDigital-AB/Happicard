@@ -31,14 +31,14 @@ from .utils import Util
 
 
 class UserList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer
 
 
 class UserDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = User.objects.all()
     serializer_class = CustomUserSerializer

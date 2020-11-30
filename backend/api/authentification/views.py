@@ -52,7 +52,7 @@ class CustomerList(generics.ListAPIView):
 class VendorDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = User.objects.all()
+    queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
 
 
@@ -208,6 +208,5 @@ class ContactView(views.APIView):
                 email_from,
                 ["send to email"],
             )
-
         return Response({"Success": "Sent"})
         return Response({"Success": "Failed"}, status=status.HTTP_400_BAD_REQUEST)

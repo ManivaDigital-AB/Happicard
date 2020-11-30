@@ -10,28 +10,28 @@ from .models import Store, NGO
 
 
 class StoreList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
 
 class NGOList(generics.ListAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = NGO.objects.all()
     serializer_class = NGOSerializer
 
 
 class StoreDetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
 
 
 class NGODetail(generics.RetrieveUpdateDestroyAPIView):
-    permission_classes = (permissions.IsAuthenticated,)
+    permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = NGO.objects.all()
     serializer_class = NGOSerializer

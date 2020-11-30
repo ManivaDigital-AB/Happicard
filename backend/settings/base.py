@@ -22,6 +22,7 @@ INSTALLED_APPS = [
     "django_countries",
     "backend.api.authentification",
     "backend.api.orders",
+    "backend.api.products",
     "backend.api.profiles",
     "drf_yasg",
     "rest_framework",

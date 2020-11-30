@@ -8,46 +8,11 @@ from django.conf import settings
 from django.shortcuts import reverse
 
 
-class Item(models.Model):
-    profile = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    title = models.CharField(max_length=100)
-    price = models.FloatField()
-    slug = models.SlugField()
-    description = models.TextField()
-    image = models.ImageField()
-
-    def __str__(self):
-        return self.title
-
-    def get_absolute_url(self):
-        return reverse("orders:product", kwargs={"slug": self.slug})
-
-    def get_add_to_cart_url(self):
-        return reverse("orders:add-to-cart", kwargs={"slug": self.slug})
-
-    def get_remove_from_cart_url(self):
-        return reverse("orders:remove-from-cart", kwargs={"slug": self.slug})
-
-
-class OrderItem(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
-    )
-    ordered = models.BooleanField(default=False)
-    item = models.ForeignKey(Item, on_delete=models.CASCADE)
-    quantity = models.IntegerField(default=1)
-
-    def __str__(self):
-        return f"{self.quantity} of {self.item.title}"
-
-    def get_total_item_price(self):
-        return self.quantity * self.item.price
-
-
 class Order(models.Model):
-    user = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
-    )
+    """
+    General order model
+    """
+
     order_id = models.CharField(max_length=56, null=False, editable=False)
     status = models.CharField(max_length=56, null=False, default="created")
     first_name = models.CharField(max_length=50, null=False, blank=False)
@@ -63,3 +28,16 @@ class Order(models.Model):
         max_digits=10, decimal_places=2, null=False, default=0
     )
     klarna_line_items = models.TextField(null=False, blank=False, default="")
+
+    def __str__(self):
+        return self.order_id
+
+
+class Cart(models.Model):
+    created_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.CASCADE
+    )
+    subtotal = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+    tax_percentage = models.DecimalField(max_digits=10, decimal_places=5, default=0.085)
+    tax_total = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)
+    total = models.DecimalField(max_digits=50, decimal_places=2, default=0.00)

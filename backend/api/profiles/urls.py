@@ -4,7 +4,10 @@ from . import views
 
 app_name = "profiles"
 urlpatterns = [
-    path("list/", views.ProfileList.as_view(), name="list-profile"),
-    path("detail/<int:pk>/", views.ProfileDetail.as_view(), name="detail-profile"),
-    path("create/", views.ProfileCreate.as_view(), name="create-profile"),
+    path("list/store/", views.StoreList.as_view(), name="list-store"),
+    path("list/ngo/", views.NGOList.as_view(), name="list-ngo"),
+    path("store/<int:pk>/", views.StoreDetail.as_view(), name="detail-store"),
+    path("ngo/<int:pk>/", views.NGODetail.as_view(), name="detail-ngo"),
+    path("create/store/", views.StoreCreate.as_view(), name="create-store"),
+    path("create/ngo/", views.NGOCreate.as_view(), name="create-ngo"),
 ]

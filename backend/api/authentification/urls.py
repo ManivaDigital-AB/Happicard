@@ -5,16 +5,18 @@ from . import views
 
 app_name = "auth"
 urlpatterns = [
-    path("list/", views.UserList.as_view(), name="list-account"),
-    path("account/<int:pk>/", views.UserDetail.as_view(), name="account"),
-    path("register/", views.UserRegistration.as_view(), name="register"),
-    path("email-verify/", views.VerifyEmail.as_view(), name="email-verify"),
+    path("vendor/list/", views.VendorList.as_view(), name="list-account"),
+    path("vendor/<int:pk>/", views.VendorDetail.as_view(), name="account"),
+    path(
+        "register/vendor/", views.VendorRegistration.as_view(), name="vendor-register"
+    ),
     path("token/", jwt_views.TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token-refresh"),
-    path("login/", views.UserLogin.as_view(), name="login"),
+    path("login/vendor/", views.VendorLogin.as_view(), name="login-vendor"),
     path("logout/", views.UserLogout.as_view(), name="logout"),
     path(
         "password-reset/",
         include("django_rest_passwordreset.urls", namespace="password-reset"),
     ),
+    path("contact/", views.ContactView.as_view(), name="contact"),
 ]

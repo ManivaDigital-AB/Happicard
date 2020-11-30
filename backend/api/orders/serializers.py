@@ -38,7 +38,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
 class OrderSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = ("order_id", "order_total", "klarna_line_items")
+        fields = ("order_id",)
 
     def get_order_items(self, obj):
         return OrderItemSerializer(obj.items.all(), many=True).data

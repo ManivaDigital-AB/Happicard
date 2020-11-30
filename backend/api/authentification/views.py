@@ -2,6 +2,7 @@ from decouple import config
 from django.shortcuts import render
 from django.conf import settings
 from django.urls import reverse
+from django.core.mail import send_mail
 from django.shortcuts import redirect
 from rest_framework import permissions, status
 from rest_framework import generics
@@ -19,34 +20,51 @@ from drf_yasg import openapi
 import jwt
 
 from .serializers import (
-    CustomUserSerializer,
-    CustomRegisterSerializer,
-    CustomLoginSerializer,
-    CustomLogoutSerializer,
-    EmailVerificationSerializer,
+    VendorSerializer,
+    VendorRegisterSerializer,
+    VendorLoginSerializer,
+    CustomerSerializer,
+    CustomerRegisterSerializer,
+    CustomerLoginSerializer,
+    UserLogoutSerializer,
+    CustomerEmailVerificationSerializer,
+    ContactSerializer,
 )
-from .models import User
-from .renderers import CustomUserRenderer
+from .models import User, Vendor, Customer
+from .renderers import UserRenderer
 from .utils import Util
 
 
-class UserList(generics.ListAPIView):
+class VendorList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Vendor.objects.all()
+    serializer_class = VendorSerializer
+
+
+class CustomerList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
+
+
+class VendorDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    serializer_class = VendorSerializer
 
 
-class UserDetail(generics.RetrieveUpdateDestroyAPIView):
+class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = User.objects.all()
-    serializer_class = CustomUserSerializer
+    queryset = Customer.objects.all()
+    serializer_class = CustomerSerializer
 
 
-class UserRegistration(generics.GenericAPIView):
-    serializer_class = CustomRegisterSerializer
-    renderer_classes = (CustomUserRenderer,)
+class VendorRegistration(generics.GenericAPIView):
+    serializer_class = VendorRegisterSerializer
 
     def post(self, request):
         user = request.data
@@ -54,10 +72,24 @@ class UserRegistration(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         serializer.save()
         user_data = serializer.data
-        user = User.objects.get(email=user_data["email"])
+
+        return Response(user_data, status=status.HTTP_201_CREATED)
+
+
+class CustomerRegistration(generics.GenericAPIView):
+    serializer_class = CustomerRegisterSerializer
+    renderer_classes = (UserRenderer,)
+
+    def post(self, request):
+        user = request.data
+        serializer = self.serializer_class(data=user)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        user_data = serializer.data
+        user = Customer.objects.get(email=user_data["email"])
         token = RefreshToken.for_user(user).access_token
         current_site = get_current_site(request).domain
-        relative_link = "/api/auth/email-verify/"
+        relative_link = "/api/auth/customer/email-verify/"
         absurl = "http://" + current_site + relative_link + "?token=" + str(token)
         email_body = (
             "Hej "
@@ -76,8 +108,8 @@ class UserRegistration(generics.GenericAPIView):
         return Response(user_data, status=status.HTTP_201_CREATED)
 
 
-class VerifyEmail(views.APIView):
-    serializer_class = EmailVerificationSerializer
+class CustomerEmailVerification(views.APIView):
+    serializer_class = CustomerEmailVerificationSerializer
 
     token_param_config = openapi.Parameter(
         "token",
@@ -91,7 +123,7 @@ class VerifyEmail(views.APIView):
         token = request.GET.get("token")
         try:
             payload = jwt.decode(token, settings.SECRET_KEY)
-            user = User.objects.get(id=payload["user_id"])
+            user = Customer.objects.get(id=payload["user_id"])
             if not user.is_verified:
                 user.is_verified = True
                 user.save()
@@ -108,8 +140,17 @@ class VerifyEmail(views.APIView):
             )
 
 
-class UserLogin(generics.GenericAPIView):
-    serializer_class = CustomLoginSerializer
+class VendorLogin(generics.GenericAPIView):
+    serializer_class = VendorLoginSerializer
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+
+class CustomerLogin(generics.GenericAPIView):
+    serializer_class = CustomerLoginSerializer
 
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
@@ -118,7 +159,7 @@ class UserLogin(generics.GenericAPIView):
 
 
 class UserLogout(views.APIView):
-    serializer_class = CustomLogoutSerializer
+    serializer_class = UserLogoutSerializer
     permission_classes = (permissions.IsAuthenticated,)
 
     def post(self, request):
@@ -151,3 +192,22 @@ def password_reset_token_created(
     Util.send_email(data)
 
     return Response({"Email": "Successfully Sent"})
+
+
+class ContactView(views.APIView):
+    def post(self, request, *args, **kwargs):
+        serializer_class = ContactSerializer(data=request.data)
+        if serializer_class.is_valid():
+            data = serializer_class.validated_data
+            email_from = data.get("email")
+            subject = data.get("subject")
+            message = data.get("message")
+            send_mail(
+                subject,
+                message,
+                email_from,
+                ["send to email"],
+            )
+
+        return Response({"Success": "Sent"})
+        return Response({"Success": "Failed"}, status=status.HTTP_400_BAD_REQUEST)

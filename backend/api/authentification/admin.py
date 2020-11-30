@@ -1,14 +1,14 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
-from .forms import CustomUserCreationForm, CustomUserChangeForm
-from .models import User
+from .forms import UserCreationForm, UserChangeForm
+from .models import User, Vendor, Customer
 
 
-class CustomUserAdmin(UserAdmin):
+class UserAdmin(UserAdmin):
     class Meta:
-        add_form = CustomUserCreationForm
-        form = CustomUserChangeForm
+        add_form = UserCreationForm
+        form = UserChangeForm
         model = User
 
     list_display = (
@@ -17,7 +17,6 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "created_at",
         "updated_at",
-        "is_staff",
         "is_active",
     )
     list_filter = (
@@ -26,7 +25,6 @@ class CustomUserAdmin(UserAdmin):
         "email",
         "created_at",
         "updated_at",
-        "is_staff",
         "is_active",
     )
     fieldsets = (
@@ -35,7 +33,7 @@ class CustomUserAdmin(UserAdmin):
             {"fields": ("email", "password")},
         ),
         ("Personal information", {"fields": ("first_name", "last_name")}),
-        ("Permissions", {"fields": ("is_staff", "is_active")}),
+        ("Permissions", {"fields": ("is_active",)}),
     )
     add_fieldsets = (
         (
@@ -47,7 +45,6 @@ class CustomUserAdmin(UserAdmin):
                     "first_name",
                     "last_name",
                     "password",
-                    "is_staff",
                     "is_active",
                 ),
             },
@@ -57,7 +54,6 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
-        "partner",
         "created_at",
         "updated_at",
     )
@@ -65,10 +61,11 @@ class CustomUserAdmin(UserAdmin):
         "first_name",
         "last_name",
         "email",
-        "partner",
         "created_at",
         "updated_at",
     )
 
 
-admin.site.register(User, CustomUserAdmin)
+admin.site.register(User, UserAdmin)
+admin.site.register(Customer)
+admin.site.register(Vendor)

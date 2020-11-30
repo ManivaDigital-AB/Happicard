@@ -1,15 +1,15 @@
 from rest_framework import serializers
 
-from .models import Profile
+from .models import Store, NGO
 
 
-class ProfileSerializer(serializers.ModelSerializer):
+class StoreSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Profile
-        fields = (
-            "image",
-            "slug",
-            "about",
-            "partner_category",
-            "brand_category",
-        )
+        model = Store
+        fields = ("title", "image", "about", "store_category")
+
+
+class NGOSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = NGO
+        fields = ("title", "image", "about", "ngo_category")

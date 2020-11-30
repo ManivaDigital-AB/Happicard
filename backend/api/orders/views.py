@@ -13,6 +13,7 @@ from django.shortcuts import redirect
 from django.utils import timezone
 from .models import Item, OrderItem, Order
 
+import requests
 import random
 import string
 
@@ -29,51 +30,40 @@ class CreateKlarnaOrder(LoginRequiredMixin, generics.GenericAPIView):
     def post(self, *args, **kwargs):
         auth = HTTPBasicAuth(klarna_un, klarna_pw)
         headers = {"content-type": "application/json"}
-        if self.request.GET.get("sid"):
-            order_id = self.request.GET.get("sid")
-            response = self.requests.get(
-                settings.KLARNA_BASE_URL + "/checkout/v1/orders/" + order_id,
+        cart = self.request.session.get("cart")
+        total = 0
+        orderlines = []
+        order_id = 0
+        try:
+            order_id = self.request.session["order_id"]
+        except:
+            pass
+        for item in cart:
+            product = utils.get_product(item)
+            orderlines.append(
+                {
+                    "name": product[1].name,
+                    "reference": product[1].id,
+                    "unit_price": int(product[1].price * 100),
+                    "quantity": int(cart[item]),
+                    "tax_rate": int(00),
+                    "total_amount": int(product[1].price * cart[item] * 100),
+                    "total_tax_amount": 0,
+                }
+            )
+            total += product[1].price * cart[item] * 100
+        integer_total = int(total)
+        if order_id:
+            response = requests.get(
+                settings.KLARNA_BASE_URL + "/checkout/v3/orders" + order_id,
                 auth=auth,
                 headers=headers,
             )
-            klarna_order = self.response.json()
-            klarna_order["order_id"]
-            if Order.objects.filter(order_id=klarna_order["order_id"]).count() == 1:
-                order = Order.objects.filter(order_id=klarna_order["order_id"]).first()
-                order.status = klarna_order["status"]
-                order.save()
-                requests.post(
-                    settings.KLARNA_BASE_URL
-                    + "/ordermanagement/v1/orders/"
-                    + order_id
-                    + "/acknowledge",
-                    auth=auth,
-                    headers=headers,
-                )
-            else:
-                order = Order(
-                    order_id=klarna_order["order_id"],
-                    status=klarna_order["status"],
-                    first_name=klarna_order["billing_address"]["given_name"],
-                    last_name=klarna_order["billing_address"]["family_name"],
-                    email=klarna_order["billing_address"]["email"],
-                    phone_number=klarna_order["billing_address"]["phone"],
-                    country=klarna_order["billing_address"]["country"],
-                    postcode=klarna_order["billing_address"]["postal_code"],
-                    town_or_city=klarna_order["billing_address"]["city"],
-                    street_address1=klarna_order["billing_address"]["street_address"],
-                    order_total=klarna_order["order_amount"],
-                    klarna_line_items=klarna_order["order_lines"],
-                )
-                order.save()
-                self.requests.post(
-                    settings.KLARNA_BASE_URL
-                    + "/ordermanagement/v3/orders/"
-                    + order_id
-                    + "/acknowledge",
-                    auth=auth,
-                    headers=headers,
-                )
+            klarna_order = response.json()
+            if klarna_order["order_lines"] == orderlines:
+                context = {"klarna_order": klarna_order}
+            return render(request, context)
+
         return Response(status=status.HTTP_200_OK)
 
 
@@ -92,6 +82,8 @@ class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
 
 
 class OrderSummary(LoginRequiredMixin, generics.GenericAPIView):
+    serializer_class = OrderSerializer
+
     def get(self, *args, **kwargs):
         try:
             order = Order.objects.get(user=self.request.user, ordered=False)

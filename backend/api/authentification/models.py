@@ -1,6 +1,7 @@
 from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
+from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django import forms
 
@@ -23,7 +24,7 @@ class UserManager(BaseUserManager):
             first_name=first_name,
             last_name=last_name,
             email=self.normalize_email(email),
-            **extra_fields
+            **extra_fields,
         )
         user.set_password(password)
         user.save()
@@ -53,10 +54,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255, verbose_name="First name")
     last_name = models.CharField(max_length=255, verbose_name="Last name")
-    is_verified = models.BooleanField(default=False)
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
-    partner = models.CharField(max_length=255, verbose_name="Partner")
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -71,3 +70,27 @@ class User(AbstractBaseUser, PermissionsMixin):
     def tokens(self):
         refresh = RefreshToken.for_user(self)
         return {"refresh": str(refresh), "access": str(refresh.access_token)}
+
+
+class Vendor(User):
+    """
+    Vendor subclass model
+    """
+
+    is_verified = models.BooleanField(default=True)
+    phone_number = models.CharField(
+        max_length=15, unique=True, verbose_name="Phone number", null=True, blank=True
+    )
+    business_address = models.CharField(max_length=255, null=True, blank=True)
+    city = models.CharField(max_length=255, null=True, blank=True)
+    state = models.CharField(max_length=255, null=True, blank=True)
+    zipcode = models.CharField(max_length=255, null=True, blank=True)
+    website = models.CharField(max_length=255, null=True, blank=True)
+
+
+class Customer(User):
+    """
+    Customer subclass model
+    """
+
+    is_verified = models.BooleanField(default=False)

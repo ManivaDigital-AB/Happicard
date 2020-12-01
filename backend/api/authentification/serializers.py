@@ -158,5 +158,7 @@ class UserLogoutSerializer(serializers.Serializer):
 
 
 class ContactSerializer(serializers.Serializer):
-    class Meta:
-        fields = ("name", "email", "subject", "message")
+    name = serializers.CharField()
+    email = serializers.EmailField()
+    subject = serializers.CharField()
+    message = serializers.CharField()

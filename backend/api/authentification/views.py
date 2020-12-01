@@ -222,19 +222,21 @@ def password_reset_token_created(
     return Response({"Email": "Successfully Sent"})
 
 
-class ContactView(views.APIView):
-    def post(self, request, *args, **kwargs):
-        serializer_class = ContactSerializer(data=request.data)
-        if serializer_class.is_valid():
-            data = serializer_class.validated_data
-            email_from = data.get("email")
-            subject = data.get("subject")
-            message = data.get("message")
-            send_mail(
-                subject,
-                message,
-                email_from,
-                ["send to email"],
-            )
-        return Response({"Success": "Sent"})
-        return Response({"Success": "Failed"}, status=status.HTTP_400_BAD_REQUEST)
+class ContactForm(generics.GenericAPIView):
+    serializer_class = ContactSerializer
+    permission_classes = (permissions.AllowAny,)
+
+    def post(self, request):
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        contact = serializer.data
+        from_email = contact.get("email")
+        subject = contact.get("subject")
+        message = contact.get("message")
+        data = {
+            "email_body": message,
+            "email_subject": subject,
+            "from_email": from_email,
+        }
+        Util.send_contactform(data)
+        return Response({"Contact Form": "Successfully Sent"})

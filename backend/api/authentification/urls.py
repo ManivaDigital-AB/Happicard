@@ -19,5 +19,5 @@ urlpatterns = [
         "password-reset/",
         include("django_rest_passwordreset.urls", namespace="password-reset"),
     ),
-    path("contact/", views.ContactView.as_view(), name="contact"),
+    path("contact/", views.ContactForm.as_view(), name="contact"),
 ]

@@ -1,4 +1,5 @@
 from django.core.mail import EmailMessage
+from django.conf import settings
 import threading
 
 
@@ -22,5 +23,15 @@ class Util:
             subject=data["email_subject"],
             body=data["email_body"],
             to=[data["to_email"]],
+        )
+        EmailThread(email).start()
+
+    @staticmethod
+    def send_contactform(data):
+        email = EmailMessage(
+            subject=data["email_subject"],
+            body=data["email_body"],
+            to=[settings.DEFAULT_FROM_EMAIL],
+            from_email=data["from_email"],
         )
         EmailThread(email).start()

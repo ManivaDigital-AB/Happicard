@@ -20,6 +20,7 @@ from drf_yasg import openapi
 import jwt
 
 from .serializers import (
+    NewsletterSerializer,
     VendorSerializer,
     VendorRegisterSerializer,
     VendorLoginSerializer,
@@ -30,9 +31,37 @@ from .serializers import (
     CustomerEmailVerificationSerializer,
     ContactSerializer,
 )
-from .models import User, Vendor, Customer
+from .models import User, Vendor, Customer, Subscriber
 from .renderers import UserRenderer
 from .utils import Util
+
+
+class Newsletter(generics.GenericAPIView):
+    serializer_class = NewsletterSerializer
+
+    def post(self, request):
+        sub = request.data
+        serializer = self.serializer_class(data=sub)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        sub_data = serializer.data
+        subscriber = Subscriber.objects.get(email=sub_data["email"])
+        email_body = "Tack för att du registrerade dig för Happicards nyhetsbrev!"
+        data = {
+            "email_body": email_body,
+            "to_email": subscriber.email,
+            "email_subject": "Välkommen till Happicard!",
+        }
+        Util.send_email(data)
+
+        return Response({"Email": "Successfully Sent"}, status=status.HTTP_201_CREATED)
+
+
+class SubscriberDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Subscriber.objects.all()
+    serializer_class = NewsletterSerializer
 
 
 class VendorList(generics.ListAPIView):
@@ -102,7 +131,6 @@ class CustomerRegistration(generics.GenericAPIView):
             "to_email": user.email,
             "email_subject": "Bekräfta din email",
         }
-
         Util.send_email(data)
 
         return Response(user_data, status=status.HTTP_201_CREATED)

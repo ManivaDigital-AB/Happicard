@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 
 from .forms import UserCreationForm, UserChangeForm
-from .models import User, Vendor, Customer
+from .models import User, Vendor, Customer, Subscriber
 
 
 class UserAdmin(UserAdmin):
@@ -69,3 +69,4 @@ class UserAdmin(UserAdmin):
 admin.site.register(User, UserAdmin)
 admin.site.register(Customer)
 admin.site.register(Vendor)
+admin.site.register(Subscriber)

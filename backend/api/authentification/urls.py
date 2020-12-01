@@ -5,6 +5,7 @@ from . import views
 
 app_name = "auth"
 urlpatterns = [
+    path("newsletter/", views.Newsletter.as_view(), name="email-newsletter"),
     path("vendor/list/", views.VendorList.as_view(), name="list-account"),
     path("vendor/<int:pk>/", views.VendorDetail.as_view(), name="account"),
     path(

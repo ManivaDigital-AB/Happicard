@@ -3,7 +3,13 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework_simplejwt.exceptions import TokenError
 from django.contrib import auth
-from .models import Vendor, Customer
+from .models import Vendor, Customer, Subscriber
+
+
+class NewsletterSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Subscriber
+        fields = ("email",)
 
 
 class VendorSerializer(serializers.ModelSerializer):

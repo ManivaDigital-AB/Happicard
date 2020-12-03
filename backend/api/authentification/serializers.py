@@ -58,6 +58,9 @@ class VendorLoginSerializer(serializers.ModelSerializer):
             raise AuthenticationFailed("Invalid credentials, try again")
         if not user.is_active:
             raise AuthenticationFailed("Account disabled, contact admin")
+        if not user.is_verified:
+            raise AuthenticationFailed("Email is not verified")
+
         return {"email": user.email, "tokens": user.tokens}
 
         return super().validate(attrs)
@@ -100,15 +103,14 @@ class VendorRegisterSerializer(serializers.ModelSerializer):
             "phone_number",
             "business_address",
             "city",
-            "state",
+            "region",
             "zipcode",
             "website",
-            "is_verified",
         )
 
     def validate(self, attrs):
         email = attrs.get("email", "")
-        password = attrs.get("phone_number", "")
+        password = attrs.get("password", "")
         return attrs
 
     def create(self, validated_data):
@@ -129,6 +131,14 @@ class CustomerRegisterSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Customer.objects.create_user(**validated_data)
+
+
+class VendorVerificationSerializer(serializers.ModelSerializer):
+    decision = serializers.CharField()
+
+    class Meta:
+        model = Vendor
+        fields = ("email", "decision")
 
 
 class CustomerEmailVerificationSerializer(serializers.ModelSerializer):

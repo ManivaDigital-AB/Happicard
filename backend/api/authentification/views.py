@@ -5,7 +5,7 @@ from django.urls import reverse
 from django.core.mail import send_mail
 from django.shortcuts import redirect
 from rest_framework import permissions, status
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from rest_framework.response import Response
 from django.contrib.sites.shortcuts import get_current_site
 from rest_framework_simplejwt.tokens import RefreshToken
@@ -28,6 +28,7 @@ from .serializers import (
     CustomerRegisterSerializer,
     CustomerLoginSerializer,
     UserLogoutSerializer,
+    VendorVerificationSerializer,
     CustomerEmailVerificationSerializer,
     ContactSerializer,
 )
@@ -71,6 +72,17 @@ class VendorList(generics.ListAPIView):
     serializer_class = VendorSerializer
 
 
+class PendingVendorList(viewsets.ModelViewSet):
+    def get_queryset(self):
+        if self.request.vendor.is_verified == False:
+            print("is there a pending vendor?")
+            print(
+                EmailAddress.objects.filter(
+                    user=self.request.vendor, verified=True
+                ).exists()
+            )
+
+
 class CustomerList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
@@ -94,15 +106,26 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
 
 class VendorRegistration(generics.GenericAPIView):
     serializer_class = VendorRegisterSerializer
+    renderer_classes = (UserRenderer,)
 
     def post(self, request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        vendor = request.data
+        serializer = self.serializer_class(data=vendor)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        user_data = serializer.data
+        vendor_data = serializer.data
 
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        email_body = "This vendor is pending verification with this data:\n\n{}\n \
+            Update their status on the Happicard site".format(
+            vendor_data
+        )
+        data = {
+            "email_body": email_body,
+            "to_email": settings.DEFAULT_FROM_EMAIL,
+            "email_subject": "Ombordstigningsprocess",
+        }
+        Util.send_email(data)
+        return Response(vendor_data, status=status.HTTP_201_CREATED)
 
 
 class CustomerRegistration(generics.GenericAPIView):
@@ -110,30 +133,112 @@ class CustomerRegistration(generics.GenericAPIView):
     renderer_classes = (UserRenderer,)
 
     def post(self, request):
-        user = request.data
-        serializer = self.serializer_class(data=user)
+        customer = request.data
+        serializer = self.serializer_class(data=customer)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        user_data = serializer.data
-        user = Customer.objects.get(email=user_data["email"])
-        token = RefreshToken.for_user(user).access_token
+        customer_data = serializer.data
+        customer = Customer.objects.get(email=customer_data["email"])
+        token = RefreshToken.for_user(customer).access_token
         current_site = get_current_site(request).domain
         relative_link = "/api/auth/customer/email-verify/"
         absurl = "http://" + current_site + relative_link + "?token=" + str(token)
         email_body = (
             "Hej "
-            + user.first_name
+            + customer.first_name
             + "!\n\nAnvänd länken nedan för att bekräfta din email:\n"
             + absurl
         )
         data = {
             "email_body": email_body,
-            "to_email": user.email,
+            "to_email": customer.email,
             "email_subject": "Bekräfta din email",
         }
         Util.send_email(data)
 
-        return Response(user_data, status=status.HTTP_201_CREATED)
+        return Response(customer_data, status=status.HTTP_201_CREATED)
+
+
+class VendorCMSVerification(generics.GenericAPIView):
+    serializer_class = VendorVerificationSerializer
+
+    decision_param_config = openapi.Parameter(
+        "decision",
+        in_=openapi.IN_QUERY,
+        description="Decision",
+        type=openapi.TYPE_STRING,
+    )
+
+    email_param_config = openapi.Parameter(
+        "email",
+        in_=openapi.IN_QUERY,
+        description="Email",
+        type=openapi.TYPE_STRING,
+    )
+
+    @swagger_auto_schema(manual_parameters=[decision_param_config, email_param_config])
+    def get(self, request):
+        decision = request.GET.get("decision")
+        email = request.GET.get("email")
+        vendor = Vendor.objects.get(email=email)
+        email_subject = "Resultat för partnerverifiering"
+
+        if not vendor.is_verified and decision == "Yes":
+
+            vendor.is_verified = True
+            vendor_email_body = (
+                "Grattis, du har blivit en verifierad partner med Happicard!"
+            )
+            vendor_data = {
+                "email_body": vendor_email_body,
+                "to_email": vendor.email,
+                "email_subject": email_subject,
+            }
+            Util.send_email(vendor_data)
+            vendor.save()
+
+            client_email_body = "Grattis, du har en ny partner!"
+            client_data = {
+                "email_body": client_email_body,
+                "to_email": settings.DEFAULT_FROM_EMAIL,
+                "email_subject": email_subject,
+            }
+            Util.send_email(client_data)
+            vendor.save()
+
+            return Response(
+                {"Verification": "The vendor has been verified."},
+                status=status.HTTP_202_ACCEPTED,
+            )
+
+        elif not vendor.is_verified and decision == "No":
+            vendor_email_body = "Ursäkta, din partnerverifiering avvisades."
+            vendor_data = {
+                "email_body": vendor_email_body,
+                "to_email": vendor.email,
+                "email_subject": email_result,
+            }
+            Util.send_email(vendor_data)
+            vendor.delete()
+
+            return Response(
+                {
+                    "Verification": "The vendor was not verified. Their form will be removed."
+                },
+                status=status.HTTP_401_UNAUTHORIZED,
+            )
+        elif vendor.is_verified and decision == "Yes":
+            return Response({"Verification": "The vendor has already been verified."})
+        elif vendor.is_verified and decision == "No":
+            return Response(
+                {
+                    "Verification": "The vendor has already been verified. If you want to remove them, you should do so directly."
+                }
+            )
+        else:
+            return Response(
+                {"Verification": "Your input was insufficient. Please try again."}
+            )
 
 
 class CustomerEmailVerification(views.APIView):
@@ -142,7 +247,7 @@ class CustomerEmailVerification(views.APIView):
     token_param_config = openapi.Parameter(
         "token",
         in_=openapi.IN_QUERY,
-        description="Description",
+        description="Token",
         type=openapi.TYPE_STRING,
     )
 

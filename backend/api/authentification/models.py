@@ -56,6 +56,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     last_name = models.CharField(max_length=255, verbose_name="Last name")
     is_active = models.BooleanField(default=True)
     is_staff = models.BooleanField(default=False)
+    is_verified = models.BooleanField(default=False)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
@@ -74,29 +75,32 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Vendor(User):
     """
-    Vendor subclass model
+    Vendor child model
     """
 
-    is_verified = models.BooleanField(default=True)
     phone_number = models.CharField(
         max_length=15, unique=True, verbose_name="Phone number", null=True, blank=True
     )
     business_address = models.CharField(max_length=255, null=True, blank=True)
     city = models.CharField(max_length=255, null=True, blank=True)
-    state = models.CharField(max_length=255, null=True, blank=True)
+    region = models.CharField(max_length=255, null=True, blank=True)
     zipcode = models.CharField(max_length=255, null=True, blank=True)
     website = models.CharField(max_length=255, null=True, blank=True)
 
 
 class Customer(User):
     """
-    Customer subclass model
+    Customer child model
     """
 
-    is_verified = models.BooleanField(default=False)
+    pass
 
 
 class Subscriber(models.Model):
+    """
+    Email subscriber model
+    """
+
     email = models.EmailField(unique=True)
 
     def __str__(self):

@@ -18,6 +18,7 @@ class UserAdmin(UserAdmin):
         "created_at",
         "updated_at",
         "is_active",
+        "is_verified",
     )
     list_filter = (
         "first_name",
@@ -26,6 +27,7 @@ class UserAdmin(UserAdmin):
         "created_at",
         "updated_at",
         "is_active",
+        "is_verified",
     )
     fieldsets = (
         (
@@ -33,7 +35,7 @@ class UserAdmin(UserAdmin):
             {"fields": ("email", "password")},
         ),
         ("Personal information", {"fields": ("first_name", "last_name")}),
-        ("Permissions", {"fields": ("is_active",)}),
+        ("Permissions", {"fields": ("is_active", "is_verified")}),
     )
     add_fieldsets = (
         (
@@ -46,6 +48,7 @@ class UserAdmin(UserAdmin):
                     "last_name",
                     "password",
                     "is_active",
+                    "is_verified",
                 ),
             },
         ),

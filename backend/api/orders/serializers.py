@@ -22,6 +22,6 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
 class CheckoutSerializer(serializers.Serializer):
     product_type = serializers.ChoiceField(choices=[GiftCard, Campaign])
-    purchase_country = serializers.CharField(default="SE")
-    purchase_currency = serializers.CharField(default="SEK")
-    locale = serializers.CharField(default="se-sv")
+    purchase_country = serializers.CharField()
+    purchase_currency = serializers.CharField()
+    locale = serializers.CharField()

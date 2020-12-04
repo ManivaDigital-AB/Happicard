@@ -6,8 +6,28 @@ from . import views
 app_name = "auth"
 urlpatterns = [
     path("newsletter/", views.Newsletter.as_view(), name="email-newsletter"),
-    path("vendor/list/", views.VendorList.as_view(), name="list-account"),
-    path("vendor/<int:pk>/", views.VendorDetail.as_view(), name="account"),
+    path("customer/count/", views.CustomerCount.as_view(), name="count-customer"),
+    path("customer/list/", views.CustomerList.as_view(), name="list-customer"),
+    path("customer/<int:pk>/", views.CustomerDetail.as_view(), name="customer"),
+    path(
+        "register/customer/",
+        views.CustomerRegistration.as_view(),
+        name="vendor-register",
+    ),
+    path(
+        "customer-verify/",
+        views.CustomerEmailVerification.as_view(),
+        name="customer-register",
+    ),
+    path("subscriber/count/", views.SubscriberCount.as_view(), name="count-subscriber"),
+    path("vendor/count/", views.VendorCount.as_view(), name="count-vendor"),
+    path(
+        "pending-vendor/list/",
+        views.PendingVendorList.as_view(),
+        name="list-pending-vendor",
+    ),
+    path("vendor/list/", views.VendorList.as_view(), name="list-vendor"),
+    path("vendor/<int:pk>/", views.VendorDetail.as_view(), name="vendor"),
     path(
         "register/vendor/", views.VendorRegistration.as_view(), name="vendor-register"
     ),
@@ -18,6 +38,7 @@ urlpatterns = [
     ),
     path("token/", jwt_views.TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token-refresh"),
+    path("login/customer/", views.CustomerLogin.as_view(), name="login-customer"),
     path("login/vendor/", views.VendorLogin.as_view(), name="login-vendor"),
     path("logout/", views.UserLogout.as_view(), name="logout"),
     path(

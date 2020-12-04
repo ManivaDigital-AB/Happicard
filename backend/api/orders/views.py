@@ -7,9 +7,9 @@ from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions, status
 from rest_framework import generics
+from django.core import serializers
 from rest_framework.response import Response
 
-from backend.api.products.utils import get_product
 from .models import Order, OrderProduct
 from .serializers import (
     OrderSerializer,
@@ -18,6 +18,7 @@ from .serializers import (
 )
 from decimal import Decimal
 from backend.api.products.models import GiftCard, Campaign
+from backend.api.authentification.utils import Util
 
 klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
@@ -82,7 +83,7 @@ class KlarnaCheckout(generics.GenericAPIView):
                 headers=headers,
             )
 
-            # klarna_order = response.json()
+            klarna_order = response.json()
             if klarna_order["order_lines"] == order_lines:
                 context = {"klarna_order": klarna_order}
                 return Response(context, status=status.HTTP_200_OK)
@@ -103,7 +104,7 @@ class KlarnaCheckoutCompletion(generics.GenericAPIView):
             auth=auth,
             headers=headers,
         )
-        # klarna_order = response.json()
+        klarna_order = response.json()
         order = Order(
             order_id=klarna_order["order_id"],
             status=klarna_order["status"],
@@ -120,7 +121,10 @@ class KlarnaCheckoutCompletion(generics.GenericAPIView):
         )
         order.save()
         context = {"klarna_order": klarna_order}
-        confirm_body = "Grattis, du har blivit en verifierad partner med Happicard!"
+        confirm_subject = "Order Confirmation!"
+        confirm_body = "Grattis, your order has been confirmed! Redeem your Happicard purchase with this QR Code:\n{}".format(
+            "QR Code goes here"
+        )
         confirmation = {
             "email_body": confirm_body,
             "to_email": vendor.email,

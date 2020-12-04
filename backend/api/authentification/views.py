@@ -1,5 +1,6 @@
 from decouple import config
 from django.shortcuts import render
+from django.db.models import Max
 from django.conf import settings
 from django.urls import reverse
 from django.core.mail import send_mail
@@ -33,6 +34,7 @@ from .serializers import (
     ContactSerializer,
 )
 from .models import User, Vendor, Customer, Subscriber
+from .forms import VendorForm
 from .renderers import UserRenderer
 from .utils import Util
 
@@ -68,19 +70,15 @@ class SubscriberDetail(generics.RetrieveUpdateDestroyAPIView):
 class VendorList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Vendor.objects.all()
+    queryset = Vendor.objects.filter(is_verified=True)
     serializer_class = VendorSerializer
 
 
-class PendingVendorList(viewsets.ModelViewSet):
-    def get_queryset(self):
-        if self.request.vendor.is_verified == False:
-            print("is there a pending vendor?")
-            print(
-                EmailAddress.objects.filter(
-                    user=self.request.vendor, verified=True
-                ).exists()
-            )
+class PendingVendorList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Vendor.objects.filter(is_verified=False)
+    serializer_class = VendorSerializer
 
 
 class CustomerList(generics.ListAPIView):
@@ -115,9 +113,8 @@ class VendorRegistration(generics.GenericAPIView):
         serializer.save()
         vendor_data = serializer.data
 
-        email_body = "This vendor is pending verification with this data:\n\n{}\n \
-            Update their status on the Happicard site".format(
-            vendor_data
+        email_body = "This vendor is pending verification with this data:\n{}\n\nUpdate their status now on the Happicard admin panel!".format(
+            vendor
         )
         data = {
             "email_body": email_body,
@@ -141,7 +138,7 @@ class CustomerRegistration(generics.GenericAPIView):
         customer = Customer.objects.get(email=customer_data["email"])
         token = RefreshToken.for_user(customer).access_token
         current_site = get_current_site(request).domain
-        relative_link = "/api/auth/customer/email-verify/"
+        relative_link = "/api/auth/customer/customer-verify/"
         absurl = "http://" + current_site + relative_link + "?token=" + str(token)
         email_body = (
             "Hej "
@@ -345,3 +342,33 @@ class ContactForm(generics.GenericAPIView):
         }
         Util.send_contactform(data)
         return Response({"Contact Form": "Successfully Sent"})
+
+
+class SubscriberCount(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request, format=None):
+        subscriber_count = Subscriber.objects.count()
+        data = {"Subscriber Count": subscriber_count}
+        return Response(data)
+
+
+class VendorCount(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request, format=None):
+        vendor_count = Vendor.objects.count()
+        data = {"Vendor Count": vendor_count}
+        return Response(data)
+
+
+class CustomerCount(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+
+    def get(self, request, format=None):
+        customer_count = Customer.objects.count()
+        data = {"Customer Count": customer_count}
+        return Response(data)

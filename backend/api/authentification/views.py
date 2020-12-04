@@ -63,7 +63,7 @@ class Newsletter(generics.GenericAPIView):
 class SubscriberList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Subscriber.objects.all())
+    queryset = Subscriber.objects.all()
     serializer_class = NewsletterSerializer
 
 

@@ -60,10 +60,10 @@ class Newsletter(generics.GenericAPIView):
         return Response({"Email": "Successfully Sent"}, status=status.HTTP_201_CREATED)
 
 
-class SubscriberDetail(generics.RetrieveUpdateDestroyAPIView):
+class SubscriberList(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Subscriber.objects.all()
+    queryset = Subscriber.objects.all())
     serializer_class = NewsletterSerializer
 
 
@@ -100,6 +100,13 @@ class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
     authentication_classes = ()
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
+
+
+class SubscriberDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Subscriber.objects.all()
+    serializer_class = NewsletterSerializer
 
 
 class VendorRegistration(generics.GenericAPIView):

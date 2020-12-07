@@ -21,7 +21,8 @@ class OrderProductSerializer(serializers.ModelSerializer):
 
 
 class CheckoutSerializer(serializers.Serializer):
-    product_type = serializers.ChoiceField(choices=[GiftCard, Campaign])
-    purchase_country = serializers.CharField()
-    purchase_currency = serializers.CharField()
-    locale = serializers.CharField()
+    product_type = serializers.CharField()
+
+    class Meta:
+        model = GiftCard
+        fields = ("product_id",)

@@ -4,6 +4,7 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
+import uuid
 
 
 def upload_to(instance, filename):
@@ -16,12 +17,12 @@ class Product(models.Model):
     """
 
     name = models.CharField(max_length=255, null=True, blank=True)
-    product_id = models.CharField(max_length=255, null=True, blank=True)
-    price = models.DecimalField(max_digits=6, decimal_places=2, help_text="SEK")
-    image_url = models.URLField(max_length=1024, null=True, blank=True)
+    product_id = models.UUIDField(
+        default=uuid.uuid4, unique=True, db_index=True, editable=False
+    )
+    price = models.IntegerField(default=0)
     image = models.ImageField("Image", upload_to=upload_to, default="default.jpg")
     description = models.TextField("Description", max_length=500, blank=True)
-    price_without_vat = models.IntegerField(default=0)
     quantity = models.IntegerField(default=1)
     tax_amount = models.IntegerField(default=0)
     author = models.ForeignKey(
@@ -30,6 +31,9 @@ class Product(models.Model):
 
     def __str__(self):
         return self.name
+
+    def total_amount(self):
+        pass
 
 
 class GiftCard(Product):

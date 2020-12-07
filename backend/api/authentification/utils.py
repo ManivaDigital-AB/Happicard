@@ -40,13 +40,14 @@ class Util:
         EmailThread(email).start()
 
     @staticmethod
-    def create_qrcode(photo):
+    def create_qrcode(photo, data):
         logo = Image.open(photo)
         basewidth = 90
         wpercent = basewidth / float(logo.size[0])
         hsize = int((float(logo.size[1]) * float(wpercent)))
         logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
         qr_big = qrcode.QRCode(error_correction=qrcode.constants.ERROR_CORRECT_H)
+        qr_big.add_data(data)
         qr_big.make()
         img_qr_big = qr_big.make_image(fill_color="black", back_color="orange").convert(
             "RGB"

@@ -354,6 +354,7 @@ class ContactForm(generics.GenericAPIView):
 class SubscriberCount(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    serializer_class = NewsletterSerializer
 
     def get(self, request, format=None):
         subscriber_count = Subscriber.objects.count()
@@ -364,6 +365,7 @@ class SubscriberCount(generics.GenericAPIView):
 class VendorCount(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    serializer_class = VendorSerializer
 
     def get(self, request, format=None):
         vendor_count = Vendor.objects.count()
@@ -374,6 +376,7 @@ class VendorCount(generics.GenericAPIView):
 class CustomerCount(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    serializer_class = CustomerSerializer
 
     def get(self, request, format=None):
         customer_count = Customer.objects.count()

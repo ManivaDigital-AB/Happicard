@@ -6,9 +6,11 @@ from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from rest_framework import permissions, status
-from rest_framework import generics
+from rest_framework import generics, viewsets
 from django.core import serializers
 from rest_framework.response import Response
+from drf_yasg.utils import swagger_auto_schema
+from drf_yasg import openapi
 
 from .models import Order, OrderProduct
 from .serializers import (
@@ -24,69 +26,54 @@ klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
 
 
-class KlarnaCheckout(generics.GenericAPIView):
-    serializer_class = CheckoutSerializer
+class KlarnaCheckoutGiftCard(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    auth = HTTPBasicAuth(klarna_un, klarna_pw)
-    headers = {"content-type": "application/json"}
+    serializer_class = CheckoutSerializer
 
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        checkout = serializer.data
-        product_type = checkout.get("product_type")
+    product_param_config = openapi.Parameter(
+        "product_id",
+        in_=openapi.IN_QUERY,
+        description="ProductID",
+        type=openapi.TYPE_STRING,
+    )
+
+    @swagger_auto_schema(manual_parameters=[product_param_config])
+    def get(self, request):
+        auth = HTTPBasicAuth(klarna_un, klarna_pw)
+        headers = {"content-type": "application/json"}
+        product_id = request.GET.get("product_id")
+        giftcard = GiftCard.objects.get(product_id=product_id)
         total = 0
         order_lines = []
-        order_id = 0
-        if product_type == "GiftCard":
+        if giftcard:
             order_lines.append(
                 {
-                    "name": GiftCard.name,
-                    "reference": GiftCard.product_id,
-                    "unit_price": int(GiftCard.price * 100),
-                    "image_url": GiftCard.image_url,
-                    "description": GiftCard.description,
-                    "quantity": int(GiftCard.quantity),
-                    "has_offer": GiftCard.has_offer,
-                    "discount_price": GiftCard.discount_price,
-                    "tax_rate": int(00),
-                    "total_amount": int(
-                        GiftCard.price * 100
-                    ),  # WILL BE ADJUSTED FOR CART SYSTEM
+                    "name": giftcard.name,
+                    "reference": giftcard.product_id,
+                    "unit_price": giftcard.price,
+                    "description": giftcard.description,
+                    "quantity": giftcard.quantity,
+                    "has_offer": giftcard.has_offer,
+                    "discount_price": giftcard.discount_price,
+                    "tax_rate": 0,
+                    "total_amount": giftcard.price,
                     "total_tax_amount": 0,
                 }
             )
-            total += Campaign.price * 100  # WILL BE ADJUSTED FOR CART SYSTEM
-            integer_total = int(total)
-        else:
-            order_lines.append(
-                {
-                    "name": Campaign.name,
-                    "reference": Campaign.product_id,
-                    "unit_price": int(Campaign.price * 100),
-                    "image_url": Campaign.image_url,
-                    "description": Campaign.description,
-                    "quantity": int(Campaign.quantity),
-                    "tax_rate": int(00),
-                    "total_amount": int(
-                        Campaign.price * 100
-                    ),  # WILL BE ADJUSTED FOR CART SYSTEM
-                    "total_tax_amount": 0,
-                }
-            )
-            total += Campaign.price * 100  # WILL BE ADJUSTED FOR CART SYSTEM
-            integer_total = int(total)
-        if order_id:
             response = requests.get(
-                settings.KLARNA_BASE_URL + "/checkout/v3/orders/" + order_id,
+                settings.KLARNA_BASE_URL + "/checkout/v3/orders/",
                 auth=auth,
                 headers=headers,
             )
-
             klarna_order = response.json()
-            if klarna_order["order_lines"] == order_lines:
-                context = {"klarna_order": klarna_order}
-                return Response(context, status=status.HTTP_200_OK)
+            klarna_order["purchase_country"] = "SE"
+            klarna_order["purchase_currency"] = "SEK"
+            klarna_order["locale"] = "en-SE"
+            klarna_order["order_amount"] = 50000
+            klarna_order["order_tax_amount"] = 4545
+            klarna_order["order_lines"] = order_lines
+            context = {"Klarna Order": klarna_order}
+        return Response(request, context)
 
 
 class KlarnaCheckoutCompletion(generics.GenericAPIView):
@@ -197,3 +184,32 @@ def remove_single_item_from_cart(request, slug):
             messages.info(request, "This item was not in your cart")
     else:
         messages.info(request, "You do not have an active order")
+
+
+json_example = {
+    "purchase_country": "GB",
+    "purchase_currency": "GBP",
+    "locale": "en-GB",
+    "order_amount": 50000,
+    "order_tax_amount": 4545,
+    "order_lines": [
+        {
+            "type": "physical",
+            "reference": "19-402-USA",
+            "name": "Red T-Shirt",
+            "quantity": 5,
+            "quantity_unit": "pcs",
+            "unit_price": 10000,
+            "tax_rate": 1000,
+            "total_amount": 50000,
+            "total_discount_amount": 0,
+            "total_tax_amount": 4545,
+        }
+    ],
+    "merchant_urls": {
+        "terms": "https://www.example.com/terms.html",
+        "checkout": "https://www.example.com/checkout.html",
+        "confirmation": "https://www.example.com/confirmation.html",
+        "push": "https://www.example.com/api/push",
+    },
+}

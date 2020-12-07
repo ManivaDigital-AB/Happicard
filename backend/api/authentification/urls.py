@@ -20,8 +20,8 @@ urlpatterns = [
         name="customer-register",
     ),
     path("subscriber/count/", views.SubscriberCount.as_view(), name="count-subscriber"),
-    path("subscriber/list/", views.SubscriberCount.as_view(), name="list-subscriber"),
-    path("subscriber/<int:pk>/", views.CustomerDetail.as_view(), name="subscriber"),
+    path("subscriber/list/", views.SubscriberList.as_view(), name="list-subscriber"),
+    path("subscriber/<int:pk>/", views.SubscriberDetail.as_view(), name="subscriber"),
     path("vendor/count/", views.VendorCount.as_view(), name="count-vendor"),
     path(
         "pending-vendor/list/",

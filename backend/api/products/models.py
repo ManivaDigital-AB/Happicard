@@ -16,7 +16,7 @@ class Product(models.Model):
     General product model
     """
 
-    name = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
     product_id = models.UUIDField(
         default=uuid.uuid4, unique=True, db_index=True, editable=False
     )
@@ -30,10 +30,7 @@ class Product(models.Model):
     )
 
     def __str__(self):
-        return self.name
-
-    def total_amount(self):
-        pass
+        return self.title
 
 
 class GiftCard(Product):

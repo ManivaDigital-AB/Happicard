@@ -5,34 +5,9 @@ from django.db import models
 from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
-from django.shortcuts import reverse
+import uuid
 
 from backend.api.products.models import Product
-
-
-class Order(models.Model):
-    """
-    General order model
-    """
-
-    order_id = models.CharField(max_length=56, null=False, editable=False)
-    status = models.CharField(max_length=56, null=False, default="created")
-    first_name = models.CharField(max_length=50, null=False, blank=False)
-    last_name = models.CharField(max_length=50, null=False, blank=False)
-    email = models.EmailField(max_length=254, null=False, blank=False)
-    phone_number = models.CharField(max_length=20, null=False, blank=False)
-    country = CountryField(blank_label="Country *", null=False, blank=False)
-    postcode = models.CharField(max_length=20, null=True, blank=True)
-    town_or_city = models.CharField(max_length=40, null=False, blank=False)
-    street_address1 = models.CharField(max_length=80, null=False, blank=False)
-    date = models.DateTimeField(auto_now_add=True)
-    order_total = models.DecimalField(
-        max_digits=10, decimal_places=2, null=False, default=0
-    )
-    klarna_line_items = models.TextField(null=False, blank=False, default="")
-
-    def __str__(self):
-        return self.order_id
 
 
 class OrderProduct(models.Model):
@@ -57,3 +32,31 @@ class OrderProduct(models.Model):
         if self.product.discount_price:
             return self.get_total_discount_product_price()
         return self.get_total_product_price()
+
+
+class Order(models.Model):
+    """
+    General order model
+    """
+
+    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    order_id = models.UUIDField(
+        default=uuid.uuid4, unique=True, db_index=True, editable=False
+    )
+    products = models.ManyToManyField(OrderProduct)
+    status = models.CharField(max_length=56, null=False, default="created")
+    first_name = models.CharField(max_length=50, null=False, blank=False)
+    last_name = models.CharField(max_length=50, null=False, blank=False)
+    email = models.EmailField(max_length=254, null=False, blank=False)
+    phone_number = models.CharField(max_length=20, null=False, blank=False)
+    country = CountryField(blank_label="Country *", null=False, blank=False)
+    postcode = models.CharField(max_length=20, null=True, blank=True)
+    town_or_city = models.CharField(max_length=40, null=False, blank=False)
+    street_address1 = models.CharField(max_length=80, null=False, blank=False)
+    date = models.DateTimeField(auto_now_add=True)
+    order_total = models.DecimalField(
+        max_digits=10, decimal_places=2, null=False, default=0
+    )
+
+    def __str__(self):
+        return str(self.order_id)

@@ -12,17 +12,9 @@ class OrderSerializer(serializers.ModelSerializer):
 
 
 class OrderProductSerializer(serializers.ModelSerializer):
-    item = serializers.SerializerMethodField()
+    product = serializers.SerializerMethodField()
     final_price = serializers.SerializerMethodField()
 
     class Meta:
         model = OrderProduct
-        fields = ("id", "item", "quantity", "final_price")
-
-
-class CheckoutSerializer(serializers.Serializer):
-    product_type = serializers.CharField()
-
-    class Meta:
-        model = GiftCard
-        fields = ("product_id",)
+        fields = ("id", "product", "quantity", "final_price")

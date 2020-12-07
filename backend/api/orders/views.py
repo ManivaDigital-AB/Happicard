@@ -5,79 +5,107 @@ from requests.auth import HTTPBasicAuth
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, status
 from rest_framework import generics, viewsets
 from django.core import serializers
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
+from uuid import UUID
+import json
 
-from .models import Order, OrderProduct
 from .serializers import (
     OrderSerializer,
     OrderProductSerializer,
-    CheckoutSerializer,
 )
 from decimal import Decimal
-from backend.api.products.models import GiftCard, Campaign
 from backend.api.authentification.utils import Util
+
+from .models import Order, OrderProduct
 
 klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
 
 
-class KlarnaCheckoutGiftCard(generics.GenericAPIView):
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = CheckoutSerializer
+class UUIDEncoder(json.JSONEncoder):
+    def default(self, obj):
+        if isinstance(obj, UUID):
+            return obj.hex
+        return json.JSONEncoder.default(self, obj)
 
-    product_param_config = openapi.Parameter(
-        "product_id",
+
+class KlarnaCheckout(generics.GenericAPIView):
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = OrderSerializer
+
+    order_param_config = openapi.Parameter(
+        "order_id",
         in_=openapi.IN_QUERY,
-        description="ProductID",
+        description="Place the Order ID here:",
         type=openapi.TYPE_STRING,
     )
 
-    @swagger_auto_schema(manual_parameters=[product_param_config])
+    @swagger_auto_schema(manual_parameters=[order_param_config])
     def get(self, request):
         auth = HTTPBasicAuth(klarna_un, klarna_pw)
         headers = {"content-type": "application/json"}
-        product_id = request.GET.get("product_id")
-        giftcard = GiftCard.objects.get(product_id=product_id)
-        total = 0
-        order_lines = []
-        if giftcard:
-            order_lines.append(
-                {
-                    "name": giftcard.name,
-                    "reference": giftcard.product_id,
-                    "unit_price": giftcard.price,
-                    "description": giftcard.description,
-                    "quantity": giftcard.quantity,
-                    "has_offer": giftcard.has_offer,
-                    "discount_price": giftcard.discount_price,
-                    "tax_rate": 0,
-                    "total_amount": giftcard.price,
-                    "total_tax_amount": 0,
-                }
-            )
-            response = requests.get(
-                settings.KLARNA_BASE_URL + "/checkout/v3/orders/",
+        order_id = request.GET.get("order_id")
+        order = Order.objects.get(order_id=order_id)
+
+        try:
+            order_lines = []
+            order_amount = 0
+            products = order.products
+
+            for item in products.all():
+                order_lines.append(
+                    {
+                        "reference": item.product.product_id,
+                        "name": item.product.title,
+                        "quantity": int(item.product.quantity),
+                        "unit_price": int(item.product.price),
+                        "tax_rate": int(00),
+                        "total_amount": int(item.product.price * item.product.quantity),
+                        "total_discount_amount": 0,
+                        "total_tax_amount": 0,
+                    }
+                )
+                order_amount += item.product.price * item.product.quantity
+            order_amount = int(order_amount)
+            body = {
+                "purchase_country": "SE",
+                "purchase_currency": "SEK",
+                "locale": "sv-SE",
+                "order_amount": order_amount,
+                "order_tax_amount": 0,
+                "order_lines": order_lines,
+                "merchant_urls": {
+                    "terms": "https://www.example.com/terms.html",
+                    "checkout": "https://www.example.com/checkout.html",
+                    "confirmation": "https://www.example.com/confirmation.html",
+                    "push": "https://www.example.com/api/push",
+                },
+            }
+            data = json.dumps(body, cls=UUIDEncoder)
+            response = requests.post(
+                settings.KLARNA_BASE_URL + "/checkout/v3/orders",
                 auth=auth,
                 headers=headers,
+                data=data,
             )
             klarna_order = response.json()
-            klarna_order["purchase_country"] = "SE"
-            klarna_order["purchase_currency"] = "SEK"
-            klarna_order["locale"] = "en-SE"
-            klarna_order["order_amount"] = 50000
-            klarna_order["order_tax_amount"] = 4545
-            klarna_order["order_lines"] = order_lines
-            context = {"Klarna Order": klarna_order}
-        return Response(request, context)
+            return Response(
+                {"Successful Klarna Checkout Order": klarna_order},
+                status=status.HTTP_200_OK,
+            )
+
+        except ObjectDoesNotExist:
+            return Response({"Error": "You do not have an active order."})
 
 
 class KlarnaCheckoutCompletion(generics.GenericAPIView):
-    serializer_class = CheckoutSerializer
+    serializer_class = OrderSerializer
     permission_classes = (permissions.AllowAny,)
     auth = HTTPBasicAuth(klarna_un, klarna_pw)
     headers = {"content-type": "application/json"}
@@ -184,32 +212,3 @@ def remove_single_item_from_cart(request, slug):
             messages.info(request, "This item was not in your cart")
     else:
         messages.info(request, "You do not have an active order")
-
-
-json_example = {
-    "purchase_country": "GB",
-    "purchase_currency": "GBP",
-    "locale": "en-GB",
-    "order_amount": 50000,
-    "order_tax_amount": 4545,
-    "order_lines": [
-        {
-            "type": "physical",
-            "reference": "19-402-USA",
-            "name": "Red T-Shirt",
-            "quantity": 5,
-            "quantity_unit": "pcs",
-            "unit_price": 10000,
-            "tax_rate": 1000,
-            "total_amount": 50000,
-            "total_discount_amount": 0,
-            "total_tax_amount": 4545,
-        }
-    ],
-    "merchant_urls": {
-        "terms": "https://www.example.com/terms.html",
-        "checkout": "https://www.example.com/checkout.html",
-        "confirmation": "https://www.example.com/confirmation.html",
-        "push": "https://www.example.com/api/push",
-    },
-}

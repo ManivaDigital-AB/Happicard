@@ -1,14 +1,21 @@
 from django.contrib import admin
 
-from .models import Order
+from .models import Order, OrderProduct
 
 
 class OrderAdmin(admin.ModelAdmin):
 
-    readonly_fields = ("order_id", "date", "order_total", "klarna_line_items", "status")
+    readonly_fields = (
+        "order_id",
+        "date",
+        "order_total",
+        "status",
+    )
 
     fields = (
+        "user",
         "order_id",
+        "products",
         "date",
         "first_name",
         "last_name",
@@ -19,11 +26,11 @@ class OrderAdmin(admin.ModelAdmin):
         "town_or_city",
         "street_address1",
         "order_total",
-        "klarna_line_items",
         "status",
     )
 
     list_display = (
+        "user",
         "order_id",
         "date",
         "first_name",
@@ -36,3 +43,4 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdmin)
+admin.site.register(OrderProduct)

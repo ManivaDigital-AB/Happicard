@@ -1,7 +1,12 @@
-from django.core.mail import EmailMessage
+from django.core.mail import EmailMessage, EmailMultiAlternatives
 from django.conf import settings
+
+from email.mime.image import MIMEImage
+from django.contrib.staticfiles import finders
+from functools import lru_cache
 import threading
 
+import os
 import qrcode
 from PIL import Image
 
@@ -40,9 +45,35 @@ class Util:
         EmailThread(email).start()
 
     @staticmethod
+    def send_qr_email(data):
+        email = EmailMultiAlternatives(
+            subject=data["email_subject"],
+            body=data["email_body"],
+            to=[data["to_email"]],
+        )
+        body_html = """
+                    <html>
+                        <body>
+                            <p>Grattis, din beställning har bekräftats! Lös in ditt Happicard-köp med den här QR-koden:</p>
+                            <img src="cid:order_qr" alt="QR-Koden"
+                            style="width:200px;height:200px;">
+                        </body>
+                    </html>
+                    """
+        email.attach_alternative(body_html, "text/html")
+        img_dir = "backend/api/orders/qr_data/"
+        image = "order_qr.png"
+        file_path = os.path.join(img_dir, image)
+        with open(file_path, "rb") as f:
+            img = MIMEImage(f.read())
+            img.add_header("Content-ID", "<order_qr>")
+            email.attach(img)
+        EmailThread(email).start()
+
+    @staticmethod
     def create_qrcode(photo, data):
         logo = Image.open(photo)
-        basewidth = 90
+        basewidth = 150
         wpercent = basewidth / float(logo.size[0])
         hsize = int((float(logo.size[1]) * float(wpercent)))
         logo = logo.resize((basewidth, hsize), Image.ANTIALIAS)
@@ -57,4 +88,4 @@ class Util:
             (img_qr_big.size[1] - logo.size[1]) // 2,
         )
         img_qr_big.paste(logo, pos)
-        img_qr_big.save("created_qr.png")
+        img_qr_big.save("backend/api/orders/qr_data/order_qr.png")

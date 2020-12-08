@@ -17,7 +17,6 @@ import json
 
 from .serializers import (
     OrderSerializer,
-    OrderProductSerializer,
 )
 from decimal import Decimal
 from backend.api.authentification.utils import Util
@@ -36,6 +35,10 @@ class UUIDEncoder(json.JSONEncoder):
 
 
 class KlarnaCheckout(generics.GenericAPIView):
+    """
+    Checkout with Klarna API
+    """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = OrderSerializer
 
@@ -54,6 +57,7 @@ class KlarnaCheckout(generics.GenericAPIView):
         order = Order.objects.get(order_id=order_id)
 
         try:
+            order_email = order.email
             order_lines = []
             order_amount = 0
             products = order.products
@@ -80,6 +84,16 @@ class KlarnaCheckout(generics.GenericAPIView):
                 "order_amount": order_amount,
                 "order_tax_amount": 0,
                 "order_lines": order_lines,
+                "billing_address": {
+                    "given_name": order.first_name,
+                    "family_name": order.last_name,
+                    "email": order.email,
+                    "street_address": order.street_address1,
+                    "postal_code": order.postcode,
+                    "city": order.town_or_city,
+                    "phone": order.phone_number,
+                    "country": str(order.country),
+                },
                 "merchant_urls": {
                     "terms": "https://www.example.com/terms.html",
                     "checkout": "https://www.example.com/checkout.html",
@@ -104,51 +118,44 @@ class KlarnaCheckout(generics.GenericAPIView):
             return Response({"Error": "You do not have an active order."})
 
 
-class KlarnaCheckoutCompletion(generics.GenericAPIView):
-    serializer_class = OrderSerializer
-    permission_classes = (permissions.AllowAny,)
-    auth = HTTPBasicAuth(klarna_un, klarna_pw)
-    headers = {"content-type": "application/json"}
+class KlarnaCheckoutConfirmation(generics.GenericAPIView):
+    """
+    Checkout Confirmation with Klarna API
+    """
 
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = OrderSerializer
+
+    order_param_config = openapi.Parameter(
+        "order_id",
+        in_=openapi.IN_QUERY,
+        description="Place the new Order ID here:",
+        type=openapi.TYPE_STRING,
+    )
+
+    @swagger_auto_schema(manual_parameters=[order_param_config])
     def get(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        checkout = serializer.data
+        auth = HTTPBasicAuth(klarna_un, klarna_pw)
+        headers = {"content-type": "application/json"}
+        order_id = request.GET.get("order_id")
+
         response = requests.get(
             settings.KLARNA_BASE_URL + "/checkout/v3/orders/" + order_id,
             auth=auth,
             headers=headers,
         )
         klarna_order = response.json()
-        order = Order(
-            order_id=klarna_order["order_id"],
-            status=klarna_order["status"],
-            first_name=klarna_order["billing_address"]["first_name"],
-            last_name=klarna_order["billing_address"]["last_name"],
-            email=klarna_order["billing_address"]["email"],
-            phone_number=klarna_order["billing_address"]["phone"],
-            country=klarna_order["billing_address"]["country"],
-            postcode=klarna_order["billing_address"]["postal_code"],
-            town_or_city=klarna_order["billing_address"]["city"],
-            street_address1=klarna_order["billing_address"]["street_address"],
-            order_total=klarna_order["order_amount"],
-            klarna_line_items=klarna_order["order_lines"],
-        )
-        order.save()
+        Util.create_qrcode("backend/api/orders/qr_data/happicard.png", order_id)
         context = {"klarna_order": klarna_order}
-        confirm_subject = "Order Confirmation!"
-        confirm_body = "Grattis, your order has been confirmed! Redeem your Happicard purchase with this QR Code:\n{}".format(
-            "QR Code goes here"
-        )
+        confirm_subject = "Orderbekräftelse"
+        confirm_body = "Grattis, din beställning har bekräftats! Lös in ditt Happicard-köp med den här QR-koden:\n"
         confirmation = {
             "email_body": confirm_body,
-            "to_email": vendor.email,
+            "to_email": klarna_order["shipping_address"]["email"],
             "email_subject": confirm_subject,
         }
-        Util.send_email(confirmation)
-        return Response(
-            {"Success": "Order confirmed"}, context, status=status.HTTP_200_OK
-        )
+        Util.send_qr_email(confirmation)
+        return Response({"Success": "Order confirmed"}, status=status.HTTP_200_OK)
 
 
 @login_required

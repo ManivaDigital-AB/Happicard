@@ -37,7 +37,7 @@ class Profile(models.Model):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")
 
-    title = models.CharField(max_length=255)
+    title = models.CharField(max_length=255, unique=True)
     image = models.ImageField("Image", upload_to=upload_to, default="default.jpg")
     about = models.TextField("About", max_length=500, blank=True)
     published = models.DateTimeField(default=timezone.now)

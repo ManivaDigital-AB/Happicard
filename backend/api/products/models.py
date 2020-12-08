@@ -16,7 +16,7 @@ class Product(models.Model):
     General product model
     """
 
-    title = models.CharField(max_length=255, null=True, blank=True)
+    title = models.CharField(max_length=255, null=True, blank=True, unique=True)
     product_id = models.UUIDField(
         default=uuid.uuid4, unique=True, db_index=True, editable=False
     )

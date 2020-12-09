@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderProduct
+from .models import Order, OrderGiftCard, OrderCampaign
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -15,7 +15,8 @@ class OrderAdmin(admin.ModelAdmin):
     fields = (
         "user",
         "order_id",
-        "products",
+        "giftcards",
+        "campaigns",
         "date",
         "first_name",
         "last_name",
@@ -24,7 +25,9 @@ class OrderAdmin(admin.ModelAdmin):
         "country",
         "postcode",
         "town_or_city",
+        "region",
         "street_address1",
+        "street_address2",
         "order_total",
         "status",
     )
@@ -43,4 +46,5 @@ class OrderAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderProduct)
+admin.site.register(OrderGiftCard)
+admin.site.register(OrderCampaign)

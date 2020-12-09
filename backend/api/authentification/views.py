@@ -145,7 +145,7 @@ class CustomerRegistration(generics.GenericAPIView):
         customer = Customer.objects.get(email=customer_data["email"])
         token = RefreshToken.for_user(customer).access_token
         current_site = get_current_site(request).domain
-        relative_link = "/api/auth/customer/customer-verify/"
+        relative_link = "/api/auth/customer-verify/"
         absurl = "http://" + current_site + relative_link + "?token=" + str(token)
         email_body = (
             "Hej "

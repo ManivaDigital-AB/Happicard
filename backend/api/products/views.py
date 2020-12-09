@@ -10,7 +10,6 @@ from rest_framework import permissions, status
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
 from rest_framework.response import Response
-from .utils import get_product
 from .models import GiftCard, Campaign
 from .serializers import (
     GiftCardSerializer,

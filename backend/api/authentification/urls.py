@@ -17,7 +17,7 @@ urlpatterns = [
     path(
         "customer-verify/",
         views.CustomerEmailVerification.as_view(),
-        name="customer-register",
+        name="customer-verify",
     ),
     path("subscriber/count/", views.SubscriberCount.as_view(), name="count-subscriber"),
     path("subscriber/list/", views.SubscriberList.as_view(), name="list-subscriber"),

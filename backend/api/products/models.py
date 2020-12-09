@@ -39,7 +39,7 @@ class GiftCard(Product):
     """
 
     has_offer = models.BooleanField(default=False)
-    discount_price = models.FloatField(blank=True, null=True)
+    discount_price = models.IntegerField(default=0)
 
 
 class Campaign(Product):

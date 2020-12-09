@@ -5,6 +5,7 @@ from requests.auth import HTTPBasicAuth
 from django.http import HttpResponse
 from django.urls import reverse
 from django.contrib.auth.decorators import login_required
+from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, status
 from rest_framework import generics, viewsets
@@ -17,6 +18,9 @@ import json
 
 from .serializers import (
     OrderSerializer,
+    CheckoutSerializer,
+    OrderCampaignSerializer,
+    OrderGiftCardSerializer,
 )
 from decimal import Decimal
 from backend.api.authentification.utils import Util
@@ -34,13 +38,70 @@ class UUIDEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
+class CreateOrderGiftCard(generics.CreateAPIView):
+    """
+    Create Order Gift Cards
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = OrderGiftCardSerializer
+
+    def post(self, request, format=None):
+        order = request.data
+        serializer = self.serializer_class(data=order)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateOrderCampaign(generics.CreateAPIView):
+    """
+    Create Order Campaigns
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = OrderCampaignSerializer
+
+    def post(self, request, format=None):
+        order = request.data
+        serializer = self.serializer_class(data=order)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class CreateOrder(generics.CreateAPIView):
+    """
+    Create General Order
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    parser_classes = (MultiPartParser, FormParser)
+    serializer_class = OrderSerializer
+
+    def post(self, request, format=None):
+        order = request.data
+        serializer = self.serializer_class(data=order)
+        if serializer.is_valid(raise_exception=True):
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
 class KlarnaCheckout(generics.GenericAPIView):
     """
     Checkout with Klarna API
     """
 
     permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderSerializer
+    serializer_class = CheckoutSerializer
 
     order_param_config = openapi.Parameter(
         "order_id",
@@ -57,26 +118,44 @@ class KlarnaCheckout(generics.GenericAPIView):
         order = Order.objects.get(order_id=order_id)
 
         try:
-            order_email = order.email
             order_lines = []
-            order_amount = 0
-            products = order.products
-
-            for item in products.all():
+            campaign_order_amount = 0
+            giftcard_order_amount = 0
+            for item in order.campaigns.all():
                 order_lines.append(
                     {
-                        "reference": item.product.product_id,
-                        "name": item.product.title,
-                        "quantity": int(item.product.quantity),
-                        "unit_price": int(item.product.price),
+                        "reference": item.campaign.product_id,
+                        "name": item.campaign.title,
+                        "quantity": int(item.campaign.quantity),
+                        "unit_price": int(item.campaign.price),
                         "tax_rate": int(00),
-                        "total_amount": int(item.product.price * item.product.quantity),
+                        "total_amount": int(
+                            item.campaign.price * item.campaign.quantity
+                        ),
                         "total_discount_amount": 0,
                         "total_tax_amount": 0,
                     }
                 )
-                order_amount += item.product.price * item.product.quantity
-            order_amount = int(order_amount)
+                campaign_order_amount += item.campaign.price * item.campaign.quantity
+            for item in order.giftcards.all():
+                order_lines.append(
+                    {
+                        "reference": item.giftcard.product_id,
+                        "name": item.giftcard.title,
+                        "quantity": int(item.giftcard.quantity),
+                        "unit_price": int(item.giftcard.price),
+                        "tax_rate": int(00),
+                        "total_amount": int(
+                            item.giftcard.price * item.giftcard.quantity
+                        ),
+                        "total_discount_amount": 0,
+                        "total_tax_amount": 0,
+                        "has_offer": item.giftcard.has_offer,
+                        "discount_price": int(item.giftcard.discount_price),
+                    }
+                )
+                giftcard_order_amount += item.giftcard.price * item.giftcard.quantity
+            order_amount = int(campaign_order_amount + giftcard_order_amount)
             body = {
                 "purchase_country": "SE",
                 "purchase_currency": "SEK",
@@ -89,8 +168,10 @@ class KlarnaCheckout(generics.GenericAPIView):
                     "family_name": order.last_name,
                     "email": order.email,
                     "street_address": order.street_address1,
+                    "street_address2": order.street_address2,
                     "postal_code": order.postcode,
                     "city": order.town_or_city,
+                    "region": order.region,
                     "phone": order.phone_number,
                     "country": str(order.country),
                 },
@@ -124,7 +205,7 @@ class KlarnaCheckoutConfirmation(generics.GenericAPIView):
     """
 
     permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderSerializer
+    serializer_class = CheckoutSerializer
 
     order_param_config = openapi.Parameter(
         "order_id",

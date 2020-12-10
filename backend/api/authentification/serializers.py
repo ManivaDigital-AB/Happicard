@@ -134,7 +134,8 @@ class CustomerRegisterSerializer(serializers.ModelSerializer):
 
 
 class VendorVerificationSerializer(serializers.ModelSerializer):
-    decision = serializers.CharField()
+    choices = (("Yes", "Yes"), ("No", "No"))
+    decision = serializers.ChoiceField(choices=choices)
 
     class Meta:
         model = Vendor

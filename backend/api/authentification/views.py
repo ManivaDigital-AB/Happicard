@@ -170,7 +170,7 @@ class VendorCMSVerification(generics.GenericAPIView):
         "decision",
         in_=openapi.IN_QUERY,
         description="Decision",
-        type=openapi.TYPE_STRING,
+        type=openapi.TYPE_BOOLEAN,
     )
 
     email_param_config = openapi.Parameter(
@@ -183,11 +183,12 @@ class VendorCMSVerification(generics.GenericAPIView):
     @swagger_auto_schema(manual_parameters=[decision_param_config, email_param_config])
     def get(self, request):
         decision = request.GET.get("decision")
+        print(decision)
         email = request.GET.get("email")
         vendor = Vendor.objects.get(email=email)
         email_subject = "Resultat för partnerverifiering"
 
-        if not vendor.is_verified and decision == "Yes":
+        if not vendor.is_verified and decision == str(True).lower():
 
             vendor.is_verified = True
             vendor_email_body = (
@@ -215,7 +216,7 @@ class VendorCMSVerification(generics.GenericAPIView):
                 status=status.HTTP_202_ACCEPTED,
             )
 
-        elif not vendor.is_verified and decision == "No":
+        elif not vendor.is_verified and decision == str(False).lower():
             vendor_email_body = "Ursäkta, din partnerverifiering avvisades."
             vendor_data = {
                 "email_body": vendor_email_body,
@@ -231,9 +232,9 @@ class VendorCMSVerification(generics.GenericAPIView):
                 },
                 status=status.HTTP_401_UNAUTHORIZED,
             )
-        elif vendor.is_verified and decision == "Yes":
+        elif vendor.is_verified and decision == str(True).lower():
             return Response({"Verification": "The vendor has already been verified."})
-        elif vendor.is_verified and decision == "No":
+        elif vendor.is_verified and decision == str(False).lower():
             return Response(
                 {
                     "Verification": "The vendor has already been verified. If you want to remove them, you should do so directly."

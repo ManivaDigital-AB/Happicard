@@ -2,8 +2,6 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 import requests
 from requests.auth import HTTPBasicAuth
-from django.http import HttpResponse
-from django.urls import reverse
 from django.contrib.auth.decorators import login_required
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.exceptions import ObjectDoesNotExist
@@ -22,10 +20,14 @@ from .serializers import (
     OrderCampaignSerializer,
     OrderGiftCardSerializer,
 )
-from decimal import Decimal
-from backend.api.authentification.utils import Util
+from .models import (
+    Order,
+    OrderProduct,
+    OrderCampaign,
+    OrderGiftCard,
+)
 
-from .models import Order, OrderProduct
+from backend.api.authentification.utils import Util
 
 klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
@@ -36,6 +38,27 @@ class UUIDEncoder(json.JSONEncoder):
         if isinstance(obj, UUID):
             return obj.hex
         return json.JSONEncoder.default(self, obj)
+
+
+class OrderCampaignList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentification_classes = ()
+    queryset = OrderCampaign.objects.all()
+    serializer_class = OrderCampaignSerializer
+
+
+class OrderGiftCardList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentification_classes = ()
+    queryset = OrderGiftCard.objects.all()
+    serializer_class = OrderGiftCardSerializer
+
+
+class OrderList(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentification_classes = ()
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
 
 
 class CreateOrderGiftCard(generics.CreateAPIView):
@@ -104,7 +127,7 @@ class KlarnaCheckout(generics.GenericAPIView):
     serializer_class = CheckoutSerializer
 
     order_param_config = openapi.Parameter(
-        "order_id",
+        "id",
         in_=openapi.IN_QUERY,
         description="Place the Order ID here:",
         type=openapi.TYPE_STRING,
@@ -114,8 +137,8 @@ class KlarnaCheckout(generics.GenericAPIView):
     def get(self, request):
         auth = HTTPBasicAuth(klarna_un, klarna_pw)
         headers = {"content-type": "application/json"}
-        order_id = request.GET.get("order_id")
-        order = Order.objects.get(order_id=order_id)
+        order_id = request.GET.get("id")
+        order = Order.objects.get(id=order_id)
 
         try:
             order_lines = []
@@ -124,37 +147,53 @@ class KlarnaCheckout(generics.GenericAPIView):
             for item in order.campaigns.all():
                 order_lines.append(
                     {
-                        "reference": item.campaign.product_id,
+                        "type": "gift_card",
+                        "reference": item.campaign.id,
                         "name": item.campaign.title,
-                        "quantity": int(item.campaign.quantity),
+                        "quantity": int(item.quantity),
                         "unit_price": int(item.campaign.price),
                         "tax_rate": int(00),
-                        "total_amount": int(
-                            item.campaign.price * item.campaign.quantity
-                        ),
+                        "total_amount": int(item.campaign.price * item.quantity),
                         "total_discount_amount": 0,
                         "total_tax_amount": 0,
                     }
                 )
-                campaign_order_amount += item.campaign.price * item.campaign.quantity
+                campaign_order_amount += item.campaign.price * item.quantity
             for item in order.giftcards.all():
-                order_lines.append(
-                    {
-                        "reference": item.giftcard.product_id,
-                        "name": item.giftcard.title,
-                        "quantity": int(item.giftcard.quantity),
-                        "unit_price": int(item.giftcard.price),
-                        "tax_rate": int(00),
-                        "total_amount": int(
-                            item.giftcard.price * item.giftcard.quantity
-                        ),
-                        "total_discount_amount": 0,
-                        "total_tax_amount": 0,
-                        "has_offer": item.giftcard.has_offer,
-                        "discount_price": int(item.giftcard.discount_price),
-                    }
-                )
-                giftcard_order_amount += item.giftcard.price * item.giftcard.quantity
+                if item.giftcard.has_offer:
+                    order_lines.append(
+                        {
+                            "type": "gift_card",
+                            "reference": item.giftcard.id,
+                            "name": item.giftcard.title,
+                            "quantity": int(item.quantity),
+                            "unit_price": int(item.giftcard.price),
+                            "tax_rate": int(00),
+                            "total_amount": int(
+                                (item.giftcard.price * item.quantity)
+                                - item.giftcard.discount_price
+                            ),
+                            "total_discount_amount": int(item.giftcard.discount_price),
+                            "total_tax_amount": 0,
+                        }
+                    )
+                else:
+                    order_lines.append(
+                        {
+                            "type": "gift_card",
+                            "reference": item.giftcard.id,
+                            "name": item.giftcard.title,
+                            "quantity": int(item.quantity),
+                            "unit_price": int(item.giftcard.price),
+                            "tax_rate": int(00),
+                            "total_amount": int(item.giftcard.price * item.quantity),
+                            "total_discount_amount": item.giftcard.discount_price,
+                            "total_tax_amount": 0,
+                        }
+                    )
+                giftcard_order_amount += (
+                    item.giftcard.price * item.quantity
+                ) - item.giftcard.discount_price
             order_amount = int(campaign_order_amount + giftcard_order_amount)
             body = {
                 "purchase_country": "SE",
@@ -191,7 +230,7 @@ class KlarnaCheckout(generics.GenericAPIView):
             )
             klarna_order = response.json()
             return Response(
-                {"Successful Klarna Checkout Order": klarna_order},
+                {"Klarna Checkout Order": klarna_order},
                 status=status.HTTP_200_OK,
             )
 

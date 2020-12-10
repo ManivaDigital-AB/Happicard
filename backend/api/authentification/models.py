@@ -4,6 +4,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import ugettext_lazy as _
 from django.db import models
 from django import forms
+import uuid
 
 
 class UserManager(BaseUserManager):
@@ -50,6 +51,13 @@ class User(AbstractBaseUser, PermissionsMixin):
     Custom user model
     """
 
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        primary_key=True,
+    )
     username = None
     email = models.EmailField(max_length=255, unique=True, db_index=True)
     first_name = models.CharField(max_length=255, verbose_name="First name")

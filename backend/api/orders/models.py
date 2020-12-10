@@ -11,7 +11,16 @@ from backend.api.products.models import GiftCard, Campaign
 
 
 class OrderProduct(models.Model):
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        primary_key=True,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
+    )
     ordered = models.BooleanField(default=False)
     quantity = models.IntegerField(default=1)
 
@@ -54,9 +63,18 @@ class Order(models.Model):
     General order model
     """
 
-    user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    order_id = models.UUIDField(
-        default=uuid.uuid4, unique=True, db_index=True, editable=False
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        primary_key=True,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
     )
     campaigns = models.ManyToManyField(OrderCampaign, blank=True)
     giftcards = models.ManyToManyField(OrderGiftCard, blank=True)
@@ -77,4 +95,4 @@ class Order(models.Model):
     )
 
     def __str__(self):
-        return str(self.order_id)
+        return str(self.id)

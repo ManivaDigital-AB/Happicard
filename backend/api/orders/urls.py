@@ -4,6 +4,13 @@ from . import views
 app_name = "orders"
 urlpatterns = [
     path(
+        "campaigns/list/", views.OrderCampaignList.as_view(), name="ordercampaigns-list"
+    ),
+    path(
+        "giftcards/list/", views.OrderGiftCardList.as_view(), name="ordergiftcards-list"
+    ),
+    path("list/", views.OrderList.as_view(), name="order-list"),
+    path(
         "create/campaign-order",
         views.CreateOrderCampaign.as_view(),
         name="create-campaign-order",

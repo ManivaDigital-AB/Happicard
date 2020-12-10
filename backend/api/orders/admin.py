@@ -6,15 +6,15 @@ from .models import Order, OrderGiftCard, OrderCampaign
 class OrderAdmin(admin.ModelAdmin):
 
     readonly_fields = (
-        "order_id",
+        "id",
         "date",
         "order_total",
         "status",
     )
 
     fields = (
+        "id",
         "user",
-        "order_id",
         "giftcards",
         "campaigns",
         "date",
@@ -33,8 +33,8 @@ class OrderAdmin(admin.ModelAdmin):
     )
 
     list_display = (
+        "id",
         "user",
-        "order_id",
         "date",
         "first_name",
         "last_name",

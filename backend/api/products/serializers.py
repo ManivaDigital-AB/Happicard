@@ -6,10 +6,24 @@ from .models import GiftCard, Campaign
 class GiftCardSerializer(serializers.ModelSerializer):
     class Meta:
         model = GiftCard
-        fields = "__all__"
+        fields = (
+            "id",
+            "title",
+            "price",
+            "image",
+            "description",
+            "has_offer",
+            "discount_price",
+        )
 
 
 class CampaignSerializer(serializers.ModelSerializer):
     class Meta:
         model = Campaign
-        fields = "__all__"
+        fields = (
+            "id",
+            "title",
+            "price",
+            "image",
+            "description",
+        )

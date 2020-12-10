@@ -16,14 +16,17 @@ class Product(models.Model):
     General product model
     """
 
-    title = models.CharField(max_length=255, null=True, blank=True, unique=True)
-    product_id = models.UUIDField(
-        default=uuid.uuid4, unique=True, db_index=True, editable=False
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        primary_key=True,
     )
+    title = models.CharField(max_length=255, null=True, blank=True, unique=True)
     price = models.IntegerField(default=0)
     image = models.ImageField("Image", upload_to=upload_to, default="default.jpg")
     description = models.TextField("Description", max_length=500, blank=True)
-    quantity = models.IntegerField(default=1)
     tax_amount = models.IntegerField(default=0)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True

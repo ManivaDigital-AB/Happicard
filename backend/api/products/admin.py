@@ -5,6 +5,7 @@ from .models import GiftCard, Campaign
 
 class GiftCardAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "price",
         "image",
@@ -14,6 +15,7 @@ class GiftCardAdmin(admin.ModelAdmin):
 
 class CampaignAdmin(admin.ModelAdmin):
     list_display = (
+        "id",
         "title",
         "price",
         "image",

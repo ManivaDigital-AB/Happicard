@@ -1,0 +1,23 @@
+li {
+  margin-bottom: 5px;
+}
+
+.footerDesktop {
+  /* margin-bottom: 40px; */
+  display: block;
+}
+.footerMobile {
+  /* margin-bottom: 40px; */
+  display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .footerDesktop {
+    /* margin-bottom: 40px; */
+    display: none;
+  }
+  .footerMobile {
+    /* margin-bottom: 40px; */
+    display: block;
+  }
+}

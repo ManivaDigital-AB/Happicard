@@ -221,7 +221,7 @@ class VendorCMSVerification(generics.GenericAPIView):
             vendor_data = {
                 "email_body": vendor_email_body,
                 "to_email": vendor.email,
-                "email_subject": email_result,
+                "email_subject": email_subject,
             }
             Util.send_email(vendor_data)
             vendor.delete()

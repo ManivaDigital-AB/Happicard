@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
-  devtool: "inline-source-map",
+  devtool: "source-map",
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -17,13 +17,23 @@ module.exports = {
   module: {
     rules: [
       {
-        test: /\.js$/,
-        loader: "babel-loader",
-        exclude: /node_modules/,
+        test: /\.css$/,
+
+        loader: "raw-loader",
       },
       {
-        test: /\.jsx?$/,
+        test: /\.(js|jsx)$/,
+        exclude: /(node_modules|bower_components)/,
         loader: "babel-loader",
+        options: { presets: ["@babel/env"] },
+      },
+      {
+        test: /\.(png|jpe?g|gif)$/i,
+        use: [
+          {
+            loader: "file-loader",
+          },
+        ],
       },
       {
         test: /\.css$/,
@@ -62,13 +72,4 @@ module.exports = {
       inject: "body",
     }),
   ],
-  devServer: {
-    historyApiFallback: true,
-  },
-  externals: {
-    // global app config object
-    config: JSON.stringify({
-      apiUrl: "http://ec2-3-121-116-206.eu-central-1.compute.amazonaws.com",
-    }),
-  },
 };

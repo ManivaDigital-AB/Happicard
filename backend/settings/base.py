@@ -25,6 +25,7 @@ INSTALLED_APPS = [
     "backend.api.products",
     "backend.api.profiles",
     "drf_yasg",
+    "storages",
     "rest_framework",
     "rest_framework_simplejwt.token_blacklist",
     "django_rest_passwordreset",
@@ -113,22 +114,27 @@ if USE_S3:
     AWS_ACCESS_KEY_ID = config("AWS_ACCESS_KEY_ID")
     AWS_SECRET_ACCESS_KEY = config("AWS_SECRET_ACCESS_KEY")
     AWS_STORAGE_BUCKET_NAME = config("AWS_STORAGE_BUCKET_NAME")
-    AWS_DEFAULT_ACL = "public-read"
-    AWS_S3_REGION_NAME = "eu-central-1"
+    AWS_S3_REGION_NAME = "us-west-2"
     AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.amazonaws.com"
     AWS_S3_OBJECT_PARAMETERS = {"CacheControl": "max-age=86400"}
     # S3 static settings
-    AWS_LOCATION = "public/static"
-    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{AWS_LOCATION}/"
-    STATICFILES_DIRS = [
-        os.path.join(PROJECT_ROOT, "static"),
-    ]
-    STATICFILES_STORAGE = "storages.backends.s3boto3.S3Boto3Storage"
-
+    STATIC_LOCATION = "static"
+    STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
+    STATICFILES_STORAGE = "backend.settings.storage_backends.StaticStorage"
+    # S3 public media settings
+    MEDIA_LOCATION = "media"
+    MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
+    DEFAULT_FILE_STORAGE = "backend.settings.storage_backends.MediaStorage"
 else:
-    STATIC_URL = "/static/"
-    STATIC_ROOT = PROJECT_ROOT / "static"
+    STATIC_URL = "/staticfiles/"
+    STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")
     pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
+    MEDIA_URL = "/mediafiles/"
+    MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+
+STATICFILES_DIRS = [
+    os.path.join(PROJECT_ROOT, "static"),
+]
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

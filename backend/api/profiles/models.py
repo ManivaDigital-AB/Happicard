@@ -7,6 +7,7 @@ from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django.contrib.auth.decorators import login_required
+from backend.settings.storage_backends import NGOProfileStorage, StoreProfileStorage
 
 OPTIONS = (
     ("draft", "Draft"),
@@ -28,17 +29,12 @@ NGO_CHOICES = (
 )
 
 
-def upload_to(instance, filename):
-    return "static/vendors/profiles/{filename}".format(filename=filename)
-
-
 class Profile(models.Model):
     class ProfileObjects(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")
 
     title = models.CharField(max_length=255, unique=True)
-    image = models.ImageField("Image", upload_to=upload_to, default="default.jpg")
     about = models.TextField("About", max_length=500, blank=True)
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
@@ -60,12 +56,14 @@ class Profile(models.Model):
 
 
 class Store(Profile):
+    image = models.FileField(storage=StoreProfileStorage())
     store_category = models.CharField(
         max_length=50, choices=STORE_CHOICES, null=True, blank=True
     )
 
 
 class NGO(Profile):
+    image = models.FileField(storage=NGOProfileStorage())
     ngo_category = models.CharField(
         max_length=50, choices=NGO_CHOICES, null=True, blank=True
     )

@@ -20,7 +20,7 @@ DATABASES = {
 }
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = "email-smtp.eu-central-1.amazonaws.com"
+EMAIL_HOST = "email-smtp.us-west-2.amazonaws.com"
 EMAIL_PORT = 587
 EMAIL_HOST_USER = config("EMAIL_DEV_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_DEV_HOST_PASSWORD")

@@ -36,7 +36,6 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
     "django.middleware.security.SecurityMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -121,7 +120,7 @@ if USE_S3:
     STATIC_LOCATION = "static"
     STATIC_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{STATIC_LOCATION}/"
     STATICFILES_STORAGE = "backend.settings.storage_backends.StaticStorage"
-    # S3 public media settings
+    # S3 media settings
     MEDIA_LOCATION = "media"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
     DEFAULT_FILE_STORAGE = "backend.settings.storage_backends.MediaStorage"
@@ -131,10 +130,6 @@ else:
     pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
     MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
-
-STATICFILES_DIRS = [
-    os.path.join(PROJECT_ROOT, "static"),
-]
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"

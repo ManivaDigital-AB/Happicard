@@ -5,7 +5,7 @@ Tech Stack:
 * Django (Backend)
 * SQLite (Dev DB) / Postgresql (Prod DB)
 * AWS (Deployment)
-* NGINX/Gunicorn (Server)
+* NGINX/Gunicorn (Backend Server)
 
 Our goal for Happicard is to integrate React.js within a Django app and consume a RESTful API with React.js
 
@@ -24,5 +24,7 @@ python manage.py runserver
 ```
 npm install
 ```
-## AWS Deployment
+## Testing
+To test the Happicard site:
+dev.happicard.se
 

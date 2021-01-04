@@ -183,7 +183,6 @@ class VendorCMSVerification(generics.GenericAPIView):
     @swagger_auto_schema(manual_parameters=[decision_param_config, email_param_config])
     def get(self, request):
         decision = request.GET.get("decision")
-        print(decision)
         email = request.GET.get("email")
         vendor = Vendor.objects.get(email=email)
         email_subject = "Resultat för partnerverifiering"

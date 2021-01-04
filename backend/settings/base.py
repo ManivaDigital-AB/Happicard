@@ -130,10 +130,13 @@ else:
     pathlib.Path(STATIC_ROOT).mkdir(exist_ok=True, parents=True)
     MEDIA_URL = "/mediafiles/"
     MEDIA_ROOT = os.path.join(BASE_DIR, "mediafiles")
+    pathlib.Path(MEDIA_ROOT).mkdir(exist_ok=True, parents=True)
 
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-DEFAULT_FROM_EMAIL = config("DEFAULT_FROM_EMAIL")
+EMAIL_USE_TLS = True
+EMAIL_HOST = "send.one.com"
+EMAIL_PORT = 587
 
 # Klarna
 KLARNA_UN = config("KLARNA_UN")

@@ -20,6 +20,10 @@ DATABASES = {
     }
 }
 
+EMAIL_HOST_USER = config("EMAIL_PROD_HOST_USER")
+EMAIL_HOST_PASSWORD = config("EMAIL_PROD_HOST_PASSWORD")
+DEFAULT_FROM_EMAIL = config("DEFAULT_PROD_FROM_EMAIL")
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 import uuid
 
+from django.utils.translation import gettext_lazy as _
 from backend.api.products.models import GiftCard, Campaign
 
 
@@ -26,6 +27,10 @@ class OrderProduct(models.Model):
 
 
 class OrderGiftCard(OrderProduct):
+    class Meta:
+        verbose_name = _("Ordered Gift Card")
+        verbose_name_plural = _("Ordered Gift Cards")
+
     giftcard = models.ForeignKey(GiftCard, on_delete=models.CASCADE)
 
     def __str__(self):
@@ -49,6 +54,10 @@ class OrderGiftCard(OrderProduct):
 
 
 class OrderCampaign(OrderProduct):
+    class Meta:
+        verbose_name = _("Ordered Campaign")
+        verbose_name_plural = _("Ordered Campaigns")
+
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
 
     def __str__(self):

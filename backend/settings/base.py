@@ -13,6 +13,8 @@ DEBUG = True
 SECRET_KEY = config("DJANGO_SECRET_KEY")
 
 INSTALLED_APPS = [
+    "admin_interface",
+    "colorfield",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -94,7 +96,11 @@ LOGOUT_REDIRECT_URL = "/login"
 
 
 # Internationalization
-LANGUAGE_CODE = "en-us"
+
+if DEBUG:
+    LANGUAGE_CODE = "en-us"
+else:
+    LANGUAGE_CODE = "sv-eu"
 
 TIME_ZONE = "Europe/Stockholm"
 
@@ -124,6 +130,10 @@ if USE_S3:
     MEDIA_LOCATION = "media"
     MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/{MEDIA_LOCATION}/"
     DEFAULT_FILE_STORAGE = "backend.settings.storage_backends.MediaStorage"
+    # Other static files
+    STATICFILES_DIRS = [
+        os.path.join(PROJECT_ROOT, "static"),
+    ]
 else:
     STATIC_URL = "/staticfiles/"
     STATIC_ROOT = os.path.join(BASE_DIR, "staticfiles")

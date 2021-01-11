@@ -1,4 +1,5 @@
 from django.db.models.signals import post_save
+from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import models
 from django.db.models import Sum
@@ -38,6 +39,10 @@ class GiftCard(Product):
     Gift card model
     """
 
+    class Meta:
+        verbose_name = _("Gift Card")
+        verbose_name_plural = _("Gift Cards")
+
     image = models.FileField(storage=GiftCardStorage())
     has_offer = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=0)
@@ -47,5 +52,9 @@ class Campaign(Product):
     """
     NGO campaign model
     """
+
+    class Meta:
+        verbose_name = _("Campaign")
+        verbose_name_plural = _("Campaigns")
 
     image = models.FileField(storage=CampaignStorage())

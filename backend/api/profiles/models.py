@@ -35,7 +35,7 @@ class Profile(models.Model):
             return super().get_queryset().filter(status="published")
 
     title = models.CharField(max_length=255, unique=True)
-    about = models.TextField("About", max_length=500, blank=True)
+    about = models.TextField("About", max_length=750, blank=True)
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,
@@ -56,14 +56,30 @@ class Profile(models.Model):
 
 
 class Store(Profile):
+    class Meta:
+        verbose_name = _("Store")
+        verbose_name_plural = _("Stores")
+
     image = models.FileField(storage=StoreProfileStorage())
     store_category = models.CharField(
-        max_length=50, choices=STORE_CHOICES, null=True, blank=True
+        max_length=50,
+        choices=STORE_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("Store Category"),
     )
 
 
 class NGO(Profile):
+    class Meta:
+        verbose_name = _("NGO")
+        verbose_name_plural = _("NGOs")
+
     image = models.FileField(storage=NGOProfileStorage())
     ngo_category = models.CharField(
-        max_length=50, choices=NGO_CHOICES, null=True, blank=True
+        max_length=50,
+        choices=NGO_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("NGO Category"),
     )

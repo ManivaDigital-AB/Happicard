@@ -2,7 +2,12 @@ from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin
 from django.contrib.auth.models import Group
 
-from .forms import UserCreationForm, UserChangeForm
+from .forms import (
+    UserCreationForm,
+    UserChangeForm,
+    VendorCreationForm,
+    VendorChangeForm,
+)
 from .models import User, Vendor, Customer, Subscriber
 
 
@@ -19,6 +24,7 @@ class UserAdmin(UserAdmin):
         "created_at",
         "updated_at",
         "is_active",
+        "is_staff",
         "is_verified",
     )
     list_filter = (
@@ -28,6 +34,7 @@ class UserAdmin(UserAdmin):
         "created_at",
         "updated_at",
         "is_active",
+        "is_staff",
         "is_verified",
     )
     fieldsets = (
@@ -36,7 +43,7 @@ class UserAdmin(UserAdmin):
             {"fields": ("email", "password")},
         ),
         ("Personal information", {"fields": ("first_name", "last_name")}),
-        ("Permissions", {"fields": ("is_active", "is_verified")}),
+        ("Permissions", {"fields": ("is_active", "is_staff", "is_verified")}),
     )
     add_fieldsets = (
         (
@@ -49,6 +56,7 @@ class UserAdmin(UserAdmin):
                     "last_name",
                     "password",
                     "is_active",
+                    "is_staff",
                     "is_verified",
                 ),
             },
@@ -136,17 +144,19 @@ class CustomerAdmin(UserAdmin):
 
 class VendorAdmin(UserAdmin):
     class Meta:
-        add_form = UserCreationForm
-        form = UserChangeForm
+        add_form = VendorCreationForm
+        form = VendorChangeForm
         model = Vendor
 
     list_display = (
         "first_name",
         "last_name",
+        "last_login",
         "email",
         "phone_number",
         "city",
         "region",
+        "business_address",
         "zipcode",
         "website",
         "created_at",
@@ -157,10 +167,12 @@ class VendorAdmin(UserAdmin):
     list_filter = (
         "first_name",
         "last_name",
+        "last_login",
         "email",
         "phone_number",
         "city",
         "region",
+        "business_address",
         "zipcode",
         "website",
         "created_at",
@@ -171,7 +183,13 @@ class VendorAdmin(UserAdmin):
     fieldsets = (
         (
             None,
-            {"fields": ("email", "password")},
+            {
+                "fields": (
+                    "email",
+                    "password",
+                    "last_login",
+                )
+            },
         ),
         ("Personal information", {"fields": ("first_name", "last_name")}),
         ("Permissions", {"fields": ("is_active", "is_verified")}),
@@ -186,6 +204,7 @@ class VendorAdmin(UserAdmin):
                     "phone_number",
                     "city",
                     "region",
+                    "business_address",
                     "zipcode",
                     "website",
                     "first_name",
@@ -200,10 +219,12 @@ class VendorAdmin(UserAdmin):
     search_fields = (
         "first_name",
         "last_name",
+        "last_login",
         "email",
         "phone_number",
         "city",
         "region",
+        "business_address",
         "zipcode",
         "website",
         "created_at",
@@ -212,10 +233,12 @@ class VendorAdmin(UserAdmin):
     ordering = (
         "first_name",
         "last_name",
+        "last_login",
         "email",
         "phone_number",
         "city",
         "region",
+        "business_address",
         "zipcode",
         "website",
         "created_at",
@@ -223,8 +246,8 @@ class VendorAdmin(UserAdmin):
     )
 
 
-admin.site.register(Customer, CustomerAdmin)
-admin.site.register(Vendor, VendorAdmin)
+admin.site.register(Customer)
+admin.site.register(Vendor)
 admin.site.register(Subscriber)
 
 admin.site.site_header = "Happicard Admin"

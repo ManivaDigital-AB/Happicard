@@ -7,6 +7,7 @@ from django.utils import timezone
 from django.conf import settings
 import uuid
 
+from backend.api.profiles.models import Store, NGO
 from backend.settings.storage_backends import CampaignStorage, GiftCardStorage
 
 
@@ -26,9 +27,6 @@ class Product(models.Model):
     price = models.IntegerField(default=0)
     description = models.TextField("Description", max_length=500, blank=True)
     tax_amount = models.IntegerField(default=0)
-    author = models.ForeignKey(
-        settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
-    )
 
     def __str__(self):
         return self.title
@@ -46,6 +44,7 @@ class GiftCard(Product):
     image = models.FileField(storage=GiftCardStorage())
     has_offer = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=0)
+    store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True)
 
 
 class Campaign(Product):
@@ -58,3 +57,4 @@ class Campaign(Product):
         verbose_name_plural = _("Campaigns")
 
     image = models.FileField(storage=CampaignStorage())
+    ngo = models.ForeignKey(NGO, on_delete=models.CASCADE, null=True)

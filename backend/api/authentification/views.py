@@ -34,7 +34,6 @@ from .serializers import (
     ContactSerializer,
 )
 from .models import User, Vendor, Customer, Subscriber
-from .forms import VendorForm
 from .renderers import UserRenderer
 from .utils import Util
 

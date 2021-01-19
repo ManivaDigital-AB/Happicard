@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "../../components/common/device";
 
 export const BodyContainer = styled.div`
 width: 100%;
@@ -8,11 +9,11 @@ width: 100%;
 
    
     .process-body{
-      background-color: #dfb248;
-      text-align: center;
-      padding: 100px;
-      width: 100%;
-      margin: 20px 0px;
+        background-color: #dfb248;
+        text-align: center;
+        padding: 100px;
+        width: 100%;
+        margin: 20px 0px;
       }
       
       .header-container{
@@ -23,6 +24,21 @@ width: 100%;
         width: 160px;
         padding-top: 10px;
       }
+      @media ${device.laptop} { 
+   
+      }
+      @media ${device.tablet} {
+        padding: 0px;
+      }
+      @media ${device.mobileS} {
+        
+      }
+      @media ${device.mobileM} {
+        
+      }
+      @media ${device.mobileL} { 
+          
+      }
 `;
 
 
@@ -31,29 +47,114 @@ width: 40%;
 height: 400px;
 background-color: #dfb248;
 .img-header{
-    padding: 100px 120px 0px 120px;
+    width: 100%;
     height: 100%;
  }
- .img-header-1{
-  position: absolute;
-  width: 25%;
-  left: 18.5%;
- }
+
+ @media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+  padding: 0px;
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
 `;
 
 export const RightHeaderContainer = styled.div` 
 width: 40%;
 margin-left: 150px;
+@media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+  padding: 0px;
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
 `;
 
 export const ElementProcess = styled.div` 
 width: 33.3%;
 padding: 30px;
+img{
+  width: 100%;
+}
+h4{
+  margin: 10px;
+  font-weight: 200;
+}
+@media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+ 
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
 `;
 
 export const BodyProcess = styled.div` 
-margin-top: 100px;
 width: 100%;
 display: flex;
 background-color: #dfb248;
+@media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
+`;
+
+export const BodyProcessImg = styled.div` 
+width: 100%;
+padding: 100px;
+ img{
+   width: 100%
+ }
+ @media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+  
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
 `;

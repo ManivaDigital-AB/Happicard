@@ -1,8 +1,12 @@
 import React, { Component } from 'react';
-import {BodyContainer,LeftHeaderContainer,RightHeaderContainer,ElementProcess,BodyProcess } from "../about/aboutStyle";
+import {BodyContainer,LeftHeaderContainer,RightHeaderContainer,ElementProcess,BodyProcess,BodyProcessImg } from "../about/aboutStyle";
 import logoImg from "../../assets/images/logo.PNG";
-import about1 from "../../assets/images/about-1.PNG";
-import about2 from "../../assets/images/about-2.PNG";
+import woman from "../../assets/images/about/Woman.JPG";
+import aboutProcess1 from "../../assets/images/about/about1.PNG";
+import aboutProcess2 from "../../assets/images/about/about2.PNG";
+import aboutProcess3 from "../../assets/images/about/about3.PNG";
+import aboutSection3 from "../../assets/images/about/aboutSection3.PNG";
+import Contact from "../../components/contact/contact"
 class about extends Component {
   
     constructor(props) {
@@ -19,8 +23,8 @@ class about extends Component {
         <BodyContainer>
         <div className="row header-container">  
             <LeftHeaderContainer>         
-            <img src={about1} className="img-header"></img> 
-            <img src={about2} className="img-header-1"></img>       
+            <img src={woman} className="img-header"></img> 
+            
             </LeftHeaderContainer>
             <RightHeaderContainer>         
             <h2>About  <img src={logoImg} className="happicard-img"></img></h2>        
@@ -41,6 +45,7 @@ class about extends Component {
             <h2><img src={logoImg}  className="happicard-img"></img> Process</h2>               
             <BodyProcess> 
                   <ElementProcess>
+                  <img src={aboutProcess1} ></img> 
                     <h4>
                     Choose Brand
                     </h4>
@@ -49,6 +54,7 @@ class about extends Component {
                     </div>
                     </ElementProcess>     
                     <ElementProcess>
+                    <img src={aboutProcess2}></img> 
                     <h4>
                     Personalize
                     </h4>
@@ -57,6 +63,7 @@ class about extends Component {
                     </div>
                     </ElementProcess>     
                     <ElementProcess>
+                    <img src={aboutProcess3}></img> 
                     <h4>
                     Pay & Deliver
                     </h4>
@@ -66,6 +73,12 @@ class about extends Component {
                     </ElementProcess>     
                     </BodyProcess>
                     </div>
+                    <div className="row">
+                      <BodyProcessImg>
+                      <img src={aboutSection3}></img>
+                      </BodyProcessImg>
+                    </div>
+                   <Contact/>
         </BodyContainer>
     </>
     );

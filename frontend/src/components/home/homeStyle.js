@@ -1,5 +1,5 @@
 import styled from "styled-components";
-
+import { device } from "../../components/common/device";
 export const BodyContainer = styled.div`
 width: 100%;
    a{
@@ -14,7 +14,7 @@ width: 100%;
         font-weight: bold;
         font-family: Helvetica Neue,Helvetica,sans-serif;
         margin: 1em;
-        padding: 0.25em 1em;
+        padding: 0.25em 1.25em;
         border: 2px solid #DFB248;
         border-radius: 28px;
         width: 140px;
@@ -22,8 +22,25 @@ width: 100%;
    }
 
    a:hover{
-       color: #222;
+       outline: none;
+       background-color: rgb(223, 178, 72);
+       color: #fff;
    }
+   @media ${device.laptop} { 
+   
+}
+@media ${device.tablet} {
+  
+}
+@media ${device.mobileS} {
+  
+}
+@media ${device.mobileM} {
+  
+}
+@media ${device.mobileL} { 
+    
+}
 `;
 
 

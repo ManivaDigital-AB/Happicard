@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, useState  } from 'react';
 import LandingPageList from "../../components/LandingPageList/LandingPageList";
 import Slider from "react-slick";
 import LandingImg from "../../assets/images/coming_soon.PNG";
@@ -22,7 +22,7 @@ class home extends Component {
       slidesToShow: 1,
       slidesToScroll: 1,
     };
-
+    
     return (     
     <>
       

@@ -2,7 +2,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import Navbar from "./components/Nav/Navbar";
 import LandingPageList from "./components/LandingPageList/LandingPageList";
-import LandingImg from "./assets/images/landing_carousel.PNG";
+import LandingImg from "./assets/images/coming_soon.PNG";
 import Slider from "react-slick";
 
 import "./index.css";
@@ -21,7 +21,7 @@ const App = () => {
     <div className="App">
       <div className="container">
         <Navbar />
-        <Slider {...settings}>
+        {/* <Slider {...settings}>
           {" "}
           <div>
             {" "}
@@ -35,7 +35,11 @@ const App = () => {
             {" "}
             <img src={LandingImg} style={{ width: "100%" }}></img>
           </div>
-        </Slider>
+        </Slider> */}
+        <div>
+          {" "}
+          <img src={LandingImg} style={{ width: "100%" }}></img>
+        </div>
         <LandingPageList />
         <Footer />
       </div>

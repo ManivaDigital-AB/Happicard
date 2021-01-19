@@ -4,7 +4,7 @@ const HtmlWebpackPlugin = require("html-webpack-plugin");
 
 module.exports = {
   entry: "./src/index.js",
-  devtool: "source-map",
+
   output: {
     path: path.resolve(__dirname, "dist"),
     filename: "bundle.js",
@@ -65,6 +65,13 @@ module.exports = {
       },
     ],
   },
+  resolve: {
+    mainFiles: ["index", "Index"],
+    extensions: [".js", ".jsx"],
+    alias: {
+      "@": path.resolve(__dirname, "src/"),
+    },
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: __dirname + "/src/index.html",
@@ -72,4 +79,10 @@ module.exports = {
       inject: "body",
     }),
   ],
+  externals: {
+    // global app config object
+    config: JSON.stringify({
+      apiUrl: "http://localhost:4000",
+    }),
+  },
 };

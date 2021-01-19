@@ -11,7 +11,7 @@ const Footer = () => {
         className="pt-4 my-md-5 pt-md-5 border-top"
         style={{
           backgroundColor: "#fbcc51",
-          fontFamily: "Helvetica Neue, Helvetica, sans-serif;",
+          fontFamily: "Helvetica Neue, Helvetica, sans-serif",
           fontSize: "12px",
         }}
       >
@@ -28,7 +28,7 @@ const Footer = () => {
               />
               <input
                 type="text"
-                class="form-control"
+                className="form-control"
                 placeholder="Email"
                 style={{
                   borderRadius: "30px",
@@ -56,7 +56,7 @@ const Footer = () => {
               </button>
             </div>
             <div className="col-6 col-md-2">
-              <h7 style={{ fontWeight: "bold" }}>Browse</h7>
+              <h2 style={{ fontWeight: "bold" }}>Browse</h2>
               <ul
                 className="list-unstyled text-small"
                 style={{ marginLeft: "10px", paddingTop: "5px" }}

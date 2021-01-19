@@ -6,6 +6,7 @@ import happiOffersListImg from "../../assets/images/happi_offers_list_01.PNG";
 import campaignsListImg from "../../assets/images/campaigns_image_list_01.PNG";
 import styled from "styled-components";
 import ProductList from "../../components/productList/productList";
+import { landingPageService } from "../../_services/landingpage.service";
 
 const Button = styled.button`
   /* Adapt the colors based on primary prop */
@@ -36,12 +37,19 @@ const LandingPageList = () => {
   const [displayGiftCards, setDisplayGiftCards] = useState(false);
   const [displayHappiOffers, setDisplayHappiOffers] = useState(false);
   const [displayCampaigns, setDisplayCampaigns] = useState(false);
+  const [giftCards, setGiftCards] = useState([]);
+  const [campaigns, setCampaigns] = useState([]);
+  const [offers, setOffers] = useState([]);
+
+  // const onOpenModal = () => setOpen(true);
+  // const onCloseModal = () => setOpen(false);
 
   const clickGiftCards = () => {
     if (displayGiftCards) {
       setDisplayGiftCards(false);
     } else {
       setDisplayGiftCards(true);
+      landingPageService.getAllGiftCards().then((x) => setGiftCards(x));
     }
     setDisplayHappiOffers(false);
     setDisplayCampaigns(false);
@@ -52,6 +60,7 @@ const LandingPageList = () => {
       setDisplayHappiOffers(false);
     } else {
       setDisplayHappiOffers(true);
+      landingPageService.getAllOffers().then((x) => setOffers(x));
     }
     setDisplayGiftCards(false);
     setDisplayCampaigns(false);
@@ -62,6 +71,7 @@ const LandingPageList = () => {
       setDisplayCampaigns(false);
     } else {
       setDisplayCampaigns(true);
+      landingPageService.getAllCampaigns().then((x) => setCampaigns(x));
     }
     setDisplayGiftCards(false);
     setDisplayHappiOffers(false);
@@ -69,89 +79,34 @@ const LandingPageList = () => {
 
   function Test(props) {
     return (
-      <div className="row" style={{ textAlign: "center" }}>
-        <div className="col-sm-4">
-          <div className="card" style={{ borderRadius: "0.65rem" }}>
-            <div className="card-body">
-              <h6 className="card-title" style={{ color: "red" }}>
-                {props.name}
-              </h6>
-              <img
-                src={props.image}
-                width="300"
-                height="150"
-                style={{ borderRadius: "0.65rem" }}
-              />
-              <p
-                className="card-text"
-                style={{
-                  paddingTop: "10px",
-                  fontSize: "12px",
-                  wordSpacing: "6px",
-                  letterSpacing: "0.2px",
-                  color: "grey",
-                  fontFamily: "Helvetica Neue, Helvetica, sans-serif",
-                }}
-              >
-                {props.title}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-4">
-          <div className="card" style={{ borderRadius: "0.65rem" }}>
-            <div className="card-body">
-              <h6 className="card-title" style={{ color: "red" }}>
-                {props.name}
-              </h6>
-              <img
-                src={props.image}
-                width="300"
-                height="150"
-                style={{ borderRadius: "0.65rem" }}
-              />
-              <p
-                className="card-text"
-                style={{
-                  paddingTop: "10px",
-                  fontSize: "12px",
-                  wordSpacing: "6px",
-                  letterSpacing: "0.2px",
-                  color: "grey",
-                  fontFamily: "Helvetica Neue, Helvetica, sans-serif",
-                }}
-              >
-                {props.title}
-              </p>
-            </div>
-          </div>
-        </div>
-        <div className="col-sm-4">
-          <div className="card" style={{ borderRadius: "0.65rem" }}>
-            <div className="card-body">
-              <h6 className="card-title" style={{ color: "red" }}>
-                {props.name}
-              </h6>
-              <img
-                src={props.image}
-                width="300"
-                height="150"
-                style={{ borderRadius: "0.65rem" }}
-              />
-              <p
-                className="card-text"
-                style={{
-                  paddingTop: "10px",
-                  fontSize: "12px",
-                  wordSpacing: "6px",
-                  letterSpacing: "0.2px",
-                  color: "grey",
-                  fontFamily: "Helvetica Neue, Helvetica, sans-serif",
-                }}
-              >
-                {props.title}
-              </p>
-            </div>
+      <div className="col-sm-4">
+        <div
+          className="card"
+          style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
+        >
+          <div className="card-body">
+            <h6 className="card-title" style={{ color: "red" }}>
+              {props.name}
+            </h6>
+            <img
+              src={props.image}
+              width="300"
+              height="150"
+              style={{ borderRadius: "0.65rem" }}
+            />
+            <p
+              className="card-text"
+              style={{
+                paddingTop: "10px",
+                fontSize: "12px",
+                // wordSpacing: "6px",
+                letterSpacing: "0.2px",
+                color: "grey",
+                fontFamily: "Helvetica Neue, Helvetica, sans-serif",
+              }}
+            >
+              Category: {props.title}
+            </p>
           </div>
         </div>
       </div>
@@ -174,7 +129,7 @@ const LandingPageList = () => {
                 outline: "none",
               }}
             >
-              Gift cards
+              Gift Cards
             </Button>
           </div>
         </div>
@@ -191,7 +146,7 @@ const LandingPageList = () => {
                 outline: "none",
               }}
             >
-              Happi offers
+              Happi Offers
             </Button>
           </div>
         </div>
@@ -213,27 +168,63 @@ const LandingPageList = () => {
           </div>
         </div>
       </div>
-      {displayGiftCards && (
+      <div
+        className="row"
+        style={{ textAlign: "center", paddingBottom: "10px" }}
+      >
+        {displayGiftCards &&
+          giftCards.length > 0 &&
+          giftCards.map((item, index) => (
+            <Test
+              name={item.title}
+              image={item.image}
+              title={item.store_category}
+              key={index}
+            />
+          ))}
+      </div>
+      {/* {displayGiftCards && (
         <Test
           name="Gift card title"
           image={giftCardListImg}
           title="Category:Fashion | Online "
         />
-      )}
-      {displayHappiOffers && (
-        <Test
-          name="Happi offers title"
-          image={happiOffersListImg}
-          title="Category:Fashion | Online+In-store "
-        />
-      )}
-      {displayCampaigns && (
-        <Test
-          name="Campaigns title"
-          image={campaignsListImg}
-          title="Category:Non profit Organizations "
-        />
-      )}
+      )} */}
+      {/* <Modal open={open} onClose={onCloseModal} center>
+        <h2>Simple centered modal</h2>
+      </Modal> */}
+      <div
+        className="row"
+        style={{ textAlign: "center", paddingBottom: "10px" }}
+        // onClick={onOpenModal}
+      >
+        {displayHappiOffers &&
+          offers.length > 0 &&
+          offers.map((item, index) => (
+            <Test
+              name={item.title}
+              image={item.image}
+              title={item.store_category}
+              key={index}
+            />
+          ))}
+      </div>
+
+      <div
+        className="row"
+        style={{ textAlign: "center", paddingBottom: "10px" }}
+      >
+        {displayCampaigns &&
+          campaigns.length > 0 &&
+          campaigns.map((item, index) => (
+            <Test
+              name={item.title}
+              image={item.image}
+              title={item.ngo_category}
+              key={index}
+            />
+          ))}
+      </div>
     </>
   );
 };

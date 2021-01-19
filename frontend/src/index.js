@@ -1,58 +1,30 @@
 import React from "react";
 import ReactDOM from "react-dom";
 import Navbar from "./components/Nav/Navbar";
-import LandingPageList from "./components/LandingPageList/LandingPageList";
-import LandingImg from "./assets/images/coming_soon.PNG";
-import Slider from "react-slick";
-
+import {  BrowserRouter  as Router, Switch,Link, Route } from 'react-router-dom';
 import "./index.css";
 import Footer from "./components/footer/footer";
+import Home from "./components/home/home";
+import About from "./components/about/about";
 import "bootstrap/dist/css/bootstrap.min.css";
 
 const App = () => {
-  const settings = {
-    dots: true,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 1,
-    slidesToScroll: 1,
-  };
+ 
   return (
     <div className="App">
       <div className="container">
-        <Navbar />
-        {/* <Slider {...settings}>
-          {" "}
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-        </Slider> */}
-        <div>
-          {" "}
-          <img src={LandingImg} style={{ width: "100%" }}></img>
-        </div>
-        <LandingPageList />
+      <Router>
+            <div className="row">
+            <Navbar />           
+              <Switch>
+                <Route exact path="/" component={Home} />                            
+                <Route path="/about" component={About}/>
+              </Switch>              
+            </div>
+          </Router>
         <Footer />
       </div>
 
-      {/* <div className="container">
-        <Navbar />
-
-        <div className="row">
-          
-         
-        </div>
-        
-      </div> */}
     </div>
   );
 };

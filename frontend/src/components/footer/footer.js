@@ -6,10 +6,11 @@ import Copyright from "../copyright/copyright";
 
 const Footer = () => {
   return (
-    <div>
+    <div className="row">
       <footer
         className="pt-4 my-md-5 pt-md-5 border-top"
         style={{
+          width: "100%",
           backgroundColor: "#fbcc51",
           fontFamily: "Helvetica Neue, Helvetica, sans-serif",
           fontSize: "12px",

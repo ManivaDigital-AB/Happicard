@@ -5,6 +5,7 @@ import searchImg from "../../assets/images/search.PNG";
 import facebookMobileImg from "../../assets/images/facebook_mobile_01.PNG";
 import instagramMobileImg from "../../assets/images/instagram_mobile_02.PNG";
 import linkedinMobileImg from "../../assets/images/linkedin_mobile_01.PNG";
+import {Link } from 'react-router-dom';
 
 const Ul = styled.ul`
   list-style: none;
@@ -60,6 +61,13 @@ const Ul = styled.ul`
       padding-top: 30px;
     }
   }
+  a{
+    text-decoration: none;
+    color: #fff;
+  }
+  a:hover{
+    color: #222;
+  }
 `;
 
 const RightNav = ({ open }) => {
@@ -73,11 +81,9 @@ const RightNav = ({ open }) => {
         open={open}
         style={{ fontFamily: "Helvetica Neue, Helvetica, sans-serif" }}
       >
-        <li
-          className={selectedMenu == "Home" ? "selected" : "unselected"}
-          onClick={() => handleClick("Home")}
-        >
-          Home
+        <li><Link to="/"  className={selectedMenu == "Home" ? "selected" : "unselected"}
+        onClick={() => handleClick("Home")}>Home</Link>
+          
         </li>
         <li
           className={selectedMenu == "Stores" ? "selected" : "unselected"}
@@ -97,11 +103,9 @@ const RightNav = ({ open }) => {
         >
           Partners
         </li>
-        <li
-          className={selectedMenu == "About" ? "selected" : "unselected"}
-          onClick={() => handleClick("About")}
-        >
-          About
+        <li><Link to="/about" className={selectedMenu == "About" ? "selected" : "unselected"}
+        onClick={() => handleClick("About")}> About</Link>
+         
         </li>
         <li className="onlyMobile paddingTop">Sign in/Sign up</li>
         <li className="onlyMobile">

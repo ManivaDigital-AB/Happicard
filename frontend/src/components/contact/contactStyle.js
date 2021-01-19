@@ -9,21 +9,21 @@ padding: 100px;
    
 }
 @media ${device.tablet} {
- 
+    padding: 30px;
 }
 @media ${device.mobileS} {
-  
+    padding: 30px;
 }
 @media ${device.mobileM} {
-  
+    padding: 30px;
 }
 @media ${device.mobileL} { 
-    
+    padding: 30px;
 }
 `;
 
 export const LeftContainer = styled.div`
-width: 40%;
+// width: 40%;
 display: grid;
 
 label{
@@ -63,18 +63,21 @@ button{
 
 }
 @media ${device.mobileS} {
-  
+    width: 100%;
+    padding: 30px;
 }
 @media ${device.mobileM} {
-  
+    width: 100%;
+    padding: 30px;
 }
 @media ${device.mobileL} { 
-    
+    width: 100%;
+    padding: 30px;
 }
 `;
 
 export const RightContainer = styled.div` 
-width: 40%;
+// width: 40%;
 margin-left: 150px;
 img{
     margin-right: 20px;
@@ -91,16 +94,22 @@ span{
    
 }
 @media ${device.tablet} {
-
+    padding: 0px;
 }
 @media ${device.mobileS} {
-  
+    width: 100%;
+    margin-left: 0px;
+    padding: 30px;
 }
 @media ${device.mobileM} {
-  
+    width: 100%;
+    margin-left: 0px;
+    padding: 30px;
 }
 @media ${device.mobileL} { 
-    
+    width: 100%;
+    margin-left: 0px;
+    padding: 30px;
 }
 `;
 

@@ -28,23 +28,52 @@ width: 100%;
    
       }
       @media ${device.tablet} {
-        padding: 0px;
+        .header-container{
+        padding: 100px 20px;
+        }
+        
       }
       @media ${device.mobileS} {
         
+        .header-container{
+          padding:0px;
+          }
+          .process-body{
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0px;
+          }
       }
       @media ${device.mobileM} {
         
+        .header-container{
+          padding:0px;
+          }
+          .process-body{
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0px;
+          }
       }
       @media ${device.mobileL} { 
-          
+      
+        .header-container{
+          padding:0px;
+          }
+          .process-body{
+            text-align: center;
+            padding: 10px;
+            width: 100%;
+            margin: 10px 0px;
+          }
       }
 `;
 
 
 export const LeftHeaderContainer = styled.div`
 width: 40%;
-height: 400px;
 background-color: #dfb248;
 .img-header{
     width: 100%;
@@ -55,16 +84,16 @@ background-color: #dfb248;
    
 }
 @media ${device.tablet} {
-  padding: 0px;
+  width: 50%;
 }
 @media ${device.mobileS} {
-  
+  width: 100%;
 }
 @media ${device.mobileM} {
-  
+  width: 100%;
 }
 @media ${device.mobileL} { 
-    
+  width: 100%;
 }
 `;
 
@@ -75,16 +104,24 @@ margin-left: 150px;
    
 }
 @media ${device.tablet} {
-  padding: 0px;
+  width: 45%;
+  margin-left: 30px;
+
 }
 @media ${device.mobileS} {
-  
+  width: 100%;
+  margin-left: 0px;
+  padding: 30px;
 }
 @media ${device.mobileM} {
-  
+  width: 100%;
+  margin-left: 0px;
+  padding: 30px;
 }
 @media ${device.mobileL} { 
-    
+  width: 100%;
+  margin-left: 0px;
+  padding: 30px;
 }
 `;
 
@@ -102,16 +139,19 @@ h4{
    
 }
 @media ${device.tablet} {
- 
+  padding: 0px;
 }
 @media ${device.mobileS} {
-  
+  width: 100%;
+  padding: 0px;
 }
 @media ${device.mobileM} {
-  
+  width: 100%;
+  padding: 0px;
 }
 @media ${device.mobileL} { 
-    
+  width: 100%;
+  padding: 0px;
 }
 `;
 
@@ -126,13 +166,13 @@ background-color: #dfb248;
 
 }
 @media ${device.mobileS} {
-  
+  display: block;
 }
 @media ${device.mobileM} {
-  
+  display: block;
 }
 @media ${device.mobileL} { 
-    
+  display: block;
 }
 `;
 
@@ -146,15 +186,15 @@ padding: 100px;
    
 }
 @media ${device.tablet} {
-  
+  padding: 30px;
 }
 @media ${device.mobileS} {
-  
+  padding: 30px;
 }
 @media ${device.mobileM} {
-  
+  padding: 30px;
 }
 @media ${device.mobileL} { 
-    
+  padding: 30px;
 }
 `;

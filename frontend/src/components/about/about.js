@@ -73,6 +73,7 @@ class about extends Component {
                     </ElementProcess>     
                     </BodyProcess>
                     </div>
+                    
                     <div className="row">
                       <BodyProcessImg>
                       <img src={aboutSection3}></img>

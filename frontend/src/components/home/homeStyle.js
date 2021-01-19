@@ -30,16 +30,28 @@ width: 100%;
    
 }
 @media ${device.tablet} {
-  
+    a{
+        top: 35%;
+        left: 10%;
+    }
 }
 @media ${device.mobileS} {
-  
+  a{
+    top: 25%;
+    left: 1%;
+   }
 }
 @media ${device.mobileM} {
-  
+    a{
+        top: 25%;
+        left: 1%;
+       }
 }
 @media ${device.mobileL} { 
-    
+    a{
+        top: 25%;
+        left: 1%;
+       }
 }
 `;
 

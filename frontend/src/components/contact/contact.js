@@ -16,6 +16,7 @@ class contact extends Component {
     return (
     <>
         <BodyContainer>
+            <div className="row">
            <LeftContainer>
                <h4>Contact Us</h4>
                <div className="form-group">
@@ -54,7 +55,7 @@ class contact extends Component {
               <span>help@happicard.se</span>
            </div>
            </RightContainer>
-          
+           </div>
         </BodyContainer>
     </>
     );

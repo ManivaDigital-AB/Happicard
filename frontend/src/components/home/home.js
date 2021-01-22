@@ -4,7 +4,7 @@ import Slider from "react-slick";
 import happicard from "../../assets/images/happicard.PNG";
 import {Link } from 'react-router-dom';
 import {BodyContainer,LeftHeaderContainer,RightHeaderContainer,ElementProcess,BodyProcess,BodyProcessImg} from '../home/homeStyle'
-import logoImg from "../../assets/images/happicard-logo.PNG";
+import logoImg from "../../assets/images/logo-small.PNG";
 
 class home extends Component {
   
@@ -70,7 +70,7 @@ class home extends Component {
                   Kontakt: info@happicard.se
                   </p>
                   <p>
-                  <Link to="/about">Read More...</Link>
+                  <Link to="/about">Read More</Link>
                   </p>
                   
             </div>        

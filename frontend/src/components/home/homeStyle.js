@@ -32,6 +32,7 @@ img{
 
 
 export const LeftHeaderContainer = styled.div`
+padding: 100px;
 width: 50%;
 background-color: #dfb248;
 .img-header{
@@ -42,14 +43,13 @@ background-color: #dfb248;
 h5{
     color: #222;
     font-weight: bold;
-    padding: 0px 140px;
     font-size: 28px;
+    white-space: nowrap;
 }
 
 p{
     color: #fff;
     font-weight: bold;
-    padding: 0px 140px;
     font-size: 28px;
 }
 
@@ -75,48 +75,51 @@ p{
 
 @media ${device.tablet} {
     h5{
-        padding: 0px 70px;
+
         font-size: 21px;
     }
     
     p{
-        padding: 0px 70px;
+
         font-size: 21px;
     }
 }
 @media ${device.mobileS} {
     width: 100%;
     h5{
-        padding: 0px 50px;
+
         font-size: 15px;
     }
     
     p{
-        padding: 0px 50px;
+
         font-size: 15px;
     }
+    padding: 10px;
 }
 @media ${device.mobileM} {
     width: 100%;
+    padding: 10px;
     h5{
-        padding: 0px 70px;
+
         font-size: 18px;
     }
     
     p{
-        padding: 0px 70px;
+
         font-size: 18px;
     }
 }
 @media ${device.mobileL} { 
     width: 100%;
+    padding: 10px;
     h5{
-        padding: 0px 70px;
+
         font-size: 18px;
     }
     
     p{
-        padding: 0px 70px;
+
         font-size: 18px;
     }
 }
@@ -124,7 +127,6 @@ p{
 
 export const RightHeaderContainer = styled.div` 
 width: 50%;
-margin-top: 150px;
 padding: 100px;
 img{
 width: 100%;
@@ -137,17 +139,17 @@ width: 100%;
 @media ${device.mobileS} {
     width: 100%;
     margin-top: 0px;
-    padding: 50px;
+    padding: 10px;
 }
 @media ${device.mobileM} {
     width: 100%;
     margin-top: 0px;
-    padding: 50px;
+    padding: 10px;
 }
 @media ${device.mobileL} { 
     width: 100%;
     margin-top: 0px;
-    padding: 50px;
+    padding: 10px;
 }
 `;
 

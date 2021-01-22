@@ -1,18 +1,64 @@
 import styled from "styled-components";
 import { device } from "../../components/common/device";
+
 export const BodyContainer = styled.div`
+background-color: #dfb248;
 width: 100%;
-   a{
+
+img{
+    width: 100%;
+}
+   
+      @media ${device.laptop} { 
+   
+      }
+      @media ${device.tablet} {
+      
+        
+      }
+      @media ${device.mobileS} {
+        
+        padding: 50px;
+      }
+      @media ${device.mobileM} {
+        
+        padding: 50px;
+      }
+      @media ${device.mobileL} { 
+        padding: 50px;
+       
+      }
+`;
+
+
+export const LeftHeaderContainer = styled.div`
+width: 50%;
+background-color: #dfb248;
+.img-header{
+    width: 100%;
+    height: 100%;
+ }
+
+h5{
+    color: #222;
+    font-weight: bold;
+    padding: 0px 140px;
+    font-size: 28px;
+}
+
+p{
+    color: #fff;
+    font-weight: bold;
+    padding: 0px 140px;
+    font-size: 28px;
+}
+
+ a{
     text-decoration: none;
-    position: absolute;
-    left: 20%;
-    top: 70%;
     background: white;
     color: black;
-    font-size: 1em;
     font-weight: bold;
     font-family: "Helvetica Neue", Helvetica, sans-serif;
-    margin: 1em;
     padding: 5px 20px;
     border: 2px solid rgb(223, 178, 72);
     border-radius: 28px;
@@ -26,35 +72,82 @@ width: 100%;
        background-color: rgb(223, 178, 72);
        color: #fff;
    }
-   @media ${device.laptop} { 
-   
-}
+
 @media ${device.tablet} {
-    a{
-        top: 35%;
-        left: 10%;
+    h5{
+        padding: 0px 70px;
+        font-size: 21px;
+    }
+    
+    p{
+        padding: 0px 70px;
+        font-size: 21px;
     }
 }
 @media ${device.mobileS} {
-  a{
-    top: 25%;
-    left: 1%;
-   }
+    width: 100%;
+    h5{
+        padding: 0px 50px;
+        font-size: 15px;
+    }
+    
+    p{
+        padding: 0px 50px;
+        font-size: 15px;
+    }
 }
 @media ${device.mobileM} {
-    a{
-        top: 25%;
-        left: 1%;
-       }
+    width: 100%;
+    h5{
+        padding: 0px 70px;
+        font-size: 18px;
+    }
+    
+    p{
+        padding: 0px 70px;
+        font-size: 18px;
+    }
 }
 @media ${device.mobileL} { 
-    a{
-        top: 25%;
-        left: 1%;
-       }
+    width: 100%;
+    h5{
+        padding: 0px 70px;
+        font-size: 18px;
+    }
+    
+    p{
+        padding: 0px 70px;
+        font-size: 18px;
+    }
 }
 `;
 
+export const RightHeaderContainer = styled.div` 
+width: 50%;
+margin-top: 150px;
+padding: 100px;
+img{
+width: 100%;
+}
 
 
+@media ${device.tablet} {
+    padding: 50px;
+}
+@media ${device.mobileS} {
+    width: 100%;
+    margin-top: 0px;
+    padding: 50px;
+}
+@media ${device.mobileM} {
+    width: 100%;
+    margin-top: 0px;
+    padding: 50px;
+}
+@media ${device.mobileL} { 
+    width: 100%;
+    margin-top: 0px;
+    padding: 50px;
+}
+`;
 

@@ -41,7 +41,7 @@ class about extends Component {
             </RightHeaderContainer>
             </div>
 
-            <div className="process-body">           
+            {/* <div className="process-body">           
             <h2><img src={logoImg}  className="happicard-img"></img> Process</h2>               
             <BodyProcess> 
                   <ElementProcess>
@@ -79,7 +79,7 @@ class about extends Component {
                       <img src={aboutSection3}></img>
                       </BodyProcessImg>
                     </div>
-                   <Contact/>
+                   <Contact/> */}
         </BodyContainer>
     </>
     );

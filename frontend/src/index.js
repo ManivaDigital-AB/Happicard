@@ -12,17 +12,17 @@ const App = () => {
  
   return (
     <div className="App">
-      <div className="container">
+      <div className="">
       <Router>
             <div className="row">
-            <Navbar />           
+            {/* <Navbar />            */}
               <Switch>
                 <Route exact path="/" component={Home} />                            
                 <Route path="/about" component={About}/>
               </Switch>              
             </div>
           </Router>
-        <Footer />
+        {/* <Footer /> */}
       </div>
 
     </div>

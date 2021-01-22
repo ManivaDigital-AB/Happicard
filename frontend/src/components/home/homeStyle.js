@@ -9,24 +9,22 @@ img{
     width: 100%;
 }
    
-      @media ${device.laptop} { 
-   
-      }
+    
       @media ${device.tablet} {
-      
+        min-height: 1400px;
         
       }
       @media ${device.mobileS} {
-        
+        min-height: 1050px;
         padding: 50px;
       }
       @media ${device.mobileM} {
-        
+        min-height: 1050px;
         padding: 50px;
       }
       @media ${device.mobileL} { 
         padding: 50px;
-       
+        min-height: 1050px;
       }
 `;
 
@@ -35,6 +33,8 @@ export const LeftHeaderContainer = styled.div`
 padding: 100px;
 width: 50%;
 background-color: #dfb248;
+
+
 .img-header{
     width: 100%;
     height: 100%;
@@ -74,6 +74,7 @@ p{
    }
 
 @media ${device.tablet} {
+   
     h5{
 
         font-size: 21px;
@@ -86,6 +87,7 @@ p{
 }
 @media ${device.mobileS} {
     width: 100%;
+  
     h5{
 
         font-size: 15px;
@@ -99,6 +101,7 @@ p{
 }
 @media ${device.mobileM} {
     width: 100%;
+   
     padding: 10px;
     h5{
 
@@ -111,6 +114,7 @@ p{
     }
 }
 @media ${device.mobileL} { 
+   
     width: 100%;
     padding: 10px;
     h5{

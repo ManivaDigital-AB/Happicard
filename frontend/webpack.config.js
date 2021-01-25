@@ -65,6 +65,9 @@ module.exports = {
       },
     ],
   },
+  devServer: {
+    historyApiFallback: true,
+  },
   resolve: {
     mainFiles: ["index", "Index"],
     extensions: [".js", ".jsx"],

@@ -37,7 +37,7 @@ const Footer = () => {
                   width: "185px",
                   borderColor: "white",
                   backgroundColor: "rgb(251, 204, 81)",
-                  borderWidth: "3px",
+                  borderWidth: "2px",
                   fontSize: "12px",
                 }}
               />
@@ -57,73 +57,84 @@ const Footer = () => {
               </button>
             </div>
             <div className="col-6 col-md-2">
-              <h2 style={{ fontWeight: "bold" }}>Browse</h2>
-              <ul
-                className="list-unstyled text-small"
-                style={{ marginLeft: "10px", paddingTop: "5px" }}
-              >
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Home
-                  </a>
+              <h7 style={{ fontWeight: "bold", marginLeft: "26px" }}>Browse</h7>
+              <ul className="text-small" style={{ paddingTop: "5px" }}>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Home
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    How it works
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      How it Works
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Gift cards
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Gift Cards
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Happi offers
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Happi Offers
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Campaigns
-                  </a>
+
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Campaigns
+                    </a>
+                  </span>
                 </li>
               </ul>
             </div>
             <div className="col-6 col-md-2">
-              <h7 style={{ fontWeight: "bold" }}>About</h7>
-              <ul
-                className="list-unstyled text-small"
-                style={{ marginLeft: "10px", paddingTop: "5px" }}
-              >
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    About
-                  </a>
+              <h7 style={{ fontWeight: "bold", marginLeft: "26px" }}>About</h7>
+              <ul className="text-small" style={{ paddingTop: "5px" }}>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      About
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    contact us
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Contact Us
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Another resource
-                  </a>
+
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Partner with Us
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Partner with us
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Reviews
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Reviews
-                  </a>
-                </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Sign in
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Sign In
+                    </a>
+                  </span>
                 </li>
               </ul>
             </div>
@@ -131,33 +142,39 @@ const Footer = () => {
               <h7
                 style={{
                   fontWeight: "bold",
+                  marginLeft: "26px",
                 }}
               >
                 Support
               </h7>
-              <ul
-                className="list-unstyled text-small"
-                style={{ marginLeft: "10px", paddingTop: "5px" }}
-              >
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Help center
-                  </a>
+              <ul className="text-small" style={{ paddingTop: "5px" }}>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Help Center
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Privacy policy
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Privacy Policy
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    Terms & conditions
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      Terms & Conditions
+                    </a>
+                  </span>
                 </li>
-                <li style={{ marginBottom: "5px" }}>
-                  <a className="text-muted" href="#">
-                    FAQs
-                  </a>
+                <li style={{ marginBottom: "5px", color: "#D7383B" }}>
+                  <span style={{ color: "black" }}>
+                    <a className="text-muted" href="#">
+                      FAQs
+                    </a>
+                  </span>
                 </li>
               </ul>
             </div>

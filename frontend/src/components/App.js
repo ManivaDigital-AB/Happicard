@@ -2,19 +2,16 @@ import React from "react";
 import Navbar from "./Nav/Navbar";
 import Slider from "react-slick";
 
-
 function App() {
   return (
     <div className="App">
-      <div className="container">
-     
+      <div className="">
         <Navbar />
-        <Slider {...settings}>
+        {/* <Slider {...settings}>
           {" "}
           <div></div>
-        </Slider>
+        </Slider> */}
         App
-      
       </div>{" "}
     </div>
   );

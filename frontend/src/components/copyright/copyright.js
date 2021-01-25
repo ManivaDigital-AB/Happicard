@@ -17,7 +17,7 @@ const copyright = () => {
               color: "gray",
             }}
           >
-            @2021 Happi card.All rights reserved
+            @ 2021 Happicard. All rights reserved
           </p>
         </div>
         <ul

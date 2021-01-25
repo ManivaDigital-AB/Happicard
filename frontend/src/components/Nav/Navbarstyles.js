@@ -6,7 +6,7 @@ export const Nav = styled.nav`
   padding: 0 20px;
   display: flex;
   justify-content: center;
-  background-color: #dfb248;
+  background-color: #ffc541;
   color: white;
   font-size: 14px;
   .logo {

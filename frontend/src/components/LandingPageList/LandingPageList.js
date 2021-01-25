@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import giftImg from "../../assets/images/gift_card_01.PNG";
 import offersImg from "../../assets/images/happi_offers_02.PNG";
+import campaignsImg from "../../assets/images/campaigns_01.PNG";
 import giftCardListImg from "../../assets/images/gift_card_list_01.PNG";
 import happiOffersListImg from "../../assets/images/happi_offers_list_01.PNG";
 import campaignsListImg from "../../assets/images/campaigns_image_list_01.PNG";
@@ -19,7 +20,7 @@ const Button = styled.button`
 
   margin: 1em;
   padding: 0.25em 1em;
-  border: 2px solid #DFB248;
+  border: 2px solid  #FFC541;
   border-radius: 28px;
   width: 140px;
   outline: none;
@@ -99,7 +100,7 @@ const LandingPageList = () => {
               style={{
                 paddingTop: "10px",
                 fontSize: "12px",
-                // wordSpacing: "6px",
+
                 letterSpacing: "0.2px",
                 color: "grey",
                 fontFamily: "Helvetica Neue, Helvetica, sans-serif",
@@ -118,14 +119,11 @@ const LandingPageList = () => {
       <div className="row" style={{ paddingTop: "75px" }}>
         <div className="col-sm">
           <div style={{ textAlign: "center" }}>
-            <ListImg
-              src={giftImg}
-              // style={{ width: "350px", padding: "5px 5px 5px 5px" }}
-            />
+            <ListImg src={giftImg} />
             <Button
               onClick={clickGiftCards}
               style={{
-                backgroundColor: displayGiftCards ? "#dfb248" : "",
+                backgroundColor: displayGiftCards ? "#FFC541" : "",
                 outline: "none",
               }}
             >
@@ -135,14 +133,11 @@ const LandingPageList = () => {
         </div>
         <div className="col-sm">
           <div style={{ textAlign: "center" }}>
-            <ListImg
-              src={offersImg}
-              // style={{ width: "350px", padding: "5px 5px 5px 5px" }}
-            />
+            <ListImg src={offersImg} />
             <Button
               onClick={clickHappiOffers}
               style={{
-                backgroundColor: displayHappiOffers ? "#dfb248" : "",
+                backgroundColor: displayHappiOffers ? "#FFC541" : "",
                 outline: "none",
               }}
             >
@@ -152,14 +147,11 @@ const LandingPageList = () => {
         </div>
         <div className="col-sm">
           <div style={{ textAlign: "center" }}>
-            <ListImg
-              src={giftImg}
-              // style={{ width: "350px", padding: "5px 5px 5px 5px" }}
-            />
+            <ListImg src={campaignsImg} />
             <Button
               onClick={clickCampaigns}
               style={{
-                backgroundColor: displayCampaigns ? "#dfb248" : "",
+                backgroundColor: displayCampaigns ? "# #FFC541" : "",
                 outline: "none",
               }}
             >
@@ -183,20 +175,10 @@ const LandingPageList = () => {
             />
           ))}
       </div>
-      {/* {displayGiftCards && (
-        <Test
-          name="Gift card title"
-          image={giftCardListImg}
-          title="Category:Fashion | Online "
-        />
-      )} */}
-      {/* <Modal open={open} onClose={onCloseModal} center>
-        <h2>Simple centered modal</h2>
-      </Modal> */}
+
       <div
         className="row"
         style={{ textAlign: "center", paddingBottom: "10px" }}
-        // onClick={onOpenModal}
       >
         {displayHappiOffers &&
           offers.length > 0 &&

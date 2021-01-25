@@ -1,18 +1,16 @@
-import React, { Component, useState  } from 'react';
+import React, { Component, useState } from "react";
 import LandingPageList from "../../components/LandingPageList/LandingPageList";
 import Slider from "react-slick";
 import LandingImg from "../../assets/images/coming_soon.PNG";
-import {Link } from 'react-router-dom';
-import {BodyContainer} from '../home/homeStyle'
+import { Link } from "react-router-dom";
+import { BodyContainer } from "../home/homeStyle";
 class home extends Component {
-  
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount(){  
-    }  
+  componentDidMount() {}
 
   render() {
     const settings = {
@@ -22,12 +20,11 @@ class home extends Component {
       slidesToShow: 1,
       slidesToScroll: 1,
     };
-    
-    return (     
-    <>
-      
-      <div className="container">   
-        {/* <Slider {...settings}>
+
+    return (
+      <>
+        <div className="container">
+          {/* <Slider {...settings}>
           {" "}
           <div>
             {" "}
@@ -44,19 +41,16 @@ class home extends Component {
         </Slider> */}
         </div>
         <BodyContainer>
-        {" "}
+          {" "}
           <img src={LandingImg} style={{ width: "100%" }}></img>
-          <Link to="/about">Read More...</Link>
-        <div className="row" style={{padding : "30px"}}>   
+          {/* <Link to="/about">Läs Mer</Link> */}
+          {/* <div className="row" style={{padding : "30px"}}>   
         <LandingPageList />
-        </div>
-    
+        </div> */}
         </BodyContainer>
-   
-    </>
+      </>
     );
   }
 }
-
 
 export default home;

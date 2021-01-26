@@ -41,6 +41,9 @@ const LandingPageList = () => {
   const [giftCards, setGiftCards] = useState([]);
   const [campaigns, setCampaigns] = useState([]);
   const [offers, setOffers] = useState([]);
+  const [selectedItem, setSelectedItem] = useState({
+    id: "",
+  });
 
   // const onOpenModal = () => setOpen(true);
   // const onCloseModal = () => setOpen(false);
@@ -78,6 +81,11 @@ const LandingPageList = () => {
     setDisplayHappiOffers(false);
   };
 
+  const handleChange = (e) => {
+    console.log(e.target.value);
+    setSelectedItem({ id: e.target.value });
+  };
+
   function Test(props) {
     return (
       <div className="col-sm-4">
@@ -86,14 +94,18 @@ const LandingPageList = () => {
           style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
         >
           <div className="card-body">
+            <input
+              type="radio"
+              value={props.id}
+              checked={selectedItem.id == props.id}
+              onChange={handleChange}
+            />
             <h6 className="card-title" style={{ color: "red" }}>
               {props.name}
             </h6>
             <img
               src={props.image}
-              width="300"
-              height="150"
-              style={{ borderRadius: "0.65rem" }}
+              style={{ borderRadius: "0.65rem", width: "100%", height: "auto" }}
             />
             <p
               className="card-text"
@@ -106,7 +118,7 @@ const LandingPageList = () => {
                 fontFamily: "Helvetica Neue, Helvetica, sans-serif",
               }}
             >
-              Category: {props.title}
+              Category: {props.title} | Online
             </p>
           </div>
         </div>
@@ -168,6 +180,7 @@ const LandingPageList = () => {
           giftCards.length > 0 &&
           giftCards.map((item, index) => (
             <Test
+              id={item.id}
               name={item.title}
               image={item.image}
               title={item.store_category}
@@ -184,6 +197,7 @@ const LandingPageList = () => {
           offers.length > 0 &&
           offers.map((item, index) => (
             <Test
+              id={item.id}
               name={item.title}
               image={item.image}
               title={item.store_category}
@@ -200,6 +214,7 @@ const LandingPageList = () => {
           campaigns.length > 0 &&
           campaigns.map((item, index) => (
             <Test
+              id={item.id}
               name={item.title}
               image={item.image}
               title={item.ngo_category}

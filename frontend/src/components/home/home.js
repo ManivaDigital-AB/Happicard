@@ -23,30 +23,25 @@ class home extends Component {
 
     return (
       <>
-        <div className="container">
-          {/* <Slider {...settings}>
-          {" "}
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-          <div>
-            {" "}
-            <img src={LandingImg} style={{ width: "100%" }}></img>
-          </div>
-        </Slider> */}
-        </div>
         <BodyContainer>
-          {" "}
-          <img src={LandingImg} style={{ width: "100%" }}></img>
-          {/* <Link to="/about">Läs Mer</Link> */}
-          {/* <div className="row" style={{padding : "30px"}}>   
-        <LandingPageList />
-        </div> */}
+          <Slider {...settings}>
+            {" "}
+            <div>
+              {" "}
+              <img src={LandingImg} style={{ width: "100%" }}></img>
+            </div>
+            <div>
+              {" "}
+              <img src={LandingImg} style={{ width: "100%" }}></img>
+            </div>
+            <div>
+              {" "}
+              <img src={LandingImg} style={{ width: "100%" }}></img>
+            </div>
+          </Slider>
+          <div style={{ padding: "30px", backgroundColor: "white" }}>
+            <LandingPageList />
+          </div>
         </BodyContainer>
       </>
     );

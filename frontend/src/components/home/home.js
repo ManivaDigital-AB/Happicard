@@ -72,9 +72,9 @@ class home extends Component {
                   att köpa, spara, ta emot och lagra digitala presentkort.
                   Kontakt: info@happicard.se
                 </p>
-                <p>
+                {/* <p>
                   <Link to="/about">Läs mer</Link>
-                </p>
+                </p> */}
               </div>
             </LeftHeaderContainer>
 

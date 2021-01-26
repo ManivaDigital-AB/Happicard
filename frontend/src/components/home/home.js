@@ -1,20 +1,25 @@
-import React, { Component, useState  } from 'react';
+import React, { Component, useState } from "react";
 import LandingPageList from "../../components/LandingPageList/LandingPageList";
 import Slider from "react-slick";
 import happicard from "../../assets/images/happicard.PNG";
-import {Link } from 'react-router-dom';
-import {BodyContainer,LeftHeaderContainer,RightHeaderContainer,ElementProcess,BodyProcess,BodyProcessImg} from '../home/homeStyle'
+import { Link } from "react-router-dom";
+import {
+  BodyContainer,
+  LeftHeaderContainer,
+  RightHeaderContainer,
+  ElementProcess,
+  BodyProcess,
+  BodyProcessImg,
+} from "../home/homeStyle";
 import logoImg from "../../assets/images/logo-small.PNG";
 
 class home extends Component {
-  
-    constructor(props) {
-        super(props);
-        this.state = {};
-    }
+  constructor(props) {
+    super(props);
+    this.state = {};
+  }
 
-    componentDidMount(){  
-    }  
+  componentDidMount() {}
 
   render() {
     const settings = {
@@ -24,11 +29,9 @@ class home extends Component {
       slidesToShow: 1,
       slidesToScroll: 1,
     };
-    
-    return (     
-    <>
-      
-     
+
+    return (
+      <>
         {/* <Slider {...settings}>
           {" "}
           <div>
@@ -58,35 +61,31 @@ class home extends Component {
         {/* <div className="row" style={{padding : "30px"}}>   
         <LandingPageList />
         </div> */}
-      <BodyContainer>
-        <div className="row">  
-            <LeftHeaderContainer>     
-            <div className="row about-div">
-                  <img src={logoImg} className="happicard-img"></img> 
-                  <h5> Vi lanserar inom kort</h5>
-                  <p>
-                  Happicard är en digital plattform som ger användare möjlighet att köpa, spara,
-                  ta emot och lagra digitala presentkort.
+        <BodyContainer>
+          <div className="row">
+            <LeftHeaderContainer>
+              <div className="row about-div">
+                <img src={logoImg} className="happicard-img"></img>
+                <h5> Vi lanserar inom kort</h5>
+                <p>
+                  Happicard är en digital plattform som ger användare möjlighet
+                  att köpa, spara, ta emot och lagra digitala presentkort.
                   Kontakt: info@happicard.se
-                  </p>
-                  <p>
-                  <Link to="/about">Read More</Link>
-                  </p>
-                  
-            </div>        
+                </p>
+                <p>
+                  <Link to="/about">Läs mer</Link>
+                </p>
+              </div>
             </LeftHeaderContainer>
 
-            <RightHeaderContainer>         
-               <img src={happicard} className="img-header"></img>   
+            <RightHeaderContainer>
+              <img src={happicard} className="img-header"></img>
             </RightHeaderContainer>
-
-        </div>
-      </BodyContainer>
-   
-    </>
+          </div>
+        </BodyContainer>
+      </>
     );
   }
 }
-
 
 export default home;

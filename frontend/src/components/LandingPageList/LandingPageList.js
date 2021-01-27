@@ -8,6 +8,8 @@ import campaignsListImg from "../../assets/images/campaigns_image_list_01.PNG";
 import styled from "styled-components";
 import ProductList from "../../components/productList/productList";
 import { landingPageService } from "../../_services/landingpage.service";
+import { Button as ModalButton, Modal, Dropdown } from "react-bootstrap";
+import Counter from "./Counter";
 
 const Button = styled.button`
   /* Adapt the colors based on primary prop */
@@ -45,8 +47,10 @@ const LandingPageList = () => {
     id: "",
   });
 
-  // const onOpenModal = () => setOpen(true);
-  // const onCloseModal = () => setOpen(false);
+  const [show, setShow] = useState(false);
+
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const clickGiftCards = () => {
     if (displayGiftCards) {
@@ -84,6 +88,7 @@ const LandingPageList = () => {
   const handleChange = (e) => {
     console.log(e.target.value);
     setSelectedItem({ id: e.target.value });
+    handleShow();
   };
 
   function Test(props) {
@@ -128,6 +133,53 @@ const LandingPageList = () => {
 
   return (
     <>
+      <Modal show={show} onHide={handleClose}>
+        <Modal.Header closeButton></Modal.Header>
+        <Modal.Body>
+          <div className="row" style={{fontSize: }}>
+            <div className="col-sm">
+              {" "}
+              <img
+                src="https://happicard-stores.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+                style={{
+                  borderRadius: "0.65rem",
+                  width: "100%",
+                  height: "auto",
+                }}
+              />
+            </div>
+            <div className="col-sm">
+              <h6>Strumpmaskinen</h6>
+              <span>Category: fashion</span>
+              <br />
+              <span>
+                Amount:
+                <select>
+                  <option value="1">500 SEK</option>
+                  <option value="2">600 SEK</option>
+                  <option value="3">700 SEK</option>
+                </select>
+              </span>
+              <br />
+              <span>
+                quantity:
+                <Counter />
+              </span>
+            </div>
+          </div>
+          <div
+            className="row"
+            style={{ padding: "18px 18px 18px 18px", fontSize: "12px" }}
+          >
+            <p>
+              About:We at StrumpMaskinen are stocking lovers who are committed
+              to helping other stocking lovers express their love for their
+              friends, family and pets. Of course, we print all kinds of pets
+              and people, in all shapes and colors.
+            </p>
+          </div>
+        </Modal.Body>
+      </Modal>
       <div className="row" style={{ paddingTop: "75px" }}>
         <div className="col-sm">
           <div style={{ textAlign: "center" }}>

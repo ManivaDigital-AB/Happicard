@@ -65,7 +65,7 @@ class home extends Component {
           <div className="row">
             <LeftHeaderContainer>
               <div className="row about-div">
-                <img src={logoImg} className="happicard-img"></img>
+                <img src={logoImg}></img>
                 <h5 style={{ paddingTop: "30px" }}> Vi lanserar inom kort</h5>
                 <p>
                   Happicard är en digital plattform som ger användare möjlighet

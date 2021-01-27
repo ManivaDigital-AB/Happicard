@@ -10,6 +10,10 @@ import ProductList from "../../components/productList/productList";
 import { landingPageService } from "../../_services/landingpage.service";
 import { Button as ModalButton, Modal, Dropdown } from "react-bootstrap";
 import Counter from "./Counter";
+import axios from "../../utils/axios";
+// import history from "../../utils/history";
+import { useHistory } from "react-router-dom";
+import { useDispatch } from "react-redux";
 
 const Button = styled.button`
   /* Adapt the colors based on primary prop */
@@ -48,9 +52,13 @@ const LandingPageList = () => {
   });
 
   const [show, setShow] = useState(false);
+  const [orderId, setOrderId] = useState("");
+  const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const history = useHistory();
 
   const clickGiftCards = () => {
     if (displayGiftCards) {
@@ -89,6 +97,43 @@ const LandingPageList = () => {
     console.log(e.target.value);
     setSelectedItem({ id: e.target.value });
     handleShow();
+  };
+
+  const onCheckoutClick = async (e) => {
+    e.preventDefault();
+    try {
+      const response = await axios.get(
+        `https://dev.api.happicard.se/api/orders/checkout/?id=ec740eba-f5f5-4dc1-a034-7c4ced3c1c77`
+      );
+      // Send a request to active cart to add/update the order_id.
+      dispatch({ type: "CHECKOUT_REQUEST", payload: response.data });
+      history.push("/checkout");
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const onOrderSubmit = async (e) => {
+    e.preventDefault();
+    if (orderId.length) {
+      try {
+        const response = await axios.get(
+          `/checkout/v3/orders/${orderId}`,
+          klarnaOrderUpdateBody,
+          {
+            auth: {
+              username: process.env.REACT_APP_KLARNA_USERNAME,
+              password: process.env.REACT_APP_KLARNA_PASSWORD,
+            },
+          }
+        );
+
+        dispatch({ type: "CHECKOUT_REQUEST", payload: response.data });
+        history.push("/checkout");
+      } catch (err) {
+        console.log(err);
+      }
+    }
   };
 
   function Test(props) {
@@ -134,13 +179,16 @@ const LandingPageList = () => {
   return (
     <>
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header closeButton></Modal.Header>
-        <Modal.Body>
-          <div className="row" style={{fontSize: }}>
+        <Modal.Header
+          closeButton
+          style={{ backgroundColor: "#ffc541" }}
+        ></Modal.Header>
+        <Modal.Body style={{ backgroundColor: "#ffc541" }}>
+          <div className="row" style={{ fontSize: "12px" }}>
             <div className="col-sm">
               {" "}
               <img
-                src="https://happicard-stores.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+                src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
                 style={{
                   borderRadius: "0.65rem",
                   width: "100%",
@@ -150,33 +198,58 @@ const LandingPageList = () => {
             </div>
             <div className="col-sm">
               <h6>Strumpmaskinen</h6>
-              <span>Category: fashion</span>
+              <div>
+                <label style={{ marginRight: "2px" }}>Category:</label> fashion
+              </div>
               <br />
-              <span>
-                Amount:
+              <div>
+                <label style={{ marginRight: "4px" }}>Amount:</label>
                 <select>
                   <option value="1">500 SEK</option>
                   <option value="2">600 SEK</option>
                   <option value="3">700 SEK</option>
                 </select>
-              </span>
+              </div>
               <br />
-              <span>
-                quantity:
+              <div>
+                <label style={{ marginRight: "4px" }}>Quantity:</label>
                 <Counter />
-              </span>
+              </div>
             </div>
           </div>
           <div
             className="row"
             style={{ padding: "18px 18px 18px 18px", fontSize: "12px" }}
           >
+            <p>About:</p>
             <p>
-              About:We at StrumpMaskinen are stocking lovers who are committed
-              to helping other stocking lovers express their love for their
+              We at StrumpMaskinen are stocking lovers who are committed to
+              helping other stocking lovers express their love for their
               friends, family and pets. Of course, we print all kinds of pets
               and people, in all shapes and colors.
             </p>
+          </div>
+          <div
+            className="row"
+            style={{
+              padding: "18px 18px 18px 18px",
+              fontSize: "12px",
+              display: "block",
+              textAlign: "center",
+            }}
+          >
+            <button
+              style={{
+                backgroundColor: "#B2A8A4",
+                border: "none",
+                height: "35px",
+                borderRadius: "16px",
+                width: "200px",
+              }}
+              onClick={onCheckoutClick}
+            >
+              Buy
+            </button>
           </div>
         </Modal.Body>
       </Modal>

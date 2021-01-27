@@ -10,12 +10,15 @@ export default (props) => {
   const getCurrentOrder = useCallback(async () => {
     try {
       if (values.oid) {
-        const response = await axios.get(`/checkout/v3/orders/${values.oid}`, {
-          auth: {
-            username: process.env.REACT_APP_KLARNA_USERNAME,
-            password: process.env.REACT_APP_KLARNA_PASSWORD,
-          },
-        });
+        const response = await axios.get(
+          `https://api.playground.klarna.com/checkout/v3/orders/${values.oid}`,
+          {
+            auth: {
+              username: process.env.REACT_APP_KLARNA_USERNAME,
+              password: process.env.REACT_APP_KLARNA_PASSWORD,
+            },
+          }
+        );
         if (response) setHTML(response.data.html_snippet);
       } else {
         throw new Error("Missing Order Id");

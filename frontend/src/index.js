@@ -13,15 +13,18 @@ import Terms from "./pages/Terms";
 import reducers from "./reducers";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
+import { createBrowserHistory } from "history";
 
 const store = createStore(reducers, {});
 
 const App = () => {
+  const historyInstance = createBrowserHistory();
+
   return (
     <div className="App">
       <div className="">
-        <Router>
-          <div className="row">
+        <Router history={historyInstance}>
+          <div className="">
             <Navbar />
             <Switch>
               <Route exact path="/" component={Home} />

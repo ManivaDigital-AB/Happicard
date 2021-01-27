@@ -14,14 +14,11 @@ function Counter() {
     setCount((prevCount) => prevCount - 1);
   };
   return (
-    <div>
-      <div>
-        <button onClick={handleDecrement}>-</button>
-        {count}
-        <button onClick={handleIncrement}>+</button>
-      </div>
-      {/* <button onClick={() => setCount(0)}>Reset</button> */}
-    </div>
+    <>
+      <button onClick={handleDecrement}>-</button>
+      <span style={{ marginLeft: "2px", marginRight: "2px" }}>{count}</span>
+      <button onClick={handleIncrement}>+</button>
+    </>
   );
 }
 

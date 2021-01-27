@@ -35,7 +35,7 @@ from .serializers import (
 )
 from .models import User, Vendor, Customer, Subscriber
 from .renderers import UserRenderer
-from .utils import Util
+from backend.utils import Util
 
 
 class Newsletter(generics.GenericAPIView):
@@ -160,88 +160,6 @@ class CustomerRegistration(generics.GenericAPIView):
         Util.send_email(data)
 
         return Response(customer_data, status=status.HTTP_201_CREATED)
-
-
-class VendorCMSVerification(generics.GenericAPIView):
-    serializer_class = VendorVerificationSerializer
-
-    decision_param_config = openapi.Parameter(
-        "decision",
-        in_=openapi.IN_QUERY,
-        description="Decision",
-        type=openapi.TYPE_BOOLEAN,
-    )
-
-    email_param_config = openapi.Parameter(
-        "email",
-        in_=openapi.IN_QUERY,
-        description="Email",
-        type=openapi.TYPE_STRING,
-    )
-
-    @swagger_auto_schema(manual_parameters=[decision_param_config, email_param_config])
-    def get(self, request):
-        decision = request.GET.get("decision")
-        email = request.GET.get("email")
-        vendor = Vendor.objects.get(email=email)
-        email_subject = "Resultat för partnerverifiering"
-
-        if not vendor.is_verified and decision == str(True).lower():
-
-            vendor.is_verified = True
-            vendor_email_body = (
-                "Grattis, du har blivit en verifierad partner med Happicard!"
-            )
-            vendor_data = {
-                "email_body": vendor_email_body,
-                "to_email": vendor.email,
-                "email_subject": email_subject,
-            }
-            Util.send_email(vendor_data)
-            vendor.save()
-
-            client_email_body = "Grattis, du har en ny partner!"
-            client_data = {
-                "email_body": client_email_body,
-                "to_email": settings.DEFAULT_FROM_EMAIL,
-                "email_subject": email_subject,
-            }
-            Util.send_email(client_data)
-            vendor.save()
-
-            return Response(
-                {"Verification": "The vendor has been verified."},
-                status=status.HTTP_202_ACCEPTED,
-            )
-
-        elif not vendor.is_verified and decision == str(False).lower():
-            vendor_email_body = "Ursäkta, din partnerverifiering avvisades."
-            vendor_data = {
-                "email_body": vendor_email_body,
-                "to_email": vendor.email,
-                "email_subject": email_subject,
-            }
-            Util.send_email(vendor_data)
-            vendor.delete()
-
-            return Response(
-                {
-                    "Verification": "The vendor was not verified. Their form will be removed."
-                },
-                status=status.HTTP_401_UNAUTHORIZED,
-            )
-        elif vendor.is_verified and decision == str(True).lower():
-            return Response({"Verification": "The vendor has already been verified."})
-        elif vendor.is_verified and decision == str(False).lower():
-            return Response(
-                {
-                    "Verification": "The vendor has already been verified. If you want to remove them, you should do so directly."
-                }
-            )
-        else:
-            return Response(
-                {"Verification": "Your input was insufficient. Please try again."}
-            )
 
 
 class CustomerEmailVerification(views.APIView):

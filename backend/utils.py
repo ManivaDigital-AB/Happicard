@@ -8,7 +8,28 @@ import threading
 
 import os
 import qrcode
+from django.template.loader import render_to_string
+from django.template import Context
 from PIL import Image
+
+from twilio.rest import Client
+from twilio.twiml.messaging_response import Body, Media, Message, MessagingResponse
+
+twilio = Client(
+    settings.TWILIO_ACCOUNT_SID,
+    settings.TWILIO_AUTH_TOKEN,
+)
+
+
+def happicard_mms_body(
+    recipient_name,
+    sender_name,
+    personal_message,
+    rebate_code,
+    redeem_website,
+):
+    body = f"Hej {recipient_name}!\nYou received a Happicard from {sender_name} who says '{personal_message}'\nHere's your rebate code:\n{rebate_code}\nYou can redeem it here:\n{redeem_website}\nYou can find the QR code here:\nhttps://cutt.ly/Dj28ESX\nThey also sent you a little surprise:"
+    return body
 
 
 class EmailThread(threading.Thread):
@@ -45,29 +66,31 @@ class Util:
         EmailThread(email).start()
 
     @staticmethod
-    def send_qr_email(data):
+    def send_happicard_email(data, recipient_name, rebate_code, redeem_website):
+        html_content = render_to_string(
+            "happicard.html",
+            {
+                "personal_message": data["email_body"],
+                "recipient_name": recipient_name,
+                "rebate_code": rebate_code,
+                "redeem_website": redeem_website,
+            },
+        )
         email = EmailMultiAlternatives(
             subject=data["email_subject"],
             body=data["email_body"],
             to=[data["to_email"]],
         )
-        body_html = """
-                    <html>
-                        <body>
-                            <p>Grattis, din beställning har bekräftats! Lös in ditt Happicard-köp med den här QR-koden:</p>
-                            <img src="cid:order_qr" alt="QR-Koden"
-                            style="width:200px;height:200px;">
-                        </body>
-                    </html>
-                    """
-        email.attach_alternative(body_html, "text/html")
+        email.attach_alternative(
+            html_content,
+            "text/html",
+        )
         img_dir = "backend/api/orders/qr_data/"
         image = "order_qr.png"
         file_path = os.path.join(img_dir, image)
         with open(file_path, "rb") as f:
             img = MIMEImage(f.read())
             img.add_header("Content-ID", "<order_qr>")
-            email.attach(img)
         EmailThread(email).start()
 
     @staticmethod
@@ -89,3 +112,35 @@ class Util:
         )
         img_qr_big.paste(logo, pos)
         img_qr_big.save("backend/api/orders/qr_data/order_qr.png")
+
+    @staticmethod
+    def outbound_sms(to_number, from_number, message_body):
+        twilio.messages.create(
+            to=to_number,
+            from_=from_number,
+            body=message_body,
+        )
+
+    @staticmethod
+    def outbound_mms(
+        to_number,
+        from_number,
+        personal_message,
+        recipient_name,
+        sender_name,
+        rebate_code,
+        redeem_website,
+        outbound_media,
+    ):
+        twilio.messages.create(
+            to=to_number,
+            from_=from_number,
+            body=happicard_mms_body(
+                recipient_name,
+                sender_name,
+                personal_message,
+                rebate_code,
+                redeem_website,
+            ),
+            media_url=outbound_media,
+        )

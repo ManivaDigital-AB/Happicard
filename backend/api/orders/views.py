@@ -1,8 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
-import requests
 from requests.auth import HTTPBasicAuth
-from django.contrib.auth.decorators import login_required
 from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, status
@@ -12,6 +10,7 @@ from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from uuid import UUID
+import requests
 import json
 
 from .serializers import (
@@ -19,15 +18,19 @@ from .serializers import (
     CheckoutSerializer,
     OrderCampaignSerializer,
     OrderGiftCardSerializer,
+    HappicardSerializer,
 )
 from .models import (
     Order,
     OrderProduct,
     OrderCampaign,
     OrderGiftCard,
+    Happicard,
 )
 
-from backend.api.authentification.utils import Util
+from backend.utils import Util
+
+DEFAULT_FROM_NUMBER = settings.DEFAULT_FROM_NUMBER
 
 klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
@@ -215,10 +218,10 @@ class KlarnaCheckout(generics.GenericAPIView):
                     "country": str(order.country),
                 },
                 "merchant_urls": {
-                    "terms": "https://www.example.com/terms.html",
-                    "checkout": "https://www.example.com/checkout.html",
-                    "confirmation": "https://www.example.com/confirmation.html",
-                    "push": "https://www.example.com/api/push",
+                    "terms": "http://localhost:3000/terms",
+                    "checkout": "http://localhost:3000/checkout?oid={checkout.order.id}",
+                    "confirmation": "http://localhost:3000/confirmation?oid={checkout.order.id}",
+                    "push": "https://7ed00556b751.ngrok.io/klarna/push?oid={checkout.order.id}",
                 },
             }
             data = json.dumps(body, cls=UUIDEncoder)
@@ -238,104 +241,97 @@ class KlarnaCheckout(generics.GenericAPIView):
             return Response({"Error": "You do not have an active order."})
 
 
-class KlarnaCheckoutConfirmation(generics.GenericAPIView):
-    """
-    Checkout Confirmation with Klarna API
-    """
-
+class CompleteHappicardCheckout(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
-    serializer_class = CheckoutSerializer
+    serializer_class = HappicardSerializer
 
-    order_param_config = openapi.Parameter(
-        "order_id",
-        in_=openapi.IN_QUERY,
-        description="Place the new Order ID here:",
-        type=openapi.TYPE_STRING,
-    )
-
-    @swagger_auto_schema(manual_parameters=[order_param_config])
-    def get(self, request):
+    def post(self, request):
         auth = HTTPBasicAuth(klarna_un, klarna_pw)
         headers = {"content-type": "application/json"}
-        order_id = request.GET.get("order_id")
 
-        response = requests.get(
-            settings.KLARNA_BASE_URL + "/checkout/v3/orders/" + order_id,
-            auth=auth,
-            headers=headers,
-        )
-        klarna_order = response.json()
-        Util.create_qrcode("backend/api/orders/qr_data/happicard.png", order_id)
-        context = {"klarna_order": klarna_order}
-        confirm_subject = "Orderbekräftelse"
-        confirm_body = "Grattis, din beställning har bekräftats! Lös in ditt Happicard-köp med den här QR-koden:\n"
-        confirmation = {
-            "email_body": confirm_body,
-            "to_email": klarna_order["shipping_address"]["email"],
-            "email_subject": confirm_subject,
-        }
-        Util.send_qr_email(confirmation)
-        return Response({"Success": "Order confirmed"}, status=status.HTTP_200_OK)
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        recipient = serializer.data
+        happi_order_id = recipient.get("happi_order_id")
+        klarna_order_id = recipient.get("klarna_order_id")
+        order = Order.objects.get(id=happi_order_id)
 
+        if happi_order_id and klarna_order_id:
+            sender_name = order.first_name
+            recipient_name = recipient.get("recipient_name")
+            recipient_email_choice = recipient.get("recipient_email_choice")
+            recipient_sms_choice = recipient.get("recipient_sms_choice")
+            personal_message = recipient.get("personal_message")
+            email_subject = f"{sender_name} sent you a Happicard"
 
-@login_required
-def add_to_cart(request, slug):
-    item = get_object_or_404(Product, slug=slug)
-    order_item, created = OrderProduct.objects.get_or_create(
-        item=item, user=request.user, ordered=False
-    )
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item.quantity += 1
-            order_item.save()
-            messages.info(request, "This item quantity was updated.")
-        else:
-            order.items.add(order_item)
-            messages.info(request, "This item was added to your cart.")
-    else:
-        ordered_date = timezone.now()
-        order = Order.objects.create(user=request.user, ordered_date=ordered_date)
-        order.items.add(order_item)
-        messages.info(request, "This item was added to your cart.")
+            rebate_code = [
+                item.giftcard.rebate_code for item in order.giftcards.all()
+            ].pop()
+            redeem_website = [
+                item.giftcard.redeem_website for item in order.giftcards.all()
+            ].pop()
 
+            # CHANGE TO BE DYNAMIC
+            Util.create_qrcode(
+                "backend/api/orders/qr_data/happicard.png", klarna_order_id
+            )
+            outbound_media = (
+                "https://media.giphy.com/media/IwAZ6dvvvaTtdI8SD5/giphy.gif"
+            )
 
-@login_required
-def remove_from_cart(request, slug):
-    item = get_object_or_404(Item, slug=slug)
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item = OrderProduct.objects.filter(
-                item=item, user=request.user, ordered=False
-            )[0]
-            order.items.remove(order_item)
-            messages.info(request, "This item was removed from your cart.")
-        else:
-            messages.info(request, "This item was not in your cart")
-    else:
-        messages.info(request, "You do not have an active order")
-
-
-@login_required
-def remove_single_item_from_cart(request, slug):
-    product = get_object_or_404(Product, slug=slug)
-    order_qs = Order.objects.filter(user=request.user, ordered=False)
-    if order_qs.exists():
-        order = order_qs[0]
-        if order.items.filter(item__slug=item.slug).exists():
-            order_item = OrderProduct.objects.filter(
-                item=item, user=request.user, ordered=False
-            )[0]
-            if order_item.quantity > 1:
-                order_item.quantity -= 1
-                order_item.save()
+            if recipient_email_choice and recipient_sms_choice:
+                recipient_email = recipient.get("recipient_email")
+                confirmation = {
+                    "to_email": recipient_email,
+                    "email_body": personal_message,
+                    "email_subject": email_subject,
+                }
+                Util.send_happicard_email(
+                    confirmation, recipient_name, rebate_code, redeem_website
+                )
+                recipient_number = recipient.get("recipient_number")
+                Util.outbound_mms(
+                    to_number=recipient_number,
+                    from_number=DEFAULT_FROM_NUMBER,
+                    personal_message=personal_message,
+                    recipient_name=recipient_name,
+                    sender_name=sender_name,
+                    rebate_code=rebate_code,
+                    redeem_website=redeem_website,
+                    outbound_media=outbound_media,
+                )
+                return Response(
+                    {"Success": "Happicard email and SMS successfully sent."},
+                    status=status.HTTP_200_OK,
+                )
+            elif recipient_sms_choice and not recipient_email_choice:
+                recipient_number = recipient.get("recipient_number")
+                Util.outbound_mms(
+                    to_number=recipient_number,
+                    from_number=DEFAULT_FROM_NUMBER,
+                    personal_message=personal_message,
+                    recipient_name=recipient_name,
+                    sender_name=sender_name,
+                    rebate_code=rebate_code,
+                    redeem_website=redeem_website,
+                    outbound_media=outbound_media,
+                )
+                return Response(
+                    {"Success": "Happicard SMS successfully sent."},
+                    status=status.HTTP_200_OK,
+                )
             else:
-                order.items.remove(order_item)
-            messages.info(request, "This item quantity was updated.")
-        else:
-            messages.info(request, "This item was not in your cart")
-    else:
-        messages.info(request, "You do not have an active order")
+                recipient_email = recipient.get("recipient_email")
+                confirmation = {
+                    "to_email": recipient_email,
+                    "email_body": personal_message,
+                    "email_subject": email_subject,
+                }
+                Util.send_happicard_email(
+                    confirmation, recipient_name, rebate_code, redeem_website
+                )
+                return Response(
+                    {"Success": "Happicard email successfully sent."},
+                    status=status.HTTP_200_OK,
+                )

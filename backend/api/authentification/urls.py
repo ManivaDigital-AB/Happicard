@@ -33,11 +33,6 @@ urlpatterns = [
     path(
         "register/vendor/", views.VendorRegistration.as_view(), name="vendor-register"
     ),
-    path(
-        "vendor-verify/",
-        views.VendorCMSVerification.as_view(),
-        name="vendor-verify",
-    ),
     path("token/", jwt_views.TokenObtainPairView.as_view(), name="token-obtain-pair"),
     path("token/refresh/", jwt_views.TokenRefreshView.as_view(), name="token-refresh"),
     path("login/customer/", views.CustomerLogin.as_view(), name="login-customer"),

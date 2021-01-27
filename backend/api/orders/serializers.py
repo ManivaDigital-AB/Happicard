@@ -1,7 +1,7 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
-from .models import Order, OrderGiftCard, OrderCampaign
+from .models import Order, OrderGiftCard, OrderCampaign, Happicard
 from backend.api.products.models import GiftCard, Campaign
 
 
@@ -57,3 +57,19 @@ class OrderCampaignSerializer(serializers.ModelSerializer):
 
     def get_campaign(self, obj):
         return OrderCampaignSerializer(obj.campaign).data
+
+
+class HappicardSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Happicard
+        fields = (
+            "happi_order_id",
+            "klarna_order_id",
+            "recipient_myself",
+            "recipient_name",
+            "recipient_email_choice",
+            "recipient_email",
+            "recipient_sms_choice",
+            "recipient_number",
+            "personal_message",
+        )

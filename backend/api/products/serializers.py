@@ -1,5 +1,4 @@
 from rest_framework import serializers
-
 from .models import GiftCard, Campaign
 
 
@@ -14,6 +13,8 @@ class GiftCardSerializer(serializers.ModelSerializer):
             "description",
             "has_offer",
             "discount_price",
+            "store_category",
+            "rebate_code",
         )
 
 
@@ -26,4 +27,5 @@ class CampaignSerializer(serializers.ModelSerializer):
             "price",
             "image",
             "description",
+            "rebate_code",
         )

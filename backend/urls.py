@@ -13,7 +13,8 @@ schema_view = get_schema_view(
         contact=openapi.Contact(email="drew@manivadigital.com"),
         license=openapi.License(name="BSD License"),
     ),
-    public=True,
+    # url="https://dev.api.happicard.se"
+    public=False,
     permission_classes=[permissions.AllowAny],
 )
 

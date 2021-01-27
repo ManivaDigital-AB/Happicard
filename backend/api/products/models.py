@@ -10,6 +10,20 @@ import uuid
 from backend.api.profiles.models import Store, NGO
 from backend.settings.storage_backends import CampaignStorage, GiftCardStorage
 
+STORE_CHOICES = (
+    ("Electronics", "Electronics"),
+    ("Fashion & Accessories", "Fashion & Accessories"),
+    ("Digital Entertainment", "Digital Entertainment"),
+    ("Home & Garden", "Home & Garden"),
+)
+
+NGO_CHOICES = (
+    ("Non-Profit Organization", "Non-Profit Organization"),
+    ("Youth", "Youth"),
+    ("Educational", "Educational"),
+    ("Literary", "Literary"),
+)
+
 
 class Product(models.Model):
     """
@@ -23,13 +37,16 @@ class Product(models.Model):
         editable=False,
         primary_key=True,
     )
-    title = models.CharField(max_length=255, null=True, blank=True, unique=True)
+    title = models.CharField(max_length=255, null=True, blank=True)
     price = models.IntegerField(default=0)
     description = models.TextField("Description", max_length=500, blank=True)
     tax_amount = models.IntegerField(default=0)
+    rebate_code = models.CharField(max_length=200, unique=True, null=True, blank=True)
+    online = models.BooleanField(default=True)
+    redeem_website = models.CharField(max_length=50, blank=True)
 
     def __str__(self):
-        return self.title
+        return f"{self.title} priced at {self.price}"
 
 
 class GiftCard(Product):
@@ -44,7 +61,13 @@ class GiftCard(Product):
     image = models.FileField(storage=GiftCardStorage())
     has_offer = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=0)
-    store = models.ForeignKey(Store, on_delete=models.CASCADE, null=True)
+    store_category = models.CharField(
+        max_length=50,
+        choices=STORE_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("Store Category"),
+    )
 
 
 class Campaign(Product):
@@ -57,4 +80,10 @@ class Campaign(Product):
         verbose_name_plural = _("Campaigns")
 
     image = models.FileField(storage=CampaignStorage())
-    ngo = models.ForeignKey(NGO, on_delete=models.CASCADE, null=True)
+    ngo_category = models.CharField(
+        max_length=50,
+        choices=NGO_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("NGO Category"),
+    )

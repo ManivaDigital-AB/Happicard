@@ -48,10 +48,12 @@ MIDDLEWARE = [
 
 ROOT_URLCONF = "backend.urls"
 
+TEMPLATE_DIR = os.path.join(BASE_DIR, "templates")
+
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [],
+        "DIRS": [TEMPLATE_DIR],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -147,6 +149,11 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = "send.one.com"
 EMAIL_PORT = 587
+
+# Twilio
+TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
+DEFAULT_FROM_NUMBER = config("TWILIO_NUMBER")
 
 # Klarna
 KLARNA_UN = config("KLARNA_UN")

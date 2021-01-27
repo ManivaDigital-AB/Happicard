@@ -9,6 +9,10 @@ import uuid
 
 from django.utils.translation import gettext_lazy as _
 from backend.api.products.models import GiftCard, Campaign
+from backend.settings.storage_backends import (
+    HappicardImageStorage,
+    HappicardVideoStorage,
+)
 
 
 class OrderProduct(models.Model):
@@ -28,8 +32,8 @@ class OrderProduct(models.Model):
 
 class OrderGiftCard(OrderProduct):
     class Meta:
-        verbose_name = _("Ordered Gift Card")
-        verbose_name_plural = _("Ordered Gift Cards")
+        verbose_name = _("Gift Card in Basket")
+        verbose_name_plural = _("Gift Cards in Basket")
 
     giftcard = models.ForeignKey(GiftCard, on_delete=models.CASCADE)
 
@@ -55,8 +59,8 @@ class OrderGiftCard(OrderProduct):
 
 class OrderCampaign(OrderProduct):
     class Meta:
-        verbose_name = _("Ordered Campaign")
-        verbose_name_plural = _("Ordered Campaigns")
+        verbose_name = _("Campaign in Basket")
+        verbose_name_plural = _("Campaigns in Basket")
 
     campaign = models.ForeignKey(Campaign, on_delete=models.CASCADE)
 
@@ -65,6 +69,37 @@ class OrderCampaign(OrderProduct):
 
     def get_total_campaign_price(self):
         return self.quantity * self.campaign.price
+
+
+class Happicard(models.Model):
+    id = models.UUIDField(
+        default=uuid.uuid4,
+        unique=True,
+        db_index=True,
+        editable=False,
+        primary_key=True,
+    )
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True,
+    )
+    happi_order_id = models.CharField(max_length=50, null=True, blank=True)
+    klarna_order_id = models.CharField(max_length=50, null=True, blank=True)
+    recipient_myself = models.BooleanField(default=True)
+    recipient_name = models.CharField(max_length=50, null=True, blank=True)
+    delivery_date = models.DateTimeField(auto_now_add=True)
+    recipient_email_choice = models.BooleanField(default=False)
+    recipient_email = models.EmailField(max_length=254, null=True, blank=True)
+    recipient_sms_choice = models.BooleanField(default=False)
+    recipient_number = models.CharField(max_length=20, null=True, blank=True)
+    personal_message = models.TextField(null=False)
+    personal_image = models.FileField(storage=HappicardImageStorage(), null=True)
+    personal_video = models.FileField(storage=HappicardVideoStorage(), null=True)
+
+    def __str__(self):
+        return str(self.id)
 
 
 class Order(models.Model):
@@ -99,6 +134,9 @@ class Order(models.Model):
     street_address1 = models.CharField(max_length=80, null=False, blank=False)
     street_address2 = models.CharField(max_length=80, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
+    happicard = models.ForeignKey(
+        Happicard, on_delete=models.CASCADE, null=True, blank=True
+    )
     order_total = models.DecimalField(
         max_digits=10, decimal_places=2, null=False, default=0
     )

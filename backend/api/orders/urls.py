@@ -4,27 +4,31 @@ from . import views
 app_name = "orders"
 urlpatterns = [
     path(
-        "campaigns/list/", views.OrderCampaignList.as_view(), name="ordercampaigns-list"
+        "basket-campaigns/",
+        views.OrderCampaignList.as_view(),
+        name="basket-campaigns-list",
     ),
     path(
-        "giftcards/list/", views.OrderGiftCardList.as_view(), name="ordergiftcards-list"
+        "basket-giftcards/",
+        views.OrderGiftCardList.as_view(),
+        name="basket-giftcards-list",
     ),
-    path("list/", views.OrderList.as_view(), name="order-list"),
+    path("", views.OrderList.as_view(), name="list-order"),
     path(
-        "create/campaign-order",
+        "campaign-to-basket/",
         views.CreateOrderCampaign.as_view(),
-        name="create-campaign-order",
+        name="campaign-to-basket",
     ),
     path(
-        "create/giftcard-order",
+        "giftcard-to-basket/",
         views.CreateOrderGiftCard.as_view(),
-        name="create-giftcard-order",
+        name="giftcard-to-basket",
     ),
-    path("create/order/", views.CreateOrder.as_view(), name="create-order"),
+    path("order/", views.CreateOrder.as_view(), name="create-order"),
     path("checkout/", views.KlarnaCheckout.as_view(), name="checkout"),
     path(
-        "checkout/confirm/",
-        views.KlarnaCheckoutConfirmation.as_view(),
-        name="checkout-confirm",
+        "happicard/confirm/",
+        views.CompleteHappicardCheckout.as_view(),
+        name="happicard-confirm",
     ),
 ]

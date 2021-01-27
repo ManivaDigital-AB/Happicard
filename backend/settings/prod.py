@@ -24,6 +24,10 @@ EMAIL_HOST_USER = config("EMAIL_PROD_HOST_USER")
 EMAIL_HOST_PASSWORD = config("EMAIL_PROD_HOST_PASSWORD")
 DEFAULT_FROM_EMAIL = config("DEFAULT_PROD_FROM_EMAIL")
 
+TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
+TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
+TWILIO_NUMBER = config("TWILIO_NUMBER")
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

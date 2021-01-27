@@ -66,7 +66,7 @@ class home extends Component {
             <LeftHeaderContainer>
               <div className="row about-div">
                 <img src={logoImg} className="happicard-img"></img>
-                <h5> Vi lanserar inom kort</h5>
+                <h5 style={{ paddingTop: "30px" }}> Vi lanserar inom kort</h5>
                 <p>
                   Happicard är en digital plattform som ger användare möjlighet
                   att köpa, spara, ta emot och lagra digitala presentkort.

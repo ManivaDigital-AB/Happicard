@@ -5,7 +5,7 @@ import Slider from "react-slick";
 function App() {
   return (
     <div className="App">
-      <div className="">
+      <div className="row">
         <Navbar />
         {/* <Slider {...settings}>
           {" "}

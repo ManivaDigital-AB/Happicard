@@ -165,7 +165,7 @@ const RightNav = ({ open }) => {
             width: "18px",
             height: "19px",
             marginTop: "18px",
-            marginRight: "3px",
+            marginRight: "15px",
           }}
         />
       </div>

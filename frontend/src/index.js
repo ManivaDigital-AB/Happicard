@@ -14,6 +14,7 @@ import reducers from "./reducers";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { createBrowserHistory } from "history";
+import logoImg from "./assets/images/logo.PNG";
 
 const store = createStore(reducers, {});
 
@@ -24,20 +25,15 @@ const App = () => {
     <div className="App">
       <div className="">
         <Router history={historyInstance}>
-          <div className="">
-            <Navbar />
-            <Switch>
-              <Route exact path="/" component={Home} />
-              <Route path="/about" component={About} />
-              <Route exact={true} path="/checkout" component={Checkout} />
-              <Route
-                exact={true}
-                path="/confirmation"
-                component={Confirmation}
-              />
-              <Route exact={true} path="/terms" component={Terms} />
-            </Switch>
-          </div>
+          <Navbar />
+
+          <Switch>
+            <Route exact path="/" component={Home} />
+            <Route path="/about" component={About} />
+            <Route exact={true} path="/checkout" component={Checkout} />
+            <Route exact={true} path="/confirmation" component={Confirmation} />
+            <Route exact={true} path="/terms" component={Terms} />
+          </Switch>
         </Router>
         <Footer />
       </div>

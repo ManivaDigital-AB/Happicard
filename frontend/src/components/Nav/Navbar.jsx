@@ -2,16 +2,21 @@ import React from "react";
 import { Nav } from "./Navbarstyles";
 import Burger from "./Burger";
 import logoImg from "../../assets/images/logo.PNG";
+import { Link } from "react-router-dom";
 
 const Navbar = () => {
   return (
-    <Nav>
-      {/* <div className="logo">Nav Bar</div> */}
-      <div>
-        <img src={logoImg} className="logo"></img>
-      </div>
-      <Burger />
-    </Nav>
+    <>
+      <Nav>
+        {/* <div className="logo">Nav Bar</div> */}
+        <div className="logo">
+          <Link to="/">
+            <img className="logoImg" src={logoImg} />
+          </Link>
+        </div>
+        <Burger />
+      </Nav>
+    </>
   );
 };
 

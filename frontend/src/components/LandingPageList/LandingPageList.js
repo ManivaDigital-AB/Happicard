@@ -103,7 +103,7 @@ const LandingPageList = () => {
     e.preventDefault();
     try {
       const response = await axios.get(
-        `https://dev.api.happicard.se/api/orders/checkout/?id=ec740eba-f5f5-4dc1-a034-7c4ced3c1c77`
+        `https://dev.api.happicard.se/api/orders/checkout/?id=6252b48a-73c2-4937-86ec-39c7687307ff`
       );
       // Send a request to active cart to add/update the order_id.
       dispatch({ type: "CHECKOUT_REQUEST", payload: response.data });
@@ -138,7 +138,7 @@ const LandingPageList = () => {
 
   function Test(props) {
     return (
-      <div className="col-sm-4">
+      <div className="col-sm-3 ml-3 mb-3">
         <div
           className="card"
           style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
@@ -150,7 +150,7 @@ const LandingPageList = () => {
               checked={selectedItem.id == props.id}
               onChange={handleChange}
             />
-            <h6 className="card-title" style={{ color: "red" }}>
+            <h6 className="card-title" style={{ color: "#D7383B" }}>
               {props.name}
             </h6>
             <img
@@ -161,14 +161,31 @@ const LandingPageList = () => {
               className="card-text"
               style={{
                 paddingTop: "10px",
-                fontSize: "12px",
+                fontSize: "9px",
 
                 letterSpacing: "0.2px",
                 color: "grey",
                 fontFamily: "Helvetica Neue, Helvetica, sans-serif",
               }}
             >
-              Category: {props.title} | Online
+              <span
+                style={{
+                  marginLeft: "2px",
+                  marginRight: "2px",
+                }}
+              >
+                Category: {props.title}
+              </span>{" "}
+              <span style={{ color: "#D7383B" }}>| </span>{" "}
+              <span
+                style={{
+                  marginLeft: "2px",
+                  marginRight: "2px",
+                }}
+              >
+                {" "}
+                Online{" "}
+              </span>
             </p>
           </div>
         </div>
@@ -179,82 +196,94 @@ const LandingPageList = () => {
   return (
     <>
       <Modal show={show} onHide={handleClose}>
-        <Modal.Header
-          closeButton
-          style={{ backgroundColor: "#ffc541" }}
-        ></Modal.Header>
-        <Modal.Body style={{ backgroundColor: "#ffc541" }}>
-          <div className="row" style={{ fontSize: "12px" }}>
-            <div className="col-sm">
-              {" "}
-              <img
-                src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
-                style={{
-                  borderRadius: "0.65rem",
-                  width: "100%",
-                  height: "auto",
-                }}
-              />
+        <div style={{ border: "8px solid #ffff", borderRadius: "0.3rem" }}>
+          <Modal.Header
+            closeButton
+            style={{ backgroundColor: "#ffc541", border: "none" }}
+          ></Modal.Header>
+          <Modal.Body style={{ backgroundColor: "#ffc541" }}>
+            <div className="row" style={{ fontSize: "12px" }}>
+              <div className="col-sm">
+                {" "}
+                <img
+                  src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+                  style={{
+                    borderRadius: "0.65rem",
+                    width: "100%",
+                    height: "auto",
+                  }}
+                />
+              </div>
+              <div className="col-sm">
+                <h6 style={{ paddingBottom: "12px" }}>Strumpmaskinen</h6>
+                <div>
+                  <label style={{ marginRight: "2px", fontWeight: "bold" }}>
+                    Category:
+                  </label>{" "}
+                  fashion
+                </div>
+
+                <div>
+                  <label style={{ marginRight: "4px", fontWeight: "bold" }}>
+                    Amount:
+                  </label>
+                  <select>
+                    <option value="1">100 SEK</option>
+                    <option value="2">600 SEK</option>
+                    <option value="3">700 SEK</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label style={{ marginRight: "4px", fontWeight: "bold" }}>
+                    Quantity:
+                  </label>
+                  <Counter />
+                </div>
+              </div>
             </div>
-            <div className="col-sm">
-              <h6>Strumpmaskinen</h6>
-              <div>
-                <label style={{ marginRight: "2px" }}>Category:</label> fashion
-              </div>
-              <br />
-              <div>
-                <label style={{ marginRight: "4px" }}>Amount:</label>
-                <select>
-                  <option value="1">500 SEK</option>
-                  <option value="2">600 SEK</option>
-                  <option value="3">700 SEK</option>
-                </select>
-              </div>
-              <br />
-              <div>
-                <label style={{ marginRight: "4px" }}>Quantity:</label>
-                <Counter />
-              </div>
-            </div>
-          </div>
-          <div
-            className="row"
-            style={{ padding: "18px 18px 18px 18px", fontSize: "12px" }}
-          >
-            <p>About:</p>
-            <p>
-              We at StrumpMaskinen are stocking lovers who are committed to
-              helping other stocking lovers express their love for their
-              friends, family and pets. Of course, we print all kinds of pets
-              and people, in all shapes and colors.
-            </p>
-          </div>
-          <div
-            className="row"
-            style={{
-              padding: "18px 18px 18px 18px",
-              fontSize: "12px",
-              display: "block",
-              textAlign: "center",
-            }}
-          >
-            <button
-              style={{
-                backgroundColor: "#B2A8A4",
-                border: "none",
-                height: "35px",
-                borderRadius: "16px",
-                width: "200px",
-              }}
-              onClick={onCheckoutClick}
+            <div
+              className="row"
+              style={{ padding: "18px 18px 18px 18px", fontSize: "12px" }}
             >
-              Buy
-            </button>
-          </div>
-        </Modal.Body>
+              <p style={{ fontWeight: "bold" }}>About:</p>
+              <p>
+                We at StrumpMaskinen are stocking lovers who are committed to
+                helping other stocking lovers express their love for their
+                friends, family and pets. Of course, we print all kinds of pets
+                and people, in all shapes and colors.
+              </p>
+            </div>
+            <div
+              className="row"
+              style={{
+                padding: "18px 18px 18px 18px",
+                fontSize: "12px",
+                display: "block",
+                textAlign: "center",
+              }}
+            >
+              <button
+                style={{
+                  backgroundColor: "#B2A8A4",
+                  border: "none",
+                  height: "35px",
+                  borderRadius: "16px",
+                  width: "200px",
+                }}
+                onClick={onCheckoutClick}
+              >
+                Buy
+              </button>
+            </div>
+          </Modal.Body>
+        </div>
       </Modal>
-      <div className="row" style={{ paddingTop: "75px" }}>
-        <div className="col-sm">
+      <div
+        className="row justify-content-md-center"
+        style={{ paddingTop: "75px" }}
+      >
+        <div className="col-sm-3">
           <div style={{ textAlign: "center" }}>
             <ListImg src={giftImg} />
             <Button
@@ -268,7 +297,7 @@ const LandingPageList = () => {
             </Button>
           </div>
         </div>
-        <div className="col-sm">
+        <div className="col-sm-3">
           <div style={{ textAlign: "center" }}>
             <ListImg src={offersImg} />
             <Button
@@ -282,7 +311,7 @@ const LandingPageList = () => {
             </Button>
           </div>
         </div>
-        <div className="col-sm">
+        <div className="col-sm-3">
           <div style={{ textAlign: "center" }}>
             <ListImg src={campaignsImg} />
             <Button
@@ -298,7 +327,7 @@ const LandingPageList = () => {
         </div>
       </div>
       <div
-        className="row"
+        className="row justify-content-md-center"
         style={{ textAlign: "center", paddingBottom: "10px" }}
       >
         {displayGiftCards &&
@@ -315,7 +344,7 @@ const LandingPageList = () => {
       </div>
 
       <div
-        className="row"
+        className="row justify-content-md-center"
         style={{ textAlign: "center", paddingBottom: "10px" }}
       >
         {displayHappiOffers &&
@@ -332,7 +361,7 @@ const LandingPageList = () => {
       </div>
 
       <div
-        className="row"
+        className="row justify-content-md-center"
         style={{ textAlign: "center", paddingBottom: "10px" }}
       >
         {displayCampaigns &&

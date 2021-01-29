@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, useCallback } from "react";
-import axios from "../utils/axios";
+import axios from "axios";
 import queryString from "query-string";
 
 export default (props) => {
@@ -10,12 +10,20 @@ export default (props) => {
   const getCurrentOrder = useCallback(async () => {
     try {
       if (values.oid) {
+        console.log(process.env.REACT_APP_KLARNA_BASEURL);
+        axios.defaults.baseURL = process.env.REACT_APP_KLARNA_BASEURL;
+        axios.defaults.config = {
+          headers: {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+          },
+        };
         const response = await axios.get(
-          `https://api.playground.klarna.com/checkout/v3/orders/${values.oid}`,
+          `https://cors-anywhere.herokuapp.com/https://api.playground.klarna.com/checkout/v3/orders/${values.oid}`,
           {
             auth: {
-              username: process.env.REACT_APP_KLARNA_USERNAME,
-              password: process.env.REACT_APP_KLARNA_PASSWORD,
+              username: "PK31863_2790f4576242",
+              password: "K9w4MbxAD8GHP3pu",
             },
           }
         );

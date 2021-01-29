@@ -15,9 +15,38 @@ function Counter() {
   };
   return (
     <>
-      <button onClick={handleDecrement}>-</button>
-      <span style={{ marginLeft: "2px", marginRight: "2px" }}>{count}</span>
-      <button onClick={handleIncrement}>+</button>
+      <button
+        onClick={handleDecrement}
+        style={{
+          backgroundColor: "#B2A8A4",
+          border: "none",
+          width: "25px",
+        }}
+      >
+        -
+      </button>
+      <input
+        style={{
+          backgroundColor: "#fff",
+          border: "none",
+          textAlign: "center",
+          width: "25px",
+        }}
+        readOnly
+        value={count}
+      />
+
+      <button
+        onClick={handleIncrement}
+        style={{
+          backgroundColor: "#FFBA08",
+          border: "none",
+          width: "25px",
+          marginRight: "8px",
+        }}
+      >
+        +
+      </button>
     </>
   );
 }

@@ -28,7 +28,7 @@ def happicard_mms_body(
     rebate_code,
     redeem_website,
 ):
-    body = f"Hej {recipient_name}!\nYou received a Happicard from {sender_name} who says '{personal_message}'\nHere's your rebate code:\n{rebate_code}\nYou can redeem it here:\n{redeem_website}\nYou can find the QR code here:\nhttps://cutt.ly/Dj28ESX\nThey also sent you a little surprise:"
+    body = f"Hej {recipient_name}!\nYou received a Happicard from {sender_name} who says '{personal_message}'\nHere's your rebate code:\n{rebate_code}\nYou can redeem it here:\n{redeem_website}\nYou can find the QR code here:\nhttps://cutt.ly/Dj28ESX\n"
     return body
 
 
@@ -130,7 +130,6 @@ class Util:
         sender_name,
         rebate_code,
         redeem_website,
-        outbound_media,
     ):
         twilio.messages.create(
             to=to_number,
@@ -142,5 +141,4 @@ class Util:
                 rebate_code,
                 redeem_website,
             ),
-            media_url=outbound_media,
         )

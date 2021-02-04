@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderGiftCard, OrderCampaign
+from .models import Order, OrderGiftCard, OrderCampaign, Happicard
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -48,3 +48,4 @@ class OrderAdmin(admin.ModelAdmin):
 admin.site.register(Order, OrderAdmin)
 admin.site.register(OrderGiftCard)
 admin.site.register(OrderCampaign)
+admin.site.register(Happicard)

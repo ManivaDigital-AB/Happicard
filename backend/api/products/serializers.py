@@ -8,13 +8,17 @@ class GiftCardSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "price",
+            "price_option_1",
+            "price_option_2",
+            "price_option_3",
+            "rebate_code_1",
+            "rebate_code_2",
+            "rebate_code_3",
             "image",
             "description",
             "has_offer",
             "discount_price",
             "store_category",
-            "rebate_code",
         )
 
 
@@ -24,8 +28,12 @@ class CampaignSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "price",
+            "price_option_1",
+            "price_option_2",
+            "price_option_3",
+            "rebate_code_1",
+            "rebate_code_2",
+            "rebate_code_3",
             "image",
             "description",
-            "rebate_code",
         )

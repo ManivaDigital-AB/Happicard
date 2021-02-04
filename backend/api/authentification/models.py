@@ -2,6 +2,7 @@ from django.contrib.auth.base_user import BaseUserManager
 from django.contrib.auth.models import AbstractBaseUser, PermissionsMixin
 from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import ugettext_lazy as _
+from django.utils import timezone
 from django.db import models
 from django import forms
 import uuid
@@ -63,8 +64,9 @@ class User(AbstractBaseUser, PermissionsMixin):
     first_name = models.CharField(max_length=255, verbose_name="First name")
     last_name = models.CharField(max_length=255, verbose_name="Last name")
     is_active = models.BooleanField(default=True)
-    is_staff = models.BooleanField(default=False)
+    is_staff = models.BooleanField(default=True)
     is_verified = models.BooleanField(default=False)
+    published = models.DateTimeField(default=timezone.now)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 

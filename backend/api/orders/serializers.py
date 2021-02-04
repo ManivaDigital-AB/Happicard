@@ -38,6 +38,7 @@ class OrderGiftCardSerializer(serializers.ModelSerializer):
             "id",
             "ordered",
             "giftcard",
+            "price_choice",
             "quantity",
         )
 
@@ -52,6 +53,7 @@ class OrderCampaignSerializer(serializers.ModelSerializer):
             "id",
             "ordered",
             "campaign",
+            "price_choice",
             "quantity",
         )
 
@@ -64,7 +66,7 @@ class HappicardSerializer(serializers.ModelSerializer):
         model = Happicard
         fields = (
             "happi_order_id",
-            "klarna_order_id",
+            "klarna_order_confirm",
             "recipient_myself",
             "recipient_name",
             "recipient_email_choice",
@@ -72,4 +74,5 @@ class HappicardSerializer(serializers.ModelSerializer):
             "recipient_sms_choice",
             "recipient_number",
             "personal_message",
+            "personal_image",
         )

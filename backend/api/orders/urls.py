@@ -25,10 +25,21 @@ urlpatterns = [
         name="giftcard-to-basket",
     ),
     path("order/", views.CreateOrder.as_view(), name="create-order"),
+    path("order/<int:pk>", views.CreateOrder.as_view(), name="order-detail"),
     path("checkout/", views.KlarnaCheckout.as_view(), name="checkout"),
     path(
-        "happicard/confirm/",
-        views.CompleteHappicardCheckout.as_view(),
-        name="happicard-confirm",
+        "checkout-confirm/",
+        views.KlarnaCheckoutConfirmation.as_view(),
+        name="checkout-confirm",
+    ),
+    path(
+        "create/happicard/",
+        views.CreateHappicard.as_view(),
+        name="create-happicard",
+    ),
+    path(
+        "happicard/<int:pk>/",
+        views.HappicardDetail.as_view(),
+        name="happicard-detail",
     ),
 ]

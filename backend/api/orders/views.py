@@ -1,7 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from requests.auth import HTTPBasicAuth
-from rest_framework.parsers import MultiPartParser, FormParser
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import permissions, status
 from rest_framework import generics, viewsets
@@ -70,10 +69,9 @@ class CreateOrderGiftCard(generics.CreateAPIView):
     """
 
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = OrderGiftCardSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         order = request.data
         serializer = self.serializer_class(data=order)
         if serializer.is_valid(raise_exception=True):
@@ -89,10 +87,9 @@ class CreateOrderCampaign(generics.CreateAPIView):
     """
 
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = OrderCampaignSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         order = request.data
         serializer = self.serializer_class(data=order)
         if serializer.is_valid(raise_exception=True):
@@ -108,10 +105,9 @@ class CreateOrder(generics.CreateAPIView):
     """
 
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = OrderSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         order = request.data
         serializer = self.serializer_class(data=order)
         if serializer.is_valid(raise_exception=True):
@@ -132,7 +128,7 @@ class KlarnaCheckout(generics.GenericAPIView):
     order_param_config = openapi.Parameter(
         "id",
         in_=openapi.IN_QUERY,
-        description="Place the Order ID here:",
+        description="Place the Happi Order ID here:",
         type=openapi.TYPE_STRING,
     )
 
@@ -154,14 +150,14 @@ class KlarnaCheckout(generics.GenericAPIView):
                         "reference": item.campaign.id,
                         "name": item.campaign.title,
                         "quantity": int(item.quantity),
-                        "unit_price": int(item.campaign.price),
+                        "unit_price": int(item.price_choice * 100),
                         "tax_rate": int(00),
-                        "total_amount": int(item.campaign.price * item.quantity),
+                        "total_amount": int((item.price_choice * 100) * item.quantity),
                         "total_discount_amount": 0,
                         "total_tax_amount": 0,
                     }
                 )
-                campaign_order_amount += item.campaign.price * item.quantity
+                campaign_order_amount += (item.price_choice * 100) * item.quantity
             for item in order.giftcards.all():
                 if item.giftcard.has_offer:
                     order_lines.append(
@@ -170,16 +166,21 @@ class KlarnaCheckout(generics.GenericAPIView):
                             "reference": item.giftcard.id,
                             "name": item.giftcard.title,
                             "quantity": int(item.quantity),
-                            "unit_price": int(item.giftcard.price),
+                            "unit_price": int(item.price_choice * 100),
                             "tax_rate": int(00),
                             "total_amount": int(
-                                (item.giftcard.price * item.quantity)
-                                - item.giftcard.discount_price
+                                int((item.price_choice * 100) * item.quantity)
+                                - int(item.giftcard.discount_price * 100)
                             ),
-                            "total_discount_amount": int(item.giftcard.discount_price),
+                            "total_discount_amount": int(
+                                item.giftcard.discount_price * 100
+                            ),
                             "total_tax_amount": 0,
                         }
                     )
+                    giftcard_order_amount += (
+                        (item.price_choice * 100) * item.quantity
+                    ) - int(item.giftcard.discount_price * 100)
                 else:
                     order_lines.append(
                         {
@@ -187,16 +188,16 @@ class KlarnaCheckout(generics.GenericAPIView):
                             "reference": item.giftcard.id,
                             "name": item.giftcard.title,
                             "quantity": int(item.quantity),
-                            "unit_price": int(item.giftcard.price),
+                            "unit_price": int((item.price_choice * 100)),
                             "tax_rate": int(00),
-                            "total_amount": int(item.giftcard.price * item.quantity),
-                            "total_discount_amount": item.giftcard.discount_price,
+                            "total_amount": int(
+                                (item.price_choice * 100) * item.quantity
+                            ),
+                            "total_discount_amount": 0,
                             "total_tax_amount": 0,
                         }
                     )
-                giftcard_order_amount += (
-                    item.giftcard.price * item.quantity
-                ) - item.giftcard.discount_price
+                    giftcard_order_amount += (item.price_choice * 100) * item.quantity
             order_amount = int(campaign_order_amount + giftcard_order_amount)
             body = {
                 "purchase_country": "SE",
@@ -221,7 +222,7 @@ class KlarnaCheckout(generics.GenericAPIView):
                     "terms": "http://localhost:3000/terms",
                     "checkout": "http://localhost:3000/checkout?oid={checkout.order.id}",
                     "confirmation": "http://localhost:3000/confirmation?oid={checkout.order.id}",
-                    "push": "https://7ed00556b751.ngrok.io/klarna/push?oid={checkout.order.id}",
+                    "push": "https://localhost:3000/klarna/push?oid={checkout.order.id}",
                 },
             }
             data = json.dumps(body, cls=UUIDEncoder)
@@ -241,7 +242,46 @@ class KlarnaCheckout(generics.GenericAPIView):
             return Response({"Error": "You do not have an active order."})
 
 
-class CompleteHappicardCheckout(generics.GenericAPIView):
+class KlarnaCheckoutConfirmation(generics.GenericAPIView):
+    """
+    Checkout Confirmation with Klarna API
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = CheckoutSerializer
+
+    order_param_config = openapi.Parameter(
+        "id",
+        in_=openapi.IN_QUERY,
+        description="Place the Klarna Order ID here:",
+        type=openapi.TYPE_STRING,
+    )
+
+    @swagger_auto_schema(manual_parameters=[order_param_config])
+    def get(self, request):
+        auth = HTTPBasicAuth(klarna_un, klarna_pw)
+        headers = {"content-type": "application/json"}
+        klarna_order_id = request.GET.get("id")
+
+        try:
+            response = requests.get(
+                settings.KLARNA_BASE_URL
+                + "/checkout/v3/orders/"
+                + "5b6e4139-8086-62cf-a001-39bcedb38e85",
+                auth=auth,
+                headers=headers,
+            )
+            klarna_confirm = response.json()
+            return Response(
+                {"Klarna Checkout Confirmation": klarna_confirm},
+                status=status.HTTP_200_OK,
+            )
+
+        except ObjectDoesNotExist:
+            return Response({"Error": "You do not have an active order."})
+
+
+class CreateHappicard(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = HappicardSerializer
 
@@ -254,10 +294,10 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
         serializer.save()
         recipient = serializer.data
         happi_order_id = recipient.get("happi_order_id")
-        klarna_order_id = recipient.get("klarna_order_id")
+        klarna_order_confirm = recipient.get("klarna_order_confirm")
         order = Order.objects.get(id=happi_order_id)
 
-        if happi_order_id and klarna_order_id:
+        if happi_order_id and klarna_order_confirm:
             sender_name = order.first_name
             recipient_name = recipient.get("recipient_name")
             recipient_email_choice = recipient.get("recipient_email_choice")
@@ -265,8 +305,13 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
             personal_message = recipient.get("personal_message")
             email_subject = f"{sender_name} sent you a Happicard"
 
+            if recipient.get("personal_image"):
+                personal_image = recipient.get("personal_image")
+            if recipient.get("personal_video"):
+                personal_video = recipient.get("personal_video")
+
             rebate_code = [
-                item.giftcard.rebate_code for item in order.giftcards.all()
+                item.match_price_choice_with_rebate for item in order.giftcards.all()
             ].pop()
             redeem_website = [
                 item.giftcard.redeem_website for item in order.giftcards.all()
@@ -274,10 +319,8 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
 
             # CHANGE TO BE DYNAMIC
             Util.create_qrcode(
-                "backend/api/orders/qr_data/happicard.png", klarna_order_id
-            )
-            outbound_media = (
-                "https://media.giphy.com/media/IwAZ6dvvvaTtdI8SD5/giphy.gif"
+                "backend/api/orders/qr_data/happicard.png",
+                happi_order_id,
             )
 
             if recipient_email_choice and recipient_sms_choice:
@@ -290,6 +333,7 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
                 Util.send_happicard_email(
                     confirmation, recipient_name, rebate_code, redeem_website
                 )
+
                 recipient_number = recipient.get("recipient_number")
                 Util.outbound_mms(
                     to_number=recipient_number,
@@ -297,9 +341,8 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
                     personal_message=personal_message,
                     recipient_name=recipient_name,
                     sender_name=sender_name,
-                    rebate_code=rebate_code,
+                    rebate_code=str(rebate_code),
                     redeem_website=redeem_website,
-                    outbound_media=outbound_media,
                 )
                 return Response(
                     {"Success": "Happicard email and SMS successfully sent."},
@@ -313,9 +356,8 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
                     personal_message=personal_message,
                     recipient_name=recipient_name,
                     sender_name=sender_name,
-                    rebate_code=rebate_code,
+                    rebate_code=str(rebate_code),
                     redeem_website=redeem_website,
-                    outbound_media=outbound_media,
                 )
                 return Response(
                     {"Success": "Happicard SMS successfully sent."},
@@ -335,3 +377,17 @@ class CompleteHappicardCheckout(generics.GenericAPIView):
                     {"Success": "Happicard email successfully sent."},
                     status=status.HTTP_200_OK,
                 )
+
+
+class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Happicard.objects.all()
+    serializer_class = HappicardSerializer
+
+
+class HappicardDetail(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Happicard.objects.all()
+    serializer_class = HappicardSerializer

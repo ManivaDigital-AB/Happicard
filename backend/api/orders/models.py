@@ -16,6 +16,7 @@ from backend.settings.storage_backends import (
 
 
 class OrderProduct(models.Model):
+
     id = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -27,6 +28,7 @@ class OrderProduct(models.Model):
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE, null=True, blank=True
     )
     ordered = models.BooleanField(default=False)
+    price_choice = models.PositiveIntegerField(default=0)
     quantity = models.IntegerField(default=1)
 
 
@@ -38,7 +40,7 @@ class OrderGiftCard(OrderProduct):
     giftcard = models.ForeignKey(GiftCard, on_delete=models.CASCADE)
 
     def __str__(self):
-        return f"{self.quantity} of {self.giftcard.title}"
+        return f"{self.quantity} of {self.giftcard.title} with {self.price_choice} SEK"
 
     def get_total_giftcard_price(self):
         return self.quantity * self.giftcard.price
@@ -55,6 +57,15 @@ class OrderGiftCard(OrderProduct):
         if self.giftcard.discount_price:
             return self.get_total_discount_giftcard_price()
         return self.get_total_product_price()
+
+    @property
+    def match_price_choice_with_rebate(self):
+        if self.price_choice == self.giftcard.price_option_1:
+            return self.giftcard.rebate_code_1
+        elif self.price_choice == self.giftcard.price_option_2:
+            return self.giftcard.rebate_code_2
+        else:
+            return self.giftcard.rebate_code_3
 
 
 class OrderCampaign(OrderProduct):
@@ -86,7 +97,7 @@ class Happicard(models.Model):
         blank=True,
     )
     happi_order_id = models.CharField(max_length=50, null=True, blank=True)
-    klarna_order_id = models.CharField(max_length=50, null=True, blank=True)
+    klarna_order_confirm = models.BooleanField(default=False)
     recipient_myself = models.BooleanField(default=True)
     recipient_name = models.CharField(max_length=50, null=True, blank=True)
     delivery_date = models.DateTimeField(auto_now_add=True)
@@ -95,11 +106,15 @@ class Happicard(models.Model):
     recipient_sms_choice = models.BooleanField(default=False)
     recipient_number = models.CharField(max_length=20, null=True, blank=True)
     personal_message = models.TextField(null=False)
-    personal_image = models.FileField(storage=HappicardImageStorage(), null=True)
-    personal_video = models.FileField(storage=HappicardVideoStorage(), null=True)
+    personal_image = models.FileField(
+        storage=HappicardImageStorage(), null=True, blank=True
+    )
+    personal_video = models.FileField(
+        storage=HappicardVideoStorage(), null=True, blank=True
+    )
 
     def __str__(self):
-        return str(self.id)
+        return f"Happicard sent to {self.recipient_name} on {self.delivery_date}"
 
 
 class Order(models.Model):

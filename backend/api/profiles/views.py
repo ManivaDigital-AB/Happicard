@@ -3,7 +3,6 @@ from rest_framework import permissions, status, generics
 from rest_framework import filters, viewsets
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework.parsers import MultiPartParser, FormParser
 
 from .serializers import StoreSerializer, NGOSerializer
 from .models import Store, NGO
@@ -39,10 +38,9 @@ class NGODetail(generics.RetrieveUpdateDestroyAPIView):
 
 class StoreCreate(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = StoreSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         prof = request.data
         serializer = self.serializer_class(data=prof)
         if serializer.is_valid(raise_exception=True):
@@ -54,10 +52,9 @@ class StoreCreate(generics.CreateAPIView):
 
 class NGOCreate(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = NGOSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         prof = request.data
         serializer = self.serializer_class(data=prof)
         if serializer.is_valid(raise_exception=True):

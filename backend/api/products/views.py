@@ -4,7 +4,6 @@ from requests.auth import HTTPBasicAuth
 from django.http import HttpResponse
 from django.urls import reverse
 from rest_framework import permissions, status
-from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import generics
 from rest_framework.response import Response
 import requests
@@ -40,10 +39,9 @@ class CampaignList(generics.ListAPIView):
 
 class GiftCardCreate(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = GiftCardSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         product = request.data
         serializer = self.serializer_class(data=product)
         if serializer.is_valid(raise_exception=True):
@@ -55,10 +53,9 @@ class GiftCardCreate(generics.CreateAPIView):
 
 class CampaignCreate(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
-    parser_classes = (MultiPartParser, FormParser)
     serializer_class = CampaignSerializer
 
-    def post(self, request, format=None):
+    def post(self, request):
         product = request.data
         serializer = self.serializer_class(data=product)
         if serializer.is_valid(raise_exception=True):

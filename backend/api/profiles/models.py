@@ -33,6 +33,10 @@ NGO_CHOICES = (
 
 
 class Profile(models.Model):
+    """
+    Abstract profile model
+    """
+
     class ProfileObjects(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")

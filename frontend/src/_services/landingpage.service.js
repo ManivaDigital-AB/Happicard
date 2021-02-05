@@ -31,7 +31,8 @@ function refreshToken() {
 
 function getAllGiftCards() {
   return fetchWrapper.get(
-    "https://dev.api.happicard.se/api/products/giftcard/list/"
+    //"https://dev.api.happicard.se/api/products/giftcard/list/"
+    "http://35.161.152.123/api/products/giftcard/list/"
   );
 }
 

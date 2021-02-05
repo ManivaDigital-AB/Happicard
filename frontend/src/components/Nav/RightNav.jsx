@@ -6,6 +6,7 @@ import facebookMobileImg from "../../assets/images/facebook_mobile_01.PNG";
 import instagramMobileImg from "../../assets/images/instagram_mobile_02.PNG";
 import linkedinMobileImg from "../../assets/images/linkedin_mobile_01.PNG";
 import { Link } from "react-router-dom";
+import { Dropdown } from "react-bootstrap";
 
 const Ul = styled.ul`
   list-style: none;
@@ -17,15 +18,25 @@ const Ul = styled.ul`
   }
 
   .selected {
-    color: #000;
+    color: #ffc542;
   }
 
   .unselected {
-    color: #fff;
+    color: #4a4746;
   }
 
   .onlyMobile {
     display: none;
+  }
+
+  .btn,
+  .btn:hover {
+    font-size: 14px;
+    margin-top: 11px;
+  }
+
+  .dropdown-item {
+    font-size: 14px;
   }
 
   @media (max-width: 768px) {
@@ -90,7 +101,7 @@ const RightNav = ({ open }) => {
             Hem
           </Link>
         </li>
-        <li
+        {/* <li
           className={selectedMenu == "Stores" ? "selected" : "unselected"}
           onClick={() => handleClick("Stores")}
         >
@@ -101,13 +112,61 @@ const RightNav = ({ open }) => {
           onClick={() => handleClick("NGOs")}
         >
           NGOs
-        </li>
-        <li
+        </li> */}
+        {/* <Dropdown>
+          <Dropdown.Toggle variant="" id="dropdown-basic">
+            Gifting
+          </Dropdown.Toggle>
+          <Dropdown.Item>
+            <Link
+              to="/Stores"
+              className={selectedMenu == "Stores" ? "selected" : "unselected"}
+              onClick={() => handleClick("Stores")}
+            >
+              Stores
+            </Link>
+          </Dropdown.Item>
+          <Dropdown.Item>
+            <Link
+              to="/Stores"
+              className={selectedMenu == "NGOs" ? "selected" : "unselected"}
+              onClick={() => handleClick("NGOs")}
+            >
+              NGOs
+            </Link>
+          </Dropdown.Item>
+        </Dropdown> */}
+        <Dropdown>
+          <Dropdown.Toggle variant="" id="dropdown-basic">
+            Gifting
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+              <Link
+                to="/stores"
+                className={selectedMenu == "Stores" ? "selected" : "unselected"}
+                onClick={() => handleClick("Stores")}
+              >
+                Stores
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Link
+                to="/ngos"
+                className={selectedMenu == "NGOs" ? "selected" : "unselected"}
+                onClick={() => handleClick("NGOs")}
+              >
+                NGOs
+              </Link>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        {/* <li
           className={selectedMenu == "Partners" ? "selected" : "unselected"}
           onClick={() => handleClick("Partners")}
         >
           Partners
-        </li>
+        </li> */}
         <li>
           <Link
             to="/about"
@@ -118,6 +177,33 @@ const RightNav = ({ open }) => {
             Om Oss
           </Link>
         </li>
+        <Dropdown>
+          <Dropdown.Toggle variant="" id="dropdown-basic">
+            Partners
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+              <Link
+                to="/SignIn"
+                className={selectedMenu == "SignIn" ? "selected" : "unselected"}
+                onClick={() => handleClick("SignIn")}
+              >
+                Sign In
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Link
+                to="/Register"
+                className={
+                  selectedMenu == "Register" ? "selected" : "unselected"
+                }
+                onClick={() => handleClick("Register")}
+              >
+                New Member
+              </Link>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
         <li className="onlyMobile paddingTop">Sign in/Sign up</li>
         <li className="onlyMobile">
           <img

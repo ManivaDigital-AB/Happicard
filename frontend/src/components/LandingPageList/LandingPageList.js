@@ -2,16 +2,11 @@ import React, { useState } from "react";
 import giftImg from "../../assets/images/gift_card_01.PNG";
 import offersImg from "../../assets/images/happi_offers_02.PNG";
 import campaignsImg from "../../assets/images/campaigns_01.PNG";
-import giftCardListImg from "../../assets/images/gift_card_list_01.PNG";
-import happiOffersListImg from "../../assets/images/happi_offers_list_01.PNG";
-import campaignsListImg from "../../assets/images/campaigns_image_list_01.PNG";
 import styled from "styled-components";
-import ProductList from "../../components/productList/productList";
 import { landingPageService } from "../../_services/landingpage.service";
-import { Button as ModalButton, Modal, Dropdown } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 import Counter from "./Counter";
 import axios from "../../utils/axios";
-// import history from "../../utils/history";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -52,11 +47,14 @@ const LandingPageList = () => {
   });
 
   const [show, setShow] = useState(false);
-  const [orderId, setOrderId] = useState("");
+  const [selectedPrice, setSelectedPrice] = useState(0);
+  const [orderId] = useState("");
   const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
+
+  const [parentCounter, setParentCounter] = useState(0);
 
   const history = useHistory();
 
@@ -94,49 +92,50 @@ const LandingPageList = () => {
   };
 
   const handleChange = (e) => {
-    console.log(e.target.value);
-    setSelectedItem({ id: e.target.value });
+    var filteredItem = giftCards.filter((item) => item.id === e.target.value);
+    setSelectedItem(filteredItem[0]);
     handleShow();
   };
 
-  const onCheckoutClick = async (e) => {
+  const handlePriceChange = (e) => {
+    setSelectedPrice(e.target.value);
+  };
+
+  const onCreateOrder = async (e) => {
     e.preventDefault();
+
     try {
-      const response = await axios.get(
-        `https://dev.api.happicard.se/api/orders/checkout/?id=6252b48a-73c2-4937-86ec-39c7687307ff`
-      );
-      // Send a request to active cart to add/update the order_id.
-      dispatch({ type: "CHECKOUT_REQUEST", payload: response.data });
-      history.push("/checkout");
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      };
+
+      await axios
+        .post(
+          `http://35.161.152.123/api/orders/giftcard-to-basket/`,
+          JSON.stringify({
+            giftcard: selectedItem.id,
+            quantity: parentCounter,
+            price_choice: selectedPrice,
+            ordered: "true",
+          }),
+          config
+        )
+        .then((response) => {
+          var data = response.data;
+          if (data != null) {
+            dispatch({ type: "CREATE_ORDER_REQUEST", payload: response.data });
+            history.push("/createorder");
+          }
+        });
     } catch (err) {
       console.log(err);
     }
   };
 
-  const onOrderSubmit = async (e) => {
-    e.preventDefault();
-    if (orderId.length) {
-      try {
-        const response = await axios.get(
-          `/checkout/v3/orders/${orderId}`,
-          klarnaOrderUpdateBody,
-          {
-            auth: {
-              username: process.env.REACT_APP_KLARNA_USERNAME,
-              password: process.env.REACT_APP_KLARNA_PASSWORD,
-            },
-          }
-        );
-
-        dispatch({ type: "CHECKOUT_REQUEST", payload: response.data });
-        history.push("/checkout");
-      } catch (err) {
-        console.log(err);
-      }
-    }
-  };
-
-  function Test(props) {
+  function Card(props) {
     return (
       <div className="col-sm-3 ml-3 mb-3">
         <div
@@ -206,7 +205,7 @@ const LandingPageList = () => {
               <div className="col-sm">
                 {" "}
                 <img
-                  src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+                  src={selectedItem.image}
                   style={{
                     borderRadius: "0.65rem",
                     width: "100%",
@@ -215,22 +214,29 @@ const LandingPageList = () => {
                 />
               </div>
               <div className="col-sm">
-                <h6 style={{ paddingBottom: "12px" }}>Strumpmaskinen</h6>
+                <h6 style={{ paddingBottom: "12px" }}>{selectedItem.title}</h6>
                 <div>
                   <label style={{ marginRight: "2px", fontWeight: "bold" }}>
                     Category:
                   </label>{" "}
-                  fashion
+                  {selectedItem.store_category}
                 </div>
 
                 <div>
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Amount:
                   </label>
-                  <select>
-                    <option value="1">100 SEK</option>
-                    <option value="2">600 SEK</option>
-                    <option value="3">700 SEK</option>
+                  <select onChange={handlePriceChange}>
+                    <option value="">select</option>
+                    <option value={selectedItem.price_option_1}>
+                      {selectedItem.price_option_1} SEK
+                    </option>
+                    <option value={selectedItem.price_option_2}>
+                      {selectedItem.price_option_2} SEK
+                    </option>
+                    <option value={selectedItem.price_option_3}>
+                      {selectedItem.price_option_3} SEK
+                    </option>
                   </select>
                 </div>
 
@@ -238,7 +244,7 @@ const LandingPageList = () => {
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Quantity:
                   </label>
-                  <Counter />
+                  <Counter setParentCounter={setParentCounter} />
                 </div>
               </div>
             </div>
@@ -265,15 +271,30 @@ const LandingPageList = () => {
             >
               <button
                 style={{
+                  backgroundColor: "#FFFF",
+                  border: "none",
+                  height: "35px",
+                  borderRadius: "16px",
+                  width: "200px",
+                  marginRight: "4px",
+                  outline: "none",
+                }}
+                onClick={onCreateOrder}
+              >
+                Buy for Myself
+              </button>
+              <button
+                style={{
                   backgroundColor: "#B2A8A4",
                   border: "none",
                   height: "35px",
                   borderRadius: "16px",
                   width: "200px",
+                  outline: "none",
                 }}
-                onClick={onCheckoutClick}
+                onClick={onCreateOrder}
               >
-                Buy
+                Buy for Someone Else
               </button>
             </div>
           </Modal.Body>
@@ -333,7 +354,7 @@ const LandingPageList = () => {
         {displayGiftCards &&
           giftCards.length > 0 &&
           giftCards.map((item, index) => (
-            <Test
+            <Card
               id={item.id}
               name={item.title}
               image={item.image}
@@ -350,7 +371,7 @@ const LandingPageList = () => {
         {displayHappiOffers &&
           offers.length > 0 &&
           offers.map((item, index) => (
-            <Test
+            <Card
               id={item.id}
               name={item.title}
               image={item.image}
@@ -367,7 +388,7 @@ const LandingPageList = () => {
         {displayCampaigns &&
           campaigns.length > 0 &&
           campaigns.map((item, index) => (
-            <Test
+            <Card
               id={item.id}
               name={item.title}
               image={item.image}

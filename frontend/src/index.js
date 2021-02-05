@@ -6,9 +6,12 @@ import "./index.css";
 import Footer from "./components/footer/footer";
 import Home from "./components/home/home";
 import About from "./components/about/about";
+import Stores from "./components/stores/stores";
+import Ngos from "./components/ngos/ngos";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
+import Createorder from "./pages/Createorder";
 import Terms from "./pages/Terms";
 import reducers from "./reducers";
 import { Provider } from "react-redux";
@@ -30,6 +33,9 @@ const App = () => {
           <Switch>
             <Route exact path="/" component={Home} />
             <Route path="/about" component={About} />
+            <Route path="/stores" component={Stores} />
+            <Route path="/ngos" component={Ngos} />
+            <Route exact={true} path="/createorder" component={Createorder} />
             <Route exact={true} path="/checkout" component={Checkout} />
             <Route exact={true} path="/confirmation" component={Confirmation} />
             <Route exact={true} path="/terms" component={Terms} />

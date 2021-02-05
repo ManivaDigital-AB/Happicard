@@ -1,7 +1,7 @@
 import React from "react";
 import { Nav } from "./Navbarstyles";
 import Burger from "./Burger";
-import logoImg from "../../assets/images/logo.PNG";
+import logoImg from "../../assets/images/logo_yellow.PNG";
 import { Link } from "react-router-dom";
 
 const Navbar = () => {

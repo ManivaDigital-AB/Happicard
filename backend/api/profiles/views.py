@@ -5,10 +5,11 @@ from .serializers import StoreSerializer, NGOSerializer
 from .models import Store, NGO
 
 
-class StoreListView(generics.GenericAPIView):
+class StoreListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = StoreSerializer
+    queryset = ""
 
     def get(self, request):
         queryset = [
@@ -46,6 +47,7 @@ class NGOListView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = NGOSerializer
+    queryset = ""
 
     def get(self, request):
         queryset = [

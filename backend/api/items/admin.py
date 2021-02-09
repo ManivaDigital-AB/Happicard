@@ -10,19 +10,6 @@ class GiftCardAdmin(admin.ModelAdmin):
             return qs
         return qs.filter(author=request.user)
 
-    list_display = (
-        "id",
-        "title",
-        "price_option_1",
-        "price_option_2",
-        "price_option_3",
-        "rebate_code_1",
-        "rebate_code_2",
-        "rebate_code_3",
-        "image",
-        "has_offer",
-    )
-
 
 class CampaignAdmin(admin.ModelAdmin):
     def get_queryset(self, request):
@@ -30,18 +17,6 @@ class CampaignAdmin(admin.ModelAdmin):
         if request.user.is_superuser:
             return qs
         return qs.filter(author=request.user)
-
-    list_display = (
-        "id",
-        "title",
-        "price_option_1",
-        "price_option_2",
-        "price_option_3",
-        "rebate_code_1",
-        "rebate_code_2",
-        "rebate_code_3",
-        "image",
-    )
 
 
 admin.site.register(GiftCard, GiftCardAdmin)

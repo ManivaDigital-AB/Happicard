@@ -1,13 +1,10 @@
-from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.conf import settings
 from django.db import models
-from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
 import uuid
 
-from backend.api.profiles.models import Store, NGO
 from backend.settings.storage_backends import CampaignStorage, GiftCardStorage
 
 OPTIONS = (
@@ -30,14 +27,17 @@ NGO_CHOICES = (
 )
 
 
-class Product(models.Model):
+class Item(models.Model):
     """
-    Abstract product model
+    Abstract Item Model
     """
 
-    class ProductsObjects(models.Manager):
+    class ItemsObjects(models.Manager):
         def get_queryset(self):
             return super().get_queryset().filter(status="published")
+
+    class Meta:
+        ordering = ("-published",)
 
     id = models.UUIDField(
         default=uuid.uuid4,
@@ -72,16 +72,13 @@ class Product(models.Model):
     )
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
-    class Meta:
-        ordering = ("-published",)
-
     def __str__(self):
         return f"{self.title} with the unique ID of {self.id}"
 
 
-class GiftCard(Product):
+class GiftCard(Item):
     """
-    Gift card model
+    Gift Card Model
     """
 
     class Meta:
@@ -100,9 +97,9 @@ class GiftCard(Product):
     )
 
 
-class Campaign(Product):
+class Campaign(Item):
     """
-    NGO campaign model
+    NGO Campaign Model
     """
 
     class Meta:

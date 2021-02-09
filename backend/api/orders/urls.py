@@ -4,42 +4,68 @@ from . import views
 app_name = "orders"
 urlpatterns = [
     path(
-        "basket-campaigns/",
-        views.OrderCampaignList.as_view(),
+        "list/basket-campaigns/",
+        views.OrderCampaignListView.as_view(),
         name="basket-campaigns-list",
     ),
     path(
-        "basket-giftcards/",
-        views.OrderGiftCardList.as_view(),
+        "list/basket-giftcards/",
+        views.OrderGiftCardListView.as_view(),
         name="basket-giftcards-list",
     ),
-    path("", views.OrderList.as_view(), name="list-order"),
     path(
-        "campaign-to-basket/",
-        views.CreateOrderCampaign.as_view(),
-        name="campaign-to-basket",
+        "list/orders/",
+        views.OrderListView.as_view(),
+        name="list-orders",
     ),
     path(
-        "giftcard-to-basket/",
-        views.CreateOrderGiftCard.as_view(),
-        name="giftcard-to-basket",
+        "create/campaign-to-basket/",
+        views.OrderCampaignCreateView.as_view(),
+        name="create-campaign-to-basket",
     ),
-    path("order/", views.CreateOrder.as_view(), name="create-order"),
-    path("order/<int:pk>", views.CreateOrder.as_view(), name="order-detail"),
-    path("checkout/", views.KlarnaCheckout.as_view(), name="checkout"),
     path(
-        "checkout-confirm/",
-        views.KlarnaCheckoutConfirmation.as_view(),
-        name="checkout-confirm",
+        "create/giftcard-to-basket/",
+        views.OrderGiftCardCreateView.as_view(),
+        name="create-giftcard-to-basket",
+    ),
+    path(
+        "create/order/",
+        views.OrderCreateView.as_view(),
+        name="create-order",
     ),
     path(
         "create/happicard/",
-        views.CreateHappicard.as_view(),
+        views.HappicardCreateView.as_view(),
         name="create-happicard",
     ),
     path(
+        "campaign-to-basket/<int:pk>",
+        views.OrderCampaignDetailView.as_view(),
+        name="campaign-to-basket-detail",
+    ),
+    path(
+        "giftcard-to-basket/<int:pk>",
+        views.OrderGiftCardDetailView.as_view(),
+        name="giftcard-to-basket-detail",
+    ),
+    path(
+        "order/<int:pk>",
+        views.OrderDetailView.as_view(),
+        name="order-detail",
+    ),
+    path(
         "happicard/<int:pk>/",
-        views.HappicardDetail.as_view(),
+        views.HappicardDetailView.as_view(),
         name="happicard-detail",
+    ),
+    path(
+        "checkout/",
+        views.KlarnaCheckoutView.as_view(),
+        name="checkout",
+    ),
+    path(
+        "confirm/checkout/",
+        views.KlarnaCheckoutConfirmView.as_view(),
+        name="confirm-checkout",
     ),
 ]

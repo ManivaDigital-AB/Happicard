@@ -1,21 +1,24 @@
-from django.db.models.signals import post_save
 from django_countries.fields import CountryField
 from django.conf import settings
 from django.db import models
-from django.db.models import Sum
 from django.utils import timezone
 from django.conf import settings
 import uuid
 
 from django.utils.translation import gettext_lazy as _
-from backend.api.products.models import GiftCard, Campaign
+
+from backend.api.items.models import GiftCard, Campaign
+
 from backend.settings.storage_backends import (
     HappicardImageStorage,
     HappicardVideoStorage,
 )
 
 
-class OrderProduct(models.Model):
+class OrderItem(models.Model):
+    """
+    Abstract Order Item Model
+    """
 
     id = models.UUIDField(
         default=uuid.uuid4,
@@ -32,7 +35,11 @@ class OrderProduct(models.Model):
     quantity = models.IntegerField(default=1)
 
 
-class OrderGiftCard(OrderProduct):
+class OrderGiftCard(OrderItem):
+    """
+    Order Gift Card Model
+    """
+
     class Meta:
         verbose_name = _("Gift Card in Basket")
         verbose_name_plural = _("Gift Cards in Basket")
@@ -68,7 +75,11 @@ class OrderGiftCard(OrderProduct):
             return self.giftcard.rebate_code_3
 
 
-class OrderCampaign(OrderProduct):
+class OrderCampaign(OrderItem):
+    """
+    Order Campaign Model
+    """
+
     class Meta:
         verbose_name = _("Campaign in Basket")
         verbose_name_plural = _("Campaigns in Basket")
@@ -83,6 +94,10 @@ class OrderCampaign(OrderProduct):
 
 
 class Happicard(models.Model):
+    """
+    Happicard Model
+    """
+
     id = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -119,7 +134,7 @@ class Happicard(models.Model):
 
 class Order(models.Model):
     """
-    General order model
+    Order Model - Requirements for Klarna Checkouts API
     """
 
     id = models.UUIDField(

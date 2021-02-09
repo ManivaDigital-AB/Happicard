@@ -6,10 +6,24 @@ from .models import Store, NGO
 class StoreSerializer(serializers.ModelSerializer):
     class Meta:
         model = Store
-        fields = ("title", "image", "about", "store_category")
+        fields = (
+            "id",
+            "title",
+            "image",
+            "about",
+            "store_category",
+            "giftcards",
+        )
 
 
 class NGOSerializer(serializers.ModelSerializer):
     class Meta:
         model = NGO
-        fields = ("title", "image", "about", "ngo_category")
+        fields = (
+            "id",
+            "title",
+            "image",
+            "about",
+            "ngo_category",
+            "campaigns",
+        )

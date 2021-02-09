@@ -28,7 +28,7 @@ def happicard_mms_body(
     rebate_code,
     redeem_website,
 ):
-    body = f"Hej {recipient_name}!\nYou received a Happicard from {sender_name} who says '{personal_message}'\nHere's your rebate code:\n{rebate_code}\nYou can redeem it here:\n{redeem_website}\nYou can find the QR code here:\nhttps://cutt.ly/Dj28ESX\n"
+    body = f"Hej {recipient_name}!\nYou received a Happicard from {sender_name} who says '{personal_message}'\nHere's your rebate code:\n{rebate_code}\nYou can redeem it here:\n{redeem_website}"
     return body
 
 
@@ -52,6 +52,25 @@ class Util:
             subject=data["email_subject"],
             body=data["email_body"],
             to=[data["to_email"]],
+        )
+        EmailThread(email).start()
+
+    @staticmethod
+    def send_onboarding_email(data):
+        html_content = render_to_string(
+            "onboarding_email.html",
+            {
+                "body": data["email_body"],
+            },
+        )
+        email = EmailMultiAlternatives(
+            subject=data["email_subject"],
+            body=data["email_body"],
+            to=[data["to_email"]],
+        )
+        email.attach_alternative(
+            html_content,
+            "text/html",
         )
         EmailThread(email).start()
 

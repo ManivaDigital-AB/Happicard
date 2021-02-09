@@ -4,13 +4,12 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
 from django.db import models
-from django import forms
 import uuid
 
 
 class UserManager(BaseUserManager):
     """
-    Custom user model manager
+    Base User Manager
     """
 
     def create_user(self, first_name, last_name, email, password=None, **extra_fields):
@@ -49,7 +48,7 @@ class UserManager(BaseUserManager):
 
 class User(AbstractBaseUser, PermissionsMixin):
     """
-    Custom user model
+    Abstract User Model
     """
 
     id = models.UUIDField(
@@ -85,7 +84,7 @@ class User(AbstractBaseUser, PermissionsMixin):
 
 class Vendor(User):
     """
-    Vendor child model
+    Vendor Model
     """
 
     phone_number = models.CharField(
@@ -100,7 +99,7 @@ class Vendor(User):
 
 class Customer(User):
     """
-    Customer child model
+    Customer Model
     """
 
     pass
@@ -108,7 +107,7 @@ class Customer(User):
 
 class Subscriber(models.Model):
     """
-    Email subscriber model
+    Email Subscriber Model
     """
 
     email = models.EmailField(unique=True)

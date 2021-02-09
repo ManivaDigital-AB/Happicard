@@ -2,8 +2,29 @@ from django.urls import path, include
 
 app_name = "api"
 urlpatterns = [
-    path("auth/", include("backend.api.authentification.urls"), name="auth"),
-    path("orders/", include("backend.api.orders.urls"), name="orders"),
-    path("products/", include("backend.api.products.urls"), name="products"),
-    path("profiles/", include("backend.api.profiles.urls"), name="profiles"),
+    path(
+        "accounts/",
+        include("backend.api.accounts.urls"),
+        name="accounts",
+    ),
+    path(
+        "orders/",
+        include("backend.api.orders.urls"),
+        name="orders",
+    ),
+    path(
+        "items/",
+        include("backend.api.items.urls"),
+        name="items",
+    ),
+    path(
+        "profiles/",
+        include("backend.api.profiles.urls"),
+        name="profiles",
+    ),
+    path(
+        "promotionals/",
+        include("backend.api.promotionals.urls"),
+        name="promotionals",
+    ),
 ]

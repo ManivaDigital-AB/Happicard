@@ -22,10 +22,11 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "django_countries",
-    "backend.api.authentification",
+    "backend.api.accounts",
     "backend.api.orders",
-    "backend.api.products",
+    "backend.api.items",
     "backend.api.profiles",
+    "backend.api.promotionals",
     "drf_yasg",
     "storages",
     "rest_framework",
@@ -66,7 +67,7 @@ TEMPLATES = [
     },
 ]
 
-AUTH_USER_MODEL = "authentification.User"
+AUTH_USER_MODEL = "accounts.User"
 
 # Permission settings
 REST_FRAMEWORK = {

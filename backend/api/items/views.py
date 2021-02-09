@@ -1,13 +1,9 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from requests.auth import HTTPBasicAuth
-from django.http import HttpResponse
-from django.urls import reverse
 from rest_framework import permissions, status
 from rest_framework import generics
 from rest_framework.response import Response
 import requests
-import json
 
 from .models import GiftCard, Campaign
 from .serializers import (
@@ -16,28 +12,28 @@ from .serializers import (
 )
 
 
-class GiftCardList(generics.ListAPIView):
+class GiftCardListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = GiftCard.objects.filter(has_offer=False).all()
     serializer_class = GiftCardSerializer
 
 
-class GiftCardOffersList(generics.ListAPIView):
+class GiftCardOfferListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = GiftCard.objects.filter(has_offer=True).all()
     serializer_class = GiftCardSerializer
 
 
-class CampaignList(generics.ListAPIView):
+class CampaignListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = Campaign.objects.all()
     serializer_class = CampaignSerializer
 
 
-class GiftCardCreate(generics.CreateAPIView):
+class GiftCardCreateView(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = GiftCardSerializer
 
@@ -51,7 +47,7 @@ class GiftCardCreate(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CampaignCreate(generics.CreateAPIView):
+class CampaignCreateView(generics.CreateAPIView):
     permission_classes = (permissions.AllowAny,)
     serializer_class = CampaignSerializer
 
@@ -65,14 +61,14 @@ class CampaignCreate(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class GiftCardDetail(generics.RetrieveUpdateDestroyAPIView):
+class GiftCardDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = GiftCard.objects.all()
     serializer_class = GiftCardSerializer
 
 
-class CampaignDetail(generics.RetrieveUpdateDestroyAPIView):
+class CampaignDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Campaign.objects.all()

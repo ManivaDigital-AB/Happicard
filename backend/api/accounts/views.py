@@ -1,6 +1,4 @@
 from decouple import config
-from django.shortcuts import render
-from django.db.models import Max
 from django.conf import settings
 from django.urls import reverse
 from django.core.mail import send_mail
@@ -13,7 +11,6 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import views
 from django.core.mail import send_mail
 from django.dispatch import receiver
-from django.template.loader import render_to_string
 from django.urls import reverse
 from django_rest_passwordreset.signals import reset_password_token_created
 from drf_yasg.utils import swagger_auto_schema
@@ -34,11 +31,10 @@ from .serializers import (
     ContactSerializer,
 )
 from .models import User, Vendor, Customer, Subscriber
-from .renderers import UserRenderer
 from backend.utils import Util
 
 
-class Newsletter(generics.GenericAPIView):
+class NewsletterCreateView(generics.CreateAPIView):
     serializer_class = NewsletterSerializer
 
     def post(self, request):
@@ -56,84 +52,81 @@ class Newsletter(generics.GenericAPIView):
         }
         Util.send_email(data)
 
-        return Response({"Email": "Successfully Sent"}, status=status.HTTP_201_CREATED)
+        return Response({"Success": "Email Delivered"}, status=status.HTTP_201_CREATED)
 
 
-class SubscriberList(generics.ListAPIView):
+class SubscriberListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Subscriber.objects.all()
     serializer_class = NewsletterSerializer
 
 
-class VendorList(generics.ListAPIView):
+class VendorListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Vendor.objects.filter(is_verified=True)
     serializer_class = VendorSerializer
 
 
-class PendingVendorList(generics.ListAPIView):
+class PendingVendorListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Vendor.objects.filter(is_verified=False)
     serializer_class = VendorSerializer
 
 
-class CustomerList(generics.ListAPIView):
+class CustomerListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
 
-class VendorDetail(generics.RetrieveUpdateDestroyAPIView):
+class VendorDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Vendor.objects.all()
     serializer_class = VendorSerializer
 
 
-class CustomerDetail(generics.RetrieveUpdateDestroyAPIView):
+class CustomerDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Customer.objects.all()
     serializer_class = CustomerSerializer
 
 
-class SubscriberDetail(generics.RetrieveUpdateDestroyAPIView):
+class SubscriberDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Subscriber.objects.all()
     serializer_class = NewsletterSerializer
 
 
-class VendorRegistration(generics.GenericAPIView):
+class VendorRegistrationView(generics.GenericAPIView):
     serializer_class = VendorRegisterSerializer
-    renderer_classes = (UserRenderer,)
 
     def post(self, request):
         vendor = request.data
         serializer = self.serializer_class(data=vendor)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        vendor_data = serializer.data
+        data = serializer.data
+        email = data["email"]
+        email_body = f"Denna leverantör väntar på verifiering med det här e-postmeddelandet:\n{email}.\n\nUppdatera deras status nu på Happicard-adminpanelen!"
 
-        email_body = "This vendor is pending verification with this data:\n{}\n\nUpdate their status now on the Happicard admin panel!".format(
-            vendor
-        )
         data = {
             "email_body": email_body,
             "to_email": settings.DEFAULT_FROM_EMAIL,
             "email_subject": "Ombordstigningsprocess",
         }
-        Util.send_email(data)
-        return Response(vendor_data, status=status.HTTP_201_CREATED)
+        Util.send_onboarding_email(data)
+        return Response({"Success": "Email Delivered"}, status=status.HTTP_201_CREATED)
 
 
-class CustomerRegistration(generics.GenericAPIView):
+class CustomerRegistrationView(generics.GenericAPIView):
     serializer_class = CustomerRegisterSerializer
-    renderer_classes = (UserRenderer,)
 
     def post(self, request):
         customer = request.data
@@ -162,7 +155,7 @@ class CustomerRegistration(generics.GenericAPIView):
         return Response(customer_data, status=status.HTTP_201_CREATED)
 
 
-class CustomerEmailVerification(views.APIView):
+class CustomerEmailVerificationView(views.APIView):
     serializer_class = CustomerEmailVerificationSerializer
 
     token_param_config = openapi.Parameter(
@@ -194,7 +187,7 @@ class CustomerEmailVerification(views.APIView):
             )
 
 
-class VendorLogin(generics.GenericAPIView):
+class VendorLoginView(generics.GenericAPIView):
     serializer_class = VendorLoginSerializer
 
     def post(self, request):
@@ -203,7 +196,7 @@ class VendorLogin(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class CustomerLogin(generics.GenericAPIView):
+class CustomerLoginView(generics.GenericAPIView):
     serializer_class = CustomerLoginSerializer
 
     def post(self, request):
@@ -212,7 +205,7 @@ class CustomerLogin(generics.GenericAPIView):
         return Response(serializer.data, status=status.HTTP_200_OK)
 
 
-class UserLogout(views.APIView):
+class UserLogoutView(views.APIView):
     serializer_class = UserLogoutSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -248,7 +241,7 @@ def password_reset_token_created(
     return Response({"Email": "Successfully Sent"})
 
 
-class ContactForm(generics.GenericAPIView):
+class ContactFormView(generics.GenericAPIView):
     serializer_class = ContactSerializer
     permission_classes = (permissions.AllowAny,)
 
@@ -268,7 +261,7 @@ class ContactForm(generics.GenericAPIView):
         return Response({"Contact Form": "Successfully Sent"})
 
 
-class SubscriberCount(generics.GenericAPIView):
+class SubscriberCountView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = NewsletterSerializer
@@ -279,7 +272,7 @@ class SubscriberCount(generics.GenericAPIView):
         return Response(data)
 
 
-class VendorCount(generics.GenericAPIView):
+class VendorCountView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = VendorSerializer
@@ -290,7 +283,7 @@ class VendorCount(generics.GenericAPIView):
         return Response(data)
 
 
-class CustomerCount(generics.GenericAPIView):
+class CustomerCountView(generics.GenericAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     serializer_class = CustomerSerializer

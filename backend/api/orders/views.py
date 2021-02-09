@@ -1,10 +1,7 @@
-from django.shortcuts import render, redirect, get_object_or_404
 from django.conf import settings
 from requests.auth import HTTPBasicAuth
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import permissions, status
-from rest_framework import generics, viewsets
-from django.core import serializers
+from rest_framework import permissions, status, generics
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
@@ -21,7 +18,6 @@ from .serializers import (
 )
 from .models import (
     Order,
-    OrderProduct,
     OrderCampaign,
     OrderGiftCard,
     Happicard,
@@ -42,30 +38,30 @@ class UUIDEncoder(json.JSONEncoder):
         return json.JSONEncoder.default(self, obj)
 
 
-class OrderCampaignList(generics.ListAPIView):
+class OrderCampaignListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = OrderCampaign.objects.all()
     serializer_class = OrderCampaignSerializer
 
 
-class OrderGiftCardList(generics.ListAPIView):
+class OrderGiftCardListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = OrderGiftCard.objects.all()
     serializer_class = OrderGiftCardSerializer
 
 
-class OrderList(generics.ListAPIView):
+class OrderListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentification_classes = ()
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
-class CreateOrderGiftCard(generics.CreateAPIView):
+class OrderGiftCardCreateView(generics.CreateAPIView):
     """
-    Create Order Gift Cards
+    Create Order Gift Cards View
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -81,9 +77,9 @@ class CreateOrderGiftCard(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CreateOrderCampaign(generics.CreateAPIView):
+class OrderCampaignCreateView(generics.CreateAPIView):
     """
-    Create Order Campaigns
+    Create Order Campaigns View
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -99,9 +95,9 @@ class CreateOrderCampaign(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class CreateOrder(generics.CreateAPIView):
+class OrderCreateView(generics.CreateAPIView):
     """
-    Create General Order
+    Create Order View
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -117,9 +113,9 @@ class CreateOrder(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class KlarnaCheckout(generics.GenericAPIView):
+class KlarnaCheckoutView(generics.GenericAPIView):
     """
-    Checkout with Klarna API
+    Checkout View with Klarna API
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -242,9 +238,9 @@ class KlarnaCheckout(generics.GenericAPIView):
             return Response({"Error": "You do not have an active order."})
 
 
-class KlarnaCheckoutConfirmation(generics.GenericAPIView):
+class KlarnaCheckoutConfirmView(generics.GenericAPIView):
     """
-    Checkout Confirmation with Klarna API
+    Checkout Confirmation View with Klarna API
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -265,9 +261,7 @@ class KlarnaCheckoutConfirmation(generics.GenericAPIView):
 
         try:
             response = requests.get(
-                settings.KLARNA_BASE_URL
-                + "/checkout/v3/orders/"
-                + "5b6e4139-8086-62cf-a001-39bcedb38e85",
+                settings.KLARNA_BASE_URL + "/checkout/v3/orders/" + klarna_order_id,
                 auth=auth,
                 headers=headers,
             )
@@ -281,7 +275,11 @@ class KlarnaCheckoutConfirmation(generics.GenericAPIView):
             return Response({"Error": "You do not have an active order."})
 
 
-class CreateHappicard(generics.CreateAPIView):
+class HappicardCreateView(generics.CreateAPIView):
+    """
+    Create Happicard View
+    """
+
     permission_classes = (permissions.AllowAny,)
     serializer_class = HappicardSerializer
 
@@ -317,12 +315,6 @@ class CreateHappicard(generics.CreateAPIView):
                 item.giftcard.redeem_website for item in order.giftcards.all()
             ].pop()
 
-            # CHANGE TO BE DYNAMIC
-            Util.create_qrcode(
-                "backend/api/orders/qr_data/happicard.png",
-                happi_order_id,
-            )
-
             if recipient_email_choice and recipient_sms_choice:
                 recipient_email = recipient.get("recipient_email")
                 confirmation = {
@@ -341,7 +333,7 @@ class CreateHappicard(generics.CreateAPIView):
                     personal_message=personal_message,
                     recipient_name=recipient_name,
                     sender_name=sender_name,
-                    rebate_code=str(rebate_code),
+                    rebate_code=rebate_code,
                     redeem_website=redeem_website,
                 )
                 return Response(
@@ -356,7 +348,7 @@ class CreateHappicard(generics.CreateAPIView):
                     personal_message=personal_message,
                     recipient_name=recipient_name,
                     sender_name=sender_name,
-                    rebate_code=str(rebate_code),
+                    rebate_code=rebate_code,
                     redeem_website=redeem_website,
                 )
                 return Response(
@@ -379,14 +371,28 @@ class CreateHappicard(generics.CreateAPIView):
                 )
 
 
-class OrderDetail(generics.RetrieveUpdateDestroyAPIView):
+class OrderCampaignDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    queryset = Happicard.objects.all()
-    serializer_class = HappicardSerializer
+    queryset = OrderCampaign.objects.all()
+    serializer_class = OrderCampaignSerializer
 
 
-class HappicardDetail(generics.RetrieveUpdateDestroyAPIView):
+class OrderGiftCardDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = OrderGiftCard.objects.all()
+    serializer_class = OrderGiftCardSerializer
+
+
+class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    queryset = Order.objects.all()
+    serializer_class = OrderSerializer
+
+
+class HappicardDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Happicard.objects.all()

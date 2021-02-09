@@ -36,4 +36,5 @@ class CampaignSerializer(serializers.ModelSerializer):
             "rebate_code_3",
             "image",
             "description",
+            "ngo_category",
         )

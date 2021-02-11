@@ -8,7 +8,7 @@ const copyright = () => {
   return (
     <>
       <div className="row" style={{ backgroundColor: "#fff" }}>
-        <div>
+        <div style={{ marginLeft: "275px" }}>
           <p
             style={{
               marginLeft: "15px",
@@ -21,8 +21,8 @@ const copyright = () => {
           </p>
         </div>
         <ul
-          className="ml-auto mr-3"
-          style={{ marginTop: "10px", marginRight: "10px" }}
+          className="ml-auto"
+          style={{ marginTop: "10px", marginRight: "330px" }}
         >
           <li className="list-inline-item">
             <a href="https://www.facebook.com" target="_blank">

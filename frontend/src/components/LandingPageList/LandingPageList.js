@@ -91,9 +91,19 @@ const LandingPageList = () => {
     setDisplayHappiOffers(false);
   };
 
-  const handleChange = (e) => {
-    var filteredItem = giftCards.filter((item) => item.id === e.target.value);
-    setSelectedItem(filteredItem[0]);
+  const handleChange = (params) => {
+    let filteredItem = {};
+
+    if (displayGiftCards)
+      filteredItem = giftCards.filter((item) => item.id === params.id);
+    else if (displayHappiOffers)
+      filteredItem = offers.filter((item) => item.id === params.id);
+    else if (displayCampaigns)
+      filteredItem = campaigns.filter((item) => item.id === params.id);
+    let product = filteredItem[0];
+    product.isGiftCardOrOffer =
+      displayGiftCards || displayHappiOffers ? true : false;
+    setSelectedItem(product);
     handleShow();
   };
 
@@ -112,9 +122,13 @@ const LandingPageList = () => {
         },
       };
 
+      let url = selectedItem.isGiftCardOrOffer
+        ? `http://35.161.152.123/api/orders/create/giftcard-to-basket/`
+        : `http://35.161.152.123/api/orders/create/campaign-to-basket/`;
+
       await axios
         .post(
-          `http://35.161.152.123/api/orders/giftcard-to-basket/`,
+          url,
           JSON.stringify({
             giftcard: selectedItem.id,
             quantity: parentCounter,
@@ -127,6 +141,7 @@ const LandingPageList = () => {
           var data = response.data;
           if (data != null) {
             dispatch({ type: "CREATE_ORDER_REQUEST", payload: response.data });
+            dispatch({ type: "SELECTED_ITEM_ORDER", payload: selectedItem });
             history.push("/createorder");
           }
         });
@@ -137,18 +152,22 @@ const LandingPageList = () => {
 
   function Card(props) {
     return (
-      <div className="col-sm-3 ml-3 mb-3">
+      <div
+        className="col-sm-3 ml-3 mb-3"
+        onClick={() => handleChange(props)}
+        style={{ cursor: "pointer" }}
+      >
         <div
           className="card"
           style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
         >
           <div className="card-body">
-            <input
+            {/* <input
               type="radio"
               value={props.id}
               checked={selectedItem.id == props.id}
               onChange={handleChange}
-            />
+            /> */}
             <h6 className="card-title" style={{ color: "#D7383B" }}>
               {props.name}
             </h6>
@@ -253,12 +272,7 @@ const LandingPageList = () => {
               style={{ padding: "18px 18px 18px 18px", fontSize: "12px" }}
             >
               <p style={{ fontWeight: "bold" }}>About:</p>
-              <p>
-                We at StrumpMaskinen are stocking lovers who are committed to
-                helping other stocking lovers express their love for their
-                friends, family and pets. Of course, we print all kinds of pets
-                and people, in all shapes and colors.
-              </p>
+              <p>{selectedItem.description}</p>
             </div>
             <div
               className="row"
@@ -276,7 +290,7 @@ const LandingPageList = () => {
                   height: "35px",
                   borderRadius: "16px",
                   width: "200px",
-                  marginRight: "4px",
+                  marginRight: "30px",
                   outline: "none",
                 }}
                 onClick={onCreateOrder}
@@ -302,7 +316,7 @@ const LandingPageList = () => {
       </Modal>
       <div
         className="row justify-content-md-center"
-        style={{ paddingTop: "75px" }}
+        style={{ paddingTop: "20px" }}
       >
         <div className="col-sm-3">
           <div style={{ textAlign: "center" }}>

@@ -8,6 +8,7 @@ import Home from "./components/home/home";
 import About from "./components/about/about";
 import Stores from "./components/stores/stores";
 import Ngos from "./components/ngos/ngos";
+import Register from "./components/register/register";
 import "bootstrap/dist/css/bootstrap.min.css";
 import Checkout from "./pages/Checkout";
 import Confirmation from "./pages/Confirmation";
@@ -35,6 +36,7 @@ const App = () => {
             <Route path="/about" component={About} />
             <Route path="/stores" component={Stores} />
             <Route path="/ngos" component={Ngos} />
+            <Route path="/register" component={Register} />
             <Route exact={true} path="/createorder" component={Createorder} />
             <Route exact={true} path="/checkout" component={Checkout} />
             <Route exact={true} path="/confirmation" component={Confirmation} />

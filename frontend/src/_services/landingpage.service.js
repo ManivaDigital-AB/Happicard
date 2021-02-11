@@ -32,19 +32,17 @@ function refreshToken() {
 function getAllGiftCards() {
   return fetchWrapper.get(
     //"https://dev.api.happicard.se/api/products/giftcard/list/"
-    "http://35.161.152.123/api/products/giftcard/list/"
+    "http://35.161.152.123/api/items/list/giftcards/"
   );
 }
 
 function getAllCampaigns() {
-  return fetchWrapper.get(
-    "https://dev.api.happicard.se/api/products/campaign/list/"
-  );
+  return fetchWrapper.get("http://35.161.152.123/api/items/list/campaigns/");
 }
 
 function getAllOffers() {
   return fetchWrapper.get(
-    "https://dev.api.happicard.se/api/products/giftcard/offers/list/"
+    "http://35.161.152.123/api/items/list/giftcard/offers/"
   );
 }
 

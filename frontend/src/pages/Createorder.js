@@ -1,5 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Field, FieldInput, FieldSelect } from "./Createorder.styles";
+import {
+  Field,
+  FieldInput,
+  FieldSelect,
+  FieldTextArea,
+} from "./Createorder.styles";
 import axios from "axios";
 import { useDispatch } from "react-redux";
 import { useForm } from "react-hook-form";
@@ -8,9 +13,14 @@ import { useSelector } from "react-redux";
 
 const Createorder = () => {
   const { register, handleSubmit } = useForm();
-  const selectedItems = useSelector((state) => state.createorder);
+  const selectedItem = useSelector((state) => state.createorder);
+  const selectedItemInOrder = useSelector(
+    (state) => state.selectedItemForOrder
+  );
   const history = useHistory();
-  // const [selectedOrderItems, setSelectedOrderItems] = useState({});
+  const [selectedOrderItem, setSelectedOrderItem] = useState({});
+  const [smsSelection, setsmsSelection] = useState(false);
+  const dispatch = useDispatch();
 
   const proceedtoCheckOut = async (orderId) => {
     try {
@@ -25,10 +35,10 @@ const Createorder = () => {
   };
 
   const onSubmit = async (data) => {
-    console.log(selectedItems);
     let array = [];
-    array.push(selectedItems.id);
-    data.giftcards = array;
+    array.push(selectedItem.id);
+    if (selectedItemInOrder.campaigns.length > 0) data.campaigns = array;
+    else data.giftcards = array;
     try {
       const config = {
         headers: {
@@ -36,10 +46,26 @@ const Createorder = () => {
           Accept: "application/json",
         },
       };
-
+      dispatch({
+        type: "NOTIFICATION_DATA",
+        payload: {
+          recipient_name: data.first_name,
+          recipient_email_choice:
+            data.notification == "Email" || data.notification == "Both"
+              ? true
+              : false,
+          recipient_email: data.email,
+          recipient_sms_choice:
+            data.notification == "SMS" || data.notification == "Both"
+              ? true
+              : false,
+          recipient_number: data.phone_number,
+          personal_message: data.message,
+        },
+      });
       await axios
         .post(
-          `http://35.161.152.123/api/orders/order/`,
+          `http://35.161.152.123/api/orders/create/order/`,
           JSON.stringify(data),
           config
         )
@@ -55,14 +81,8 @@ const Createorder = () => {
     }
   };
 
-  const dispatch = useDispatch();
-
   useEffect(() => {
-    // const selectedItems = useSelector((state) =>
-    //   state.createorder
-    // );
-    console.log(selectedItems);
-    // setSelectedOrderItems();
+    setSelectedOrderItem(selectedItemInOrder);
   }, []);
 
   return (
@@ -93,7 +113,7 @@ const Createorder = () => {
                 marginLeft: "15px",
               }}
             >
-              Strumpmaskinen
+              {/* {selectedOrderItem.title} */}test
             </h2>
             <div>
               <label
@@ -106,7 +126,9 @@ const Createorder = () => {
               >
                 Category:
               </label>{" "}
-              <span style={{ fontSize: "20px" }}>fashion</span>
+              <span style={{ fontSize: "20px" }}>
+                {/* {selectedOrderItem.store_category} */}test
+              </span>
             </div>
             <div>
               <label
@@ -150,16 +172,12 @@ const Createorder = () => {
               >
                 <h6>About</h6>
                 <p style={{ paddingBottom: "15px" }}>
-                  Here you will find hand-picked quality for an everyday
-                  luxurious life. Not necessarily the sumptuous, but the genuine
-                  and durable that gilds life with its materials, shapes and
-                  essences. Package wrapping is included in all orders until
-                  Christmas!
+                  {/* {selectedOrderItem.description} */}
                 </p>
                 <form onSubmit={handleSubmit(onSubmit)}>
                   <div className="form-row">
                     <Field className="form-group col-md-6">
-                      <label htmlFor="firstname"> firstname </label>
+                      <label htmlFor="firstname"> Firstname </label>
                       <FieldInput
                         name="first_name"
                         ref={register}
@@ -168,7 +186,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="lastname"> lastname </label>
+                      <label htmlFor="lastname"> Lastname </label>
                       <FieldInput
                         name="last_name"
                         ref={register}
@@ -177,7 +195,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="email"> email </label>
+                      <label htmlFor="email"> Email </label>
                       <FieldInput
                         name="email"
                         ref={register}
@@ -186,7 +204,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="phone_number"> phonenumber </label>
+                      <label htmlFor="phone_number"> Phonenumber </label>
                       <FieldInput
                         name="phone_number"
                         ref={register}
@@ -195,7 +213,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="street_address1">street address</label>
+                      <label htmlFor="street_address1">Street address</label>
                       <FieldInput
                         name="street_address1"
                         ref={register}
@@ -204,7 +222,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="town_or_city">city</label>
+                      <label htmlFor="town_or_city">City</label>
                       <FieldInput
                         name="town_or_city"
                         ref={register}
@@ -213,7 +231,7 @@ const Createorder = () => {
                       />
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="country">country</label>
+                      <label htmlFor="country">Country</label>
                       <FieldSelect
                         name="country"
                         ref={register}
@@ -225,7 +243,7 @@ const Createorder = () => {
                       </FieldSelect>
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label htmlFor="postcode">postalcode</label>
+                      <label htmlFor="postcode">Postalcode</label>
                       <FieldInput
                         name="postcode"
                         ref={register}
@@ -233,17 +251,58 @@ const Createorder = () => {
                         className="form-control"
                       />
                     </Field>
+                    <Field className="form-group col-md-6">
+                      <label htmlFor="message">Message</label>
+                      <FieldTextArea
+                        name="message"
+                        ref={register}
+                        placeholder="message"
+                        className="form-control"
+                        rows="3"
+                      />
+                    </Field>
+                    <div style={{ marginRight: "10px" }}>
+                      <input
+                        type="radio"
+                        name="notification"
+                        value={"Email"}
+                        ref={register}
+                        style={{ marginRight: "5px", marginLeft: "5px" }}
+                      />
+                      <label style={{ paddingBottom: "2px" }}>Email</label>
+                    </div>
+                    <div style={{ marginRight: "10px" }}>
+                      <input
+                        type="radio"
+                        name="notification"
+                        value={"SMS"}
+                        ref={register}
+                        style={{ marginRight: "5px", marginLeft: "5px" }}
+                      />
+                      <label style={{ paddingBottom: "2px" }}>SMS</label>
+                    </div>
+                    <div>
+                      <input
+                        type="radio"
+                        name="notification"
+                        value={"Both"}
+                        ref={register}
+                        style={{ marginRight: "5px", marginLeft: "5px" }}
+                      />
+                      <label style={{ paddingBottom: "2px" }}>Both</label>
+                    </div>
+                    <br />
                   </div>
                   <div style={{ textAlign: "center" }}>
                     {" "}
                     <input
                       type="submit"
-                      value="checkout"
+                      value="Checkout"
                       style={{
                         textAlign: "center",
                         borderRadius: "10px",
                         backgroundColor: "#ffc541",
-                        width: "150px",
+                        width: "250px",
                         border: "none",
                       }}
                     />

@@ -28,15 +28,30 @@ class home extends Component {
             {" "}
             <div>
               {" "}
-              <img src={LandingImg} style={{ width: "100%" }}></img>
+              <img
+                src={
+                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+                }
+                style={{ width: "100%" }}
+              ></img>
             </div>
             <div>
               {" "}
-              <img src={LandingImg} style={{ width: "100%" }}></img>
+              <img
+                src={
+                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+                }
+                style={{ width: "100%" }}
+              ></img>
             </div>
             <div>
               {" "}
-              <img src={LandingImg} style={{ width: "100%" }}></img>
+              <img
+                src={
+                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+                }
+                style={{ width: "100%" }}
+              ></img>
             </div>
           </Slider>
           <div style={{ padding: "30px", backgroundColor: "white" }}>

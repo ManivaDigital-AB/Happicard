@@ -10,9 +10,11 @@ export const BodyContainer = styled.div`
   .process-body {
     background-color: #ffc541;
     text-align: center;
-    padding: 100px;
+
     width: 100%;
     margin: 20px 0px;
+    padding-right: 250px;
+    padding-left: 250px;
   }
 
   .header-container {

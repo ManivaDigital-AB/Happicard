@@ -21,6 +21,14 @@ export const FieldInput = styled.input`
   }
 `;
 
+export const FieldTextArea = styled.textarea`
+  background-color: #f0eeed;
+  border: 1px solid #ffc541;
+  &::placeholder {
+    font-size: 12px;
+  }
+`;
+
 export const FieldSelect = styled.select`
   background-color: #f0eeed;
   border: 1px solid #ffc541;

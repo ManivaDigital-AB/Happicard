@@ -48,7 +48,7 @@ export const LeftContainer = styled.div`
   }
   button {
     text-decoration: none;
-    background-color: rgb(223, 178, 72);
+    background-color: #ffc541;
     color: black;
     font-size: 1em;
     font-weight: bold;

@@ -2,10 +2,14 @@ import React, { useEffect, useState, useRef, useCallback } from "react";
 import Slider from "react-slick";
 import { BodyContainer } from "../ngos/ngosStyles";
 import axios from "../../utils/axios";
+import NgoDetails from "./ngoDetails";
 
 const ngos = () => {
   const [ngos, setNgos] = useState([]);
   const [maxRange, setMaxRange] = useState(6);
+  const [displayNgoDetail, setDisplayNgoDetail] = useState(false);
+  const [ngoCards, setNgoCards] = useState([]);
+  const [selectedItem, setSelectedItem] = useState({});
 
   const loadMore = useCallback(() => {
     setMaxRange((prevRange) => prevRange + 3);
@@ -21,17 +25,17 @@ const ngos = () => {
 
   function Card(props) {
     return (
-      <div className="col-sm-4">
+      <div className="col-sm-4" onClick={() => handleClick(props.props)}>
         <div
           className="card"
           style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
         >
           <div className="card-body">
-            <input type="radio" value={props.id} />
+            <input type="radio" value={props.props.id} />
             <h6 className="card-title" style={{ color: "#D7383B" }}></h6>
             <div style={{ paddingBottom: "32px" }}>
               <img
-                src={props.image}
+                src={props.props.image}
                 style={{
                   borderRadius: "50%",
                   width: "125px",
@@ -58,7 +62,7 @@ const ngos = () => {
                   color: "#D7383B",
                 }}
               >
-                {props.title}
+                {props.props.title}
               </h5>{" "}
               <span
                 style={{
@@ -66,7 +70,7 @@ const ngos = () => {
                   marginRight: "2px",
                 }}
               >
-                Category: {props.category}
+                Category: {props.props.ngo_category}
               </span>{" "}
             </p>
           </div>
@@ -74,27 +78,21 @@ const ngos = () => {
             className="card-footer"
             style={{ textAlign: "left", fontSize: "12px", lineHeight: "28px" }}
           >
-            I’m a paragraph. Click here to add your own text and edit me. It’s
-            easy. Just click “Edit Text” or double click me to add your own
-            content and make changes to the font.
+            {props.props.about}
           </div>
         </div>
       </div>
     );
   }
 
+  function handleClick(item) {
+    setDisplayNgoDetail(!displayNgoDetail);
+    setSelectedItem(item);
+  }
+
   const NgosList = () =>
     ngos.slice(0, maxRange).map((item, index) => {
-      return (
-        <Card
-          image={item.image}
-          title={item.title}
-          category={item.ngo_category}
-          about={item.about}
-          id={index}
-          key={index}
-        />
-      );
+      return <Card props={item} key={index} />;
     });
 
   useEffect(() => {
@@ -107,7 +105,7 @@ const ngos = () => {
 
     const getNgosList = async () =>
       await axios
-        .get(`https://dev.api.happicard.se/api/profiles/list/ngo/`, config)
+        .get(` http://35.161.152.123/api/profiles/list/ngos/`, config)
         .then((response) => {
           setNgos(response.data);
         });
@@ -141,61 +139,83 @@ const ngos = () => {
             ></img>
           </div>
         </Slider>
-        <div
-          className="container"
-          style={{ marginTop: "25px", backgroundColor: "white" }}
-        >
-          <div className="row" style={{ paddingTop: "25px", color: "#FFC542" }}>
-            <div className="col-sm">
-              <h2 style={{ paddingBottom: "25px" }}>NGOS</h2>
-            </div>
-            <div className="col-sm" style={{ textAlign: "right" }}>
-              <select
-                style={{
-                  marginRight: "4px",
-                  border: "2px solid #FFC542",
-                  color: "#FFC542 !important",
-                }}
-              >
-                <option style={{ color: "black !important" }}>Category</option>
-              </select>
-              <select>
-                <option>Sort by: Most Popular</option>
-              </select>
-            </div>
-          </div>
+        {!displayNgoDetail && (
           <div
-            className="row justify-content-md-center"
-            style={{ textAlign: "center" }}
+            className="container"
+            style={{ marginTop: "25px", backgroundColor: "white" }}
           >
-            {ngos && <NgosList />}
+            <div
+              className="row"
+              style={{ paddingTop: "25px", color: "#FFC542" }}
+            >
+              <div className="col-sm">
+                <h2 style={{ paddingBottom: "25px" }}>NGOS</h2>
+              </div>
+              <div className="col-sm">
+                <div className="selectdiv">
+                  <label>
+                    {" "}
+                    <select>
+                      <option>Category</option>
+                      <option>Fashion</option>
+                      <option>Beauty</option>
+                      <option>Home & Garden</option>
+                      <option>Electronics</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+              <div className="col-sm">
+                <div className="selectdiv">
+                  <label>
+                    <select>
+                      <option>Sort by: Most Popular</option>
+                      <option>Sort by: Highest Discount</option>
+                      <option>Sort by: Highest Cashback</option>
+                      <option>Sort by: Brand Name</option>
+                    </select>
+                  </label>
+                </div>
+              </div>
+            </div>
+            <div
+              className="row justify-content-md-center"
+              style={{ textAlign: "center" }}
+            >
+              {ngos && <NgosList />}
+            </div>
+            <div
+              className="row"
+              style={{
+                textAlign: "center",
+                display: "block",
+                paddingBottom: "15px",
+                paddingTop: "15px",
+              }}
+            >
+              {ngos.length > 6 && (
+                <button
+                  onClick={loadMore}
+                  style={{
+                    outline: "none",
+                    width: "175px",
+                    color: "#FFC541",
+                    border: "2px solid #FFC541",
+                    borderRadius: "28px",
+                    backgroundColor: "#FFFF",
+                  }}
+                >
+                  See more
+                </button>
+              )}
+            </div>
           </div>
-          <div
-            className="row"
-            style={{
-              textAlign: "center",
-              display: "block",
-              paddingBottom: "15px",
-              paddingTop: "15px",
-            }}
-          >
-            {ngos.length > 6 && (
-              <button
-                onClick={loadMore}
-                style={{
-                  outline: "none",
-                  width: "175px",
-                  color: "#FFC541",
-                  border: "2px solid #FFC541",
-                  borderRadius: "28px",
-                  backgroundColor: "#FFFF",
-                }}
-              >
-                See more
-              </button>
-            )}
+        )}
+        {displayNgoDetail && (
+          <div>
+            <NgoDetails selectedItem={selectedItem} />
           </div>
-        </div>
+        )}
       </BodyContainer>
     </>
   );

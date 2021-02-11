@@ -7,7 +7,7 @@ import Copyright from "../copyright/copyright";
 const Footer = () => {
   return (
     <>
-      <div className="row" style={{ backgroundColor: "#ffc541" }}>
+      <div className="row " style={{ backgroundColor: "#ffc541" }}>
         <footer
           className="my-md-5"
           style={{
@@ -17,7 +17,7 @@ const Footer = () => {
             fontSize: "12px",
           }}
         >
-          <div className="footerDesktop">
+          <div className="footerDesktop container">
             <div className="row">
               <div className="col-12 col-md-3" style={{ marginLeft: "75px" }}>
                 <img
@@ -326,7 +326,7 @@ const Footer = () => {
           </div>
         </footer>
       </div>
-      <div className="">
+      <div>
         <Copyright />
       </div>
     </>

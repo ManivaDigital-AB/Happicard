@@ -8,6 +8,7 @@ import {
   BodyProcessImg,
 } from "../about/aboutStyle";
 import logoImg from "../../assets/images/logo_yellow.PNG";
+import logo from "../../assets/images/logo.PNG";
 import woman from "../../assets/images/about/Woman.JPG";
 import aboutProcess1 from "../../assets/images/about/about1.PNG";
 import aboutProcess2 from "../../assets/images/about/about2.PNG";
@@ -25,77 +26,81 @@ class about extends Component {
   render() {
     return (
       <>
-        <BodyContainer>
-          <div className="row header-container">
-            <LeftHeaderContainer>
-              <img src={woman} className="img-header"></img>
-            </LeftHeaderContainer>
-            <RightHeaderContainer>
+        <div>
+          <BodyContainer>
+            <div
+              className="row header-container"
+              style={{ backgroundColor: "#FFFF" }}
+            >
+              <LeftHeaderContainer>
+                <img src={woman} className="img-header"></img>
+              </LeftHeaderContainer>
+              <RightHeaderContainer>
+                <h2>
+                  Om <img src={logoImg} className="happicard-img"></img>
+                </h2>
+                <div className="about-div">
+                  <p>
+                    Happicard är en digital plattform som ger användare
+                    möjlighet att köpa, spara, ta emot och lagra digitala
+                    presentkort. Användaren kan köpa gåvor som hos
+                    samarbetspartners som är både företag och
+                    välgörenhetsorganisationer.
+                  </p>
+                  <p>
+                    Happicard är utvecklat med ett hållbarhetsfokus i alla
+                    aspekter. Det är en digital presentkortstjänst helt fri från
+                    plastkort. Men dessutom är samarbetspartners mycket noggrant
+                    utvalda utifrån sin hållbarhetsprofil. Det gör Happicard
+                    till en tjänst där en hållbarhetsmedveten konsument snabbt
+                    kan hitta favoriter i en unik utbudsmix.
+                  </p>
+                  <p>
+                    Happicard gör det roligt och enkelt att ge. Kontakt oss för
+                    mer info: info@happicard.se
+                  </p>
+                </div>
+              </RightHeaderContainer>
+            </div>
+
+            <div className="process-body">
               <h2>
-                Om <img src={logoImg} className="happicard-img"></img>
+                <img src={logo} className="happicard-img"></img>{" "}
+                <span style={{ color: "#4A4746" }}>Process</span>
               </h2>
-              <div className="about-div">
-                <p>
-                  Happicard är en digital plattform som ger användare möjlighet
-                  att köpa, spara, ta emot och lagra digitala presentkort.
-                  Användaren kan köpa gåvor som hos samarbetspartners som är
-                  både företag och välgörenhetsorganisationer.
-                </p>
-                <p>
-                  Happicard är utvecklat med ett hållbarhetsfokus i alla
-                  aspekter. Det är en digital presentkortstjänst helt fri från
-                  plastkort. Men dessutom är samarbetspartners mycket noggrant
-                  utvalda utifrån sin hållbarhetsprofil. Det gör Happicard till
-                  en tjänst där en hållbarhetsmedveten konsument snabbt kan
-                  hitta favoriter i en unik utbudsmix.
-                </p>
-                <p>
-                  Happicard gör det roligt och enkelt att ge. Kontakt oss för
-                  mer info: info@happicard.se
-                </p>
-              </div>
-            </RightHeaderContainer>
-          </div>
-
-          {/* <div className="process-body">
-            <h2>
-              <img src={logoImg} className="happicard-img"></img> Process
-            </h2>
-            <BodyProcess>
-              <ElementProcess>
-                <img src={aboutProcess1}></img>
-                <h4>Choose Brand</h4>
-                <div>
-                  I'm a paragraph. Click here to add your own text and edit me.
-                  It’s easy. Just click “Edit Text” or double click me.
-                </div>
-              </ElementProcess>
-              <ElementProcess>
-                <img src={aboutProcess2}></img>
-                <h4>Personalize</h4>
-                <div>
-                  I'm a paragraph. Click here to add your own text and edit me.
-                  It’s easy. Just click “Edit Text” or double click me.
-                </div>
-              </ElementProcess>
-              <ElementProcess>
-                <img src={aboutProcess3}></img>
-                <h4>Pay & Deliver</h4>
-                <div>
-                  I'm a paragraph. Click here to add your own text and edit me.
-                  It’s easy. Just click “Edit Text” or double click me.
-                </div>
-              </ElementProcess>
-            </BodyProcess>
-          </div>
-
-          <div className="row">
-            <BodyProcessImg>
-              <img src={aboutSection3}></img>
-            </BodyProcessImg>
-          </div>
-          <Contact /> */}
-        </BodyContainer>
+              <BodyProcess>
+                <ElementProcess>
+                  <img src={aboutProcess1}></img>
+                  <h4>Choose Brand</h4>
+                  <div>
+                    I'm a paragraph. Click here to add your own text and edit
+                    me. It’s easy. Just click “Edit Text” or double click me.
+                  </div>
+                </ElementProcess>
+                <ElementProcess>
+                  <img src={aboutProcess2}></img>
+                  <h4>Personalize</h4>
+                  <div>
+                    I'm a paragraph. Click here to add your own text and edit
+                    me. It’s easy. Just click “Edit Text” or double click me.
+                  </div>
+                </ElementProcess>
+                <ElementProcess>
+                  <img src={aboutProcess3}></img>
+                  <h4>Pay & Deliver</h4>
+                  <div>
+                    I'm a paragraph. Click here to add your own text and edit
+                    me. It’s easy. Just click “Edit Text” or double click me.
+                  </div>
+                </ElementProcess>
+              </BodyProcess>
+            </div>
+            <div className="row " style={{ backgroundColor: "#FFF" }}>
+              {" "}
+              <Contact />
+            </div>
+          </BodyContainer>
+        </div>
       </>
     );
   }

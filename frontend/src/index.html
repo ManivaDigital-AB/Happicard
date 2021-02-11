@@ -38,6 +38,16 @@
       type="text/css"
       href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.6.0/slick-theme.min.css"
     />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Montserrat:wght@100;600;800&display=swap"
+      rel="stylesheet"
+    />
     <script
       src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"
       integrity="sha384-q2kxQ16AaE6UbzuKqyBE9/u/KzioAlnx2maXQHiDX9d4/zp8Ok3f+M7DPm+Ib6IU"
@@ -56,6 +66,65 @@
 
     body {
       background-color: #ffc541;
+    }
+
+    .truncate {
+      display: -webkit-box;
+      -webkit-line-clamp: 3;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .selectdiv {
+      position: relative;
+      /*Don't really need this just for demo styling*/
+
+      float: left;
+      min-width: 200px;
+      /* margin: 50px 33%; */
+    }
+
+    .selectdiv:after {
+      content: "\f078";
+      font: normal normal normal 17px/1 FontAwesome;
+      color: #ffc542;
+      right: 11px;
+      top: 6px;
+      height: 34px;
+      padding: 15px 0px 0px 8px;
+
+      position: absolute;
+      pointer-events: none;
+    }
+
+    /* IE11 hide native button (thanks Matt!) */
+    select::-ms-expand {
+      display: none;
+    }
+
+    .selectdiv select {
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      /* Add some styling */
+
+      display: block;
+      width: 250px;
+
+      height: 50px;
+      float: right;
+      margin: 5px 0px;
+      padding: 0px 24px;
+      font-size: 16px;
+      line-height: 1.75;
+      color: #333;
+      background-color: #ffffff;
+      background-image: none;
+      border: 2px solid #ffc542;
+      -ms-word-break: normal;
+      word-break: normal;
+      outline: none;
     }
   </style>
   <body>

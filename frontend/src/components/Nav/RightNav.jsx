@@ -12,9 +12,11 @@ const Ul = styled.ul`
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
+  padding-top: 10px;
+  padding-left: 450px;
 
   li {
-    padding: 18px 10px;
+    padding: 18px 45px;
   }
 
   .selected {
@@ -32,11 +34,65 @@ const Ul = styled.ul`
   .btn,
   .btn:hover {
     font-size: 14px;
-    margin-top: 11px;
+    // margin-top: 11px;
   }
 
   .dropdown-item {
-    font-size: 14px;
+    font-size: 16px;
+  }
+
+  .dropdown-toggle::after {
+    content: "";
+    border: 0;
+  }
+  .dropdown-menu.show {
+    background-color: #ffff;
+    position: absolute;
+    inset: 0px auto auto 0px;
+    margin: 0px;
+    transform: translate(0px, 56px);
+    border: none;
+  }
+
+  .btn.focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .btn,
+  .btn:hover {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 18px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 18px;
+    border-radius: 0px;
+  }
+
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1rem;
+    clear: both;
+    color: #fff;
+    text-align: inherit;
+    white-space: nowrap;
+
+    border: 0;
+
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 22px;
+  }
+  a:hover,
+  .dropdown-item:hover,
+  .dropdown-item:active {
+    color: #ffc542;
   }
 
   @media (max-width: 768px) {
@@ -75,9 +131,88 @@ const Ul = styled.ul`
   a {
     text-decoration: none;
     color: #fff;
+    font-size: 16px;
   }
   a:hover {
-    color: #222;
+    color: #ffc541;
+  }
+`;
+
+const PartnerDropDown = styled.div`
+  padding-top: 10px;
+  margin-left: 290px;
+  .btn,
+  .btn:hover {
+    font-size: 14px;
+    // margin-top: 11px;
+  }
+
+  .dropdown-item {
+    font-size: 16px;
+  }
+
+  .dropdown-toggle::after {
+    content: "";
+    border: 0;
+  }
+  .dropdown-menu.show {
+    background-color: #ffff;
+    position: absolute;
+    inset: 0px auto auto 0px;
+    margin: 0px;
+    transform: translate(0px, 56px);
+    border: none;
+  }
+
+  .btn.focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .partner {
+    background-color: #ffc542;
+  }
+
+  .btn,
+  .btn:hover {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 18px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 18px;
+    border-radius: 0px;
+  }
+
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1rem;
+    clear: both;
+    color: #fff;
+    text-align: inherit;
+    white-space: nowrap;
+
+    border: 0;
+
+    font-size: 18px;
+    font-weight: bold;
+    text-decoration: none;
+    line-height: 22px;
+
+    a {
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+  }
+  a:hover,
+  .dropdown-item:hover,
+  .dropdown-item:active {
+    color: #ffc542;
   }
 `;
 
@@ -101,41 +236,7 @@ const RightNav = ({ open }) => {
             Hem
           </Link>
         </li>
-        {/* <li
-          className={selectedMenu == "Stores" ? "selected" : "unselected"}
-          onClick={() => handleClick("Stores")}
-        >
-          Butiker
-        </li>
-        <li
-          className={selectedMenu == "NGOs" ? "selected" : "unselected"}
-          onClick={() => handleClick("NGOs")}
-        >
-          NGOs
-        </li> */}
-        {/* <Dropdown>
-          <Dropdown.Toggle variant="" id="dropdown-basic">
-            Gifting
-          </Dropdown.Toggle>
-          <Dropdown.Item>
-            <Link
-              to="/Stores"
-              className={selectedMenu == "Stores" ? "selected" : "unselected"}
-              onClick={() => handleClick("Stores")}
-            >
-              Stores
-            </Link>
-          </Dropdown.Item>
-          <Dropdown.Item>
-            <Link
-              to="/Stores"
-              className={selectedMenu == "NGOs" ? "selected" : "unselected"}
-              onClick={() => handleClick("NGOs")}
-            >
-              NGOs
-            </Link>
-          </Dropdown.Item>
-        </Dropdown> */}
+
         <Dropdown>
           <Dropdown.Toggle variant="" id="dropdown-basic">
             Gifting
@@ -161,12 +262,7 @@ const RightNav = ({ open }) => {
             </Dropdown.Item>
           </Dropdown.Menu>
         </Dropdown>
-        {/* <li
-          className={selectedMenu == "Partners" ? "selected" : "unselected"}
-          onClick={() => handleClick("Partners")}
-        >
-          Partners
-        </li> */}
+
         <li>
           <Link
             to="/about"
@@ -177,33 +273,7 @@ const RightNav = ({ open }) => {
             Om Oss
           </Link>
         </li>
-        <Dropdown>
-          <Dropdown.Toggle variant="" id="dropdown-basic">
-            Partners
-          </Dropdown.Toggle>
-          <Dropdown.Menu>
-            <Dropdown.Item>
-              <Link
-                to="/SignIn"
-                className={selectedMenu == "SignIn" ? "selected" : "unselected"}
-                onClick={() => handleClick("SignIn")}
-              >
-                Sign In
-              </Link>
-            </Dropdown.Item>
-            <Dropdown.Item>
-              <Link
-                to="/Register"
-                className={
-                  selectedMenu == "Register" ? "selected" : "unselected"
-                }
-                onClick={() => handleClick("Register")}
-              >
-                New Member
-              </Link>
-            </Dropdown.Item>
-          </Dropdown.Menu>
-        </Dropdown>
+
         <li className="onlyMobile paddingTop">Sign in/Sign up</li>
         <li className="onlyMobile">
           <img
@@ -235,23 +305,52 @@ const RightNav = ({ open }) => {
           />
         </li>
       </Ul>
-      <div style={{ marginLeft: "15px", marginLeft: "100px" }}>
-        <img
-          src={cartImg}
-          style={{
-            width: "18px",
-            height: "19px",
-            marginTop: "18px",
-            marginRight: "10px",
-          }}
-        />
+      <PartnerDropDown>
+        <Dropdown>
+          <Dropdown.Toggle variant="" id="dropdown-basic" className="partner">
+            Partners
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+              <Link
+                to="/SignIn"
+                className={selectedMenu == "SignIn" ? "selected" : "unselected"}
+                onClick={() => handleClick("SignIn")}
+              >
+                Sign In
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+              <Link
+                to="/register"
+                className={
+                  selectedMenu == "Register" ? "selected" : "unselected"
+                }
+                onClick={() => handleClick("Register")}
+              >
+                New Member
+              </Link>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+      </PartnerDropDown>
+      <div style={{ marginLeft: "15px" }}>
         <img
           src={searchImg}
           style={{
-            width: "18px",
-            height: "19px",
-            marginTop: "18px",
+            width: "25px",
+            height: "25px",
+            marginTop: "28px",
             marginRight: "15px",
+          }}
+        />
+        <img
+          src={cartImg}
+          style={{
+            width: "25px",
+            height: "25px",
+            marginTop: "28px",
+            marginRight: "10px",
           }}
         />
       </div>

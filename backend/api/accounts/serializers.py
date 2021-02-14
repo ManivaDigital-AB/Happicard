@@ -99,18 +99,17 @@ class VendorRegisterSerializer(serializers.ModelSerializer):
             "first_name",
             "last_name",
             "email",
-            "password",
             "phone_number",
-            "business_address",
-            "city",
-            "region",
-            "zipcode",
-            "website",
+            "company_address",
+            "company_role",
+            "corporate_form",
+            "company_category",
+            "company_website",
+            "comments",
         )
 
     def validate(self, attrs):
         email = attrs.get("email", "")
-        password = attrs.get("password", "")
         return attrs
 
     def create(self, validated_data):

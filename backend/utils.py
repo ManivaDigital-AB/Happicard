@@ -48,17 +48,8 @@ class EmailThread(threading.Thread):
 class Util:
     @staticmethod
     def send_email(data):
-        email = EmailMessage(
-            subject=data["email_subject"],
-            body=data["email_body"],
-            to=[data["to_email"]],
-        )
-        EmailThread(email).start()
-
-    @staticmethod
-    def send_onboarding_email(data):
         html_content = render_to_string(
-            "onboarding_email.html",
+            "basic_email.html",
             {
                 "body": data["email_body"],
             },

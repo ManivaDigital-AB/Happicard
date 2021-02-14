@@ -12,7 +12,14 @@ class UserManager(BaseUserManager):
     Base User Manager
     """
 
-    def create_user(self, first_name, last_name, email, password=None, **extra_fields):
+    def create_user(
+        self,
+        first_name,
+        last_name,
+        email,
+        password="välkommen-till-happicard",
+        **extra_fields,
+    ):
         """
         Create user with the given email and password
         """
@@ -70,7 +77,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     updated_at = models.DateTimeField(auto_now=True)
 
     USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["first_name", "last_name"]
+    REQUIRED_FIELDS = ["first_name", "last_name", "password"]
 
     objects = UserManager()
 
@@ -87,14 +94,19 @@ class Vendor(User):
     Vendor Model
     """
 
-    phone_number = models.CharField(
-        max_length=15, unique=True, verbose_name="Phone number", null=True, blank=True
+    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    company_name = models.CharField(max_length=255, null=True, blank=True)
+    company_address = models.CharField(max_length=255, null=True, blank=True)
+    company_role = models.CharField(max_length=255, null=True, blank=True)
+    corporate_form = models.CharField(max_length=255, null=True, blank=True)
+    company_category = models.CharField(max_length=255, null=True, blank=True)
+    company_website = models.CharField(
+        max_length=255, unique=True, null=True, blank=True
     )
-    business_address = models.CharField(max_length=255, null=True, blank=True)
-    city = models.CharField(max_length=255, null=True, blank=True)
-    region = models.CharField(max_length=255, null=True, blank=True)
-    zipcode = models.CharField(max_length=255, null=True, blank=True)
-    website = models.CharField(max_length=255, null=True, blank=True)
+    comments = models.TextField(max_length=500, null=True, blank=True)
+
+    def __str__(self):
+        return self.email
 
 
 class Customer(User):

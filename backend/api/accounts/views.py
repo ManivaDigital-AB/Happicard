@@ -112,17 +112,20 @@ class VendorRegistrationView(generics.GenericAPIView):
         serializer = self.serializer_class(data=vendor)
         serializer.is_valid(raise_exception=True)
         serializer.save()
-        data = serializer.data
-        email = data["email"]
-        email_body = f"Denna leverantör väntar på verifiering med det här e-postmeddelandet:\n{email}.\n\nUppdatera deras status nu på Happicard-adminpanelen!"
+        form = serializer.data
+        email = form["email"]
+        onboard_body = f"Denna leverantör väntar på verifiering med det här e-postmeddelandet: {email}. Uppdatera deras status nu på Happicard-adminpanelen!"
 
-        data = {
-            "email_body": email_body,
+        onboard_data = {
+            "email_body": onboard_body,
             "to_email": settings.DEFAULT_FROM_EMAIL,
             "email_subject": "Ombordstigningsprocess",
         }
-        Util.send_onboarding_email(data)
-        return Response({"Success": "Email Delivered"}, status=status.HTTP_201_CREATED)
+        Util.send_onboarding_email(onboard_data)
+
+        return Response(
+            {"Success": "Onboarding Email Delivered"}, status=status.HTTP_201_CREATED
+        )
 
 
 class CustomerRegistrationView(generics.GenericAPIView):

@@ -28,6 +28,10 @@ TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
 TWILIO_NUMBER = config("TWILIO_NUMBER")
 
+# Stripe
+STRIPE_PROD_PK = config("STRIPE_PROD_PK")
+STRIPE_PROD_SK = config("STRIPE_PROD_SK")
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

@@ -1,12 +1,13 @@
 from django.conf import settings
 from requests.auth import HTTPBasicAuth
 from django.core.exceptions import ObjectDoesNotExist
-from rest_framework import permissions, status, generics
+from rest_framework import permissions, status, generics, views
 from rest_framework.response import Response
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 from uuid import UUID
 import requests
+import stripe
 import json
 
 from .serializers import (
@@ -15,6 +16,7 @@ from .serializers import (
     OrderCampaignSerializer,
     OrderGiftCardSerializer,
     HappicardSerializer,
+    StripeTransferSerializer,
 )
 from .models import (
     Order,
@@ -29,6 +31,8 @@ DEFAULT_FROM_NUMBER = settings.DEFAULT_FROM_NUMBER
 
 klarna_un = settings.KLARNA_UN
 klarna_pw = settings.KLARNA_PW
+
+stripe.api_key = settings.STRIPE_DEV_SK
 
 
 class UUIDEncoder(json.JSONEncoder):
@@ -371,29 +375,103 @@ class HappicardCreateView(generics.CreateAPIView):
                 )
 
 
+class StripePaymentView(views.APIView):
+    """
+    Stripe Payment View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        payment_intent = stripe.PaymentIntent.create(
+            amount=10000,
+            currency="usd",
+            payment_method_types=["card"],
+            transfer_group="{ORDER10}",
+        )
+        transfer = stripe.Transfer.create(
+            amount=7000,
+            currency="usd",
+            destination="acct_1IO3nh2VgnDoOgtm",
+            transfer_group="{ORDER10}",
+        )
+
+        return Response(status=status.HTTP_200_OK, data=transfer)
+
+
+class StripeChargeView(views.APIView):
+    """
+    Stripe Charge View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        charge = stripe.Charge.create(
+            amount=2000,
+            currency="sek",
+            source="tok_se",
+            description="Testing charges with transfers",
+        )
+        return Response(status=status.HTTP_200_OK, data=charge)
+
+
+class StripeTransferView(generics.GenericAPIView):
+    """
+    Stripe Transfer View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = StripeTransferSerializer
+
+    def post(self, request):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        transfer = serializer.data
+        charge_id = transfer.get("charge_id")
+        destination = transfer.get("destination")
+
+        transfer = stripe.Transfer.create(
+            amount=1000,
+            currency="sek",
+            source_transaction=charge_id,
+            destination=destination,
+        )
+        return Response(status=status.HTTP_200_OK, data=transfer)
+
+
+class StripePayoutView(views.APIView):
+    """
+    Stripe Payout View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        payout = stripe.Payout.create(amount=2100, currency="sek")
+        return Response(status=status.HTTP_200_OK, data=payout)
+
+
 class OrderCampaignDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
     queryset = OrderCampaign.objects.all()
     serializer_class = OrderCampaignSerializer
 
 
 class OrderGiftCardDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
     queryset = OrderGiftCard.objects.all()
     serializer_class = OrderGiftCardSerializer
 
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
     queryset = Order.objects.all()
     serializer_class = OrderSerializer
 
 
 class HappicardDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
-    authentication_classes = ()
     queryset = Happicard.objects.all()
     serializer_class = HappicardSerializer

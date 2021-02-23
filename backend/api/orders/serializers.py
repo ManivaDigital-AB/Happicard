@@ -1,7 +1,7 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
-from .models import Order, OrderGiftCard, OrderCampaign, Happicard
+from .models import StripeOrder, Order, OrderGiftCard, OrderCampaign, Happicard
 from backend.api.items.models import GiftCard, Campaign
 
 
@@ -12,6 +12,24 @@ class OrderSerializer(serializers.ModelSerializer):
             "id",
             "campaigns",
             "giftcards",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "country",
+            "region",
+            "postcode",
+            "town_or_city",
+            "street_address1",
+            "street_address2",
+        )
+
+
+class StripeOrderSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Order
+        fields = (
+            "id",
             "first_name",
             "last_name",
             "email",
@@ -75,4 +93,16 @@ class HappicardSerializer(serializers.ModelSerializer):
             "recipient_number",
             "personal_message",
             "personal_image",
+        )
+
+
+class StripeTransferSerializer(serializers.Serializer):
+    charge_id = serializers.CharField()
+    destination = serializers.CharField()
+
+    class Meta:
+        model = Happicard
+        fields = (
+            "charge_id",
+            "destination",
         )

@@ -148,17 +148,8 @@ else:
 # Email
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
-EMAIL_HOST = "send.one.com"
+EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = 587
-
-# Twilio
-TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
-TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
-DEFAULT_FROM_NUMBER = config("TWILIO_NUMBER")
-
-# Klarna
-KLARNA_UN = config("KLARNA_UN")
-KLARNA_PW = config("KLARNA_PW")
 
 # Logging
 LOG_DIR = PROJECT_ROOT / "log"

@@ -59,13 +59,23 @@ urlpatterns = [
         name="happicard-detail",
     ),
     path(
-        "checkout/",
-        views.KlarnaCheckoutView.as_view(),
-        name="checkout",
+        "create/stripe-payment/",
+        views.StripePaymentView.as_view(),
+        name="stripe-payment",
     ),
     path(
-        "confirm/checkout/",
-        views.KlarnaCheckoutConfirmView.as_view(),
-        name="confirm-checkout",
+        "create/stripe-charge/",
+        views.StripeChargeView.as_view(),
+        name="stripe-charge",
+    ),
+    path(
+        "create/stripe-transfer/",
+        views.StripeTransferView.as_view(),
+        name="stripe-transfer",
+    ),
+    path(
+        "create/stripe-payout/",
+        views.StripePayoutView.as_view(),
+        name="stripe-payout",
     ),
 ]

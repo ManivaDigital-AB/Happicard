@@ -1,7 +1,7 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
-from .models import StripeOrder, Order, OrderGiftCard, OrderCampaign, Happicard
+from .models import Order, OrderGiftCard, OrderCampaign, Happicard
 from backend.api.items.models import GiftCard, Campaign
 
 

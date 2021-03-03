@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from .models import Order, OrderGiftCard, OrderCampaign, Happicard
+from .models import Order, OrderItem
 
 
 class OrderAdmin(admin.ModelAdmin):
@@ -8,15 +8,12 @@ class OrderAdmin(admin.ModelAdmin):
     readonly_fields = (
         "id",
         "date",
-        "order_total",
-        "status",
     )
 
     fields = (
         "id",
         "user",
-        "giftcards",
-        "campaigns",
+        "items",
         "date",
         "first_name",
         "last_name",
@@ -28,8 +25,6 @@ class OrderAdmin(admin.ModelAdmin):
         "region",
         "street_address1",
         "street_address2",
-        "order_total",
-        "status",
     )
 
     list_display = (
@@ -38,14 +33,10 @@ class OrderAdmin(admin.ModelAdmin):
         "date",
         "first_name",
         "last_name",
-        "order_total",
-        "status",
     )
 
     ordering = ("-date",)
 
 
 admin.site.register(Order, OrderAdmin)
-admin.site.register(OrderGiftCard)
-admin.site.register(OrderCampaign)
-admin.site.register(Happicard)
+admin.site.register(OrderItem)

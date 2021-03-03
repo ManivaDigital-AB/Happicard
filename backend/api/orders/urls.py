@@ -4,14 +4,9 @@ from . import views
 app_name = "orders"
 urlpatterns = [
     path(
-        "list/basket-campaigns/",
-        views.OrderCampaignListView.as_view(),
-        name="basket-campaigns-list",
-    ),
-    path(
-        "list/basket-giftcards/",
-        views.OrderGiftCardListView.as_view(),
-        name="basket-giftcards-list",
+        "list/basket-items/",
+        views.OrderItemListView.as_view(),
+        name="basket-items-list",
     ),
     path(
         "list/orders/",
@@ -19,14 +14,9 @@ urlpatterns = [
         name="list-orders",
     ),
     path(
-        "create/campaign-to-basket/",
-        views.OrderCampaignCreateView.as_view(),
-        name="create-campaign-to-basket",
-    ),
-    path(
-        "create/giftcard-to-basket/",
-        views.OrderGiftCardCreateView.as_view(),
-        name="create-giftcard-to-basket",
+        "create/item-to-basket/",
+        views.OrderItemCreateView.as_view(),
+        name="create-item-to-basket",
     ),
     path(
         "create/order/",
@@ -39,34 +29,24 @@ urlpatterns = [
         name="create-happicard",
     ),
     path(
-        "campaign-to-basket/<int:pk>",
-        views.OrderCampaignDetailView.as_view(),
-        name="campaign-to-basket-detail",
+        "item-to-basket/<uuid:pk>",
+        views.OrderItemDetailView.as_view(),
+        name="item-to-basket-detail",
     ),
     path(
-        "giftcard-to-basket/<int:pk>",
-        views.OrderGiftCardDetailView.as_view(),
-        name="giftcard-to-basket-detail",
-    ),
-    path(
-        "order/<int:pk>",
+        "order/<uuid:pk>",
         views.OrderDetailView.as_view(),
         name="order-detail",
-    ),
-    path(
-        "happicard/<int:pk>/",
-        views.HappicardDetailView.as_view(),
-        name="happicard-detail",
-    ),
-    path(
-        "create/stripe-payment/",
-        views.StripePaymentView.as_view(),
-        name="stripe-payment",
     ),
     path(
         "create/stripe-charge/",
         views.StripeChargeView.as_view(),
         name="stripe-charge",
+    ),
+    path(
+        "create/stripe-payment/",
+        views.StripePaymentView.as_view(),
+        name="stripe-payment",
     ),
     path(
         "create/stripe-transfer/",

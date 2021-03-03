@@ -15,12 +15,12 @@ urlpatterns = [
         name="list-ngos",
     ),
     path(
-        "store/<int:pk>/",
+        "store/<uuid:pk>/",
         views.StoreDetailView.as_view(),
         name="store-detail",
     ),
     path(
-        "ngo/<int:pk>/",
+        "ngo/<uuid:pk>/",
         views.NGODetailView.as_view(),
         name="ngo-detail",
     ),

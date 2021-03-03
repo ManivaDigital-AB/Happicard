@@ -1,7 +1,7 @@
 from django_countries.serializer_fields import CountryField
 from rest_framework import serializers
 
-from .models import Order, OrderGiftCard, OrderCampaign, Happicard
+from .models import Order, OrderItem
 from backend.api.items.models import GiftCard, Campaign
 
 
@@ -10,8 +10,7 @@ class OrderSerializer(serializers.ModelSerializer):
         model = Order
         fields = (
             "id",
-            "campaigns",
-            "giftcards",
+            "items",
             "first_name",
             "last_name",
             "email",
@@ -22,24 +21,14 @@ class OrderSerializer(serializers.ModelSerializer):
             "town_or_city",
             "street_address1",
             "street_address2",
-        )
-
-
-class StripeOrderSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = (
-            "id",
-            "first_name",
-            "last_name",
-            "email",
-            "phone_number",
-            "country",
-            "region",
-            "postcode",
-            "town_or_city",
-            "street_address1",
-            "street_address2",
+            "happicard_recipient_myself",
+            "happicard_recipient_name",
+            "happicard_recipient_email_choice",
+            "happicard_recipient_email",
+            "happicard_recipient_sms_choice",
+            "happicard_recipient_number",
+            "happicard_personal_message",
+            "happicard_personal_image",
         )
 
 
@@ -49,50 +38,25 @@ class CheckoutSerializer(serializers.ModelSerializer):
         fields = ("id",)
 
 
-class OrderGiftCardSerializer(serializers.ModelSerializer):
+class OrderItemSerializer(serializers.ModelSerializer):
     class Meta:
-        model = OrderGiftCard
+        model = OrderItem
         fields = (
             "id",
             "ordered",
+            "campaign",
             "giftcard",
             "price_choice",
             "quantity",
         )
 
-    def get_giftcard(self, obj):
-        return OrderGiftCardSerializer(obj.giftcard).data
 
-
-class OrderCampaignSerializer(serializers.ModelSerializer):
+class StripeChargeSerializer(serializers.Serializer):
     class Meta:
-        model = OrderCampaign
+        model = Order
         fields = (
-            "id",
-            "ordered",
-            "campaign",
-            "price_choice",
-            "quantity",
-        )
-
-    def get_campaign(self, obj):
-        return OrderCampaignSerializer(obj.campaign).data
-
-
-class HappicardSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Happicard
-        fields = (
-            "happi_order_id",
-            "klarna_order_confirm",
-            "recipient_myself",
-            "recipient_name",
-            "recipient_email_choice",
-            "recipient_email",
-            "recipient_sms_choice",
-            "recipient_number",
-            "personal_message",
-            "personal_image",
+            "amount",
+            "source",
         )
 
 
@@ -101,7 +65,6 @@ class StripeTransferSerializer(serializers.Serializer):
     destination = serializers.CharField()
 
     class Meta:
-        model = Happicard
         fields = (
             "charge_id",
             "destination",

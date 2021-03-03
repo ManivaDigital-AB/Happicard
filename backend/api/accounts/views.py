@@ -121,7 +121,7 @@ class VendorRegistrationView(generics.GenericAPIView):
             "to_email": settings.DEFAULT_FROM_EMAIL,
             "email_subject": "Ombordstigningsprocess",
         }
-        Util.send_onboarding_email(onboard_data)
+        Util.send_email(onboard_data)
 
         return Response(
             {"Success": "Onboarding Email Delivered"}, status=status.HTTP_201_CREATED

@@ -29,12 +29,12 @@ urlpatterns = [
         name="create-campaign",
     ),
     path(
-        "giftcard/<int:pk>/",
+        "giftcard/<uuid:pk>/",
         views.GiftCardDetailView.as_view(),
         name="giftcard-detail",
     ),
     path(
-        "campaign/<int:pk>/",
+        "campaign/<uuid:pk>/",
         views.CampaignDetailView.as_view(),
         name="campaign-detail",
     ),

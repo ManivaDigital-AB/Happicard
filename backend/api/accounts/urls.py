@@ -31,17 +31,17 @@ urlpatterns = [
         name="list-subscribers",
     ),
     path(
-        "customer/<int:pk>/",
+        "customer/<uuid:pk>/",
         views.CustomerDetailView.as_view(),
         name="customer-detail",
     ),
     path(
-        "vendor/<int:pk>/",
+        "vendor/<uuid:pk>/",
         views.VendorDetailView.as_view(),
         name="vendor-detail",
     ),
     path(
-        "subscriber/<int:pk>/",
+        "subscriber/<uuid:pk>/",
         views.SubscriberDetailView.as_view(),
         name="subscriber-detail",
     ),

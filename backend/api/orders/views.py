@@ -19,6 +19,7 @@ from .models import (
     OrderItem,
 )
 
+from backend.tasks import send_happicard_email_task, outbound_mms_task
 from backend.utils import Util
 
 DEFAULT_FROM_NUMBER = settings.DEFAULT_FROM_NUMBER
@@ -195,12 +196,12 @@ class HappicardCreateView(generics.CreateAPIView):
                     "email_body": personal_message,
                     "email_subject": email_subject,
                 }
-                Util.send_happicard_email(
+                send_happicard_email_task.delay(
                     confirmation, recipient_name, rebate_code, redeem_website
                 )
 
                 recipient_number = recipient.get("happicard_recipient_number")
-                Util.outbound_mms(
+                outbound_mms_task.delay(
                     to_number=recipient_number,
                     from_number=DEFAULT_FROM_NUMBER,
                     personal_message=personal_message,
@@ -215,7 +216,7 @@ class HappicardCreateView(generics.CreateAPIView):
                 )
             elif recipient_sms_choice and not recipient_email_choice:
                 recipient_number = recipient.get("happicard_recipient_number")
-                Util.outbound_mms(
+                outbound_mms_task.delay(
                     to_number=recipient_number,
                     from_number=DEFAULT_FROM_NUMBER,
                     personal_message=personal_message,
@@ -229,18 +230,19 @@ class HappicardCreateView(generics.CreateAPIView):
                     status=status.HTTP_200_OK,
                 )
             else:
-                delivery_date = recipient.get("happicard_delivery_date")
                 recipient_email = recipient.get("happicard_recipient_email")
                 confirmation = {
                     "to_email": recipient_email,
                     "email_body": personal_message,
                     "email_subject": email_subject,
                 }
-                Util.send_happicard_email(
+                send_happicard_email_task.delay(
                     confirmation, recipient_name, rebate_code, redeem_website
                 )
                 return Response(
-                    {"Success": "Happicard email successfully sent."},
+                    {
+                        "Success": f"Happicard email will be successfully sent on {happicard_delivery_date}."
+                    },
                     status=status.HTTP_200_OK,
                 )
 

@@ -12,6 +12,8 @@ import json
 from .serializers import (
     OrderSerializer,
     OrderItemSerializer,
+    OrderListSerializer,
+    OrderItemListSerializer,
     StripeTransferSerializer,
 )
 from .models import (
@@ -30,14 +32,14 @@ stripe.api_key = settings.STRIPE_DEV_SK
 class OrderListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    serializer_class = OrderSerializer
+    serializer_class = OrderListSerializer
     queryset = Order.objects.all()
 
 
 class OrderItemListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
-    serializer_class = OrderItemSerializer
+    serializer_class = OrderItemListSerializer
     queryset = OrderItem.objects.all()
 
 
@@ -227,11 +229,11 @@ class OrderItemDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
+    serializer_class = OrderItemListSerializer
 
 
 class OrderDetailView(generics.RetrieveUpdateDestroyAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
     queryset = Order.objects.all()
-    serializer_class = OrderSerializer
+    serializer_class = OrderListSerializer

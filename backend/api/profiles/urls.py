@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, re_path
 from rest_framework_simplejwt import views as jwt_views
 from . import views
 
@@ -33,5 +33,10 @@ urlpatterns = [
         "create/ngo/",
         views.NGOCreateView.as_view(),
         name="create-ngo",
+    ),
+    re_path(
+        "search/(?P<title>.+)/$",
+        views.StoreSearchView.as_view(),
+        name="search-stores",
     ),
 ]

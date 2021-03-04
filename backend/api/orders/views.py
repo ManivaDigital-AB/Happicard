@@ -87,13 +87,13 @@ class StripePaymentView(views.APIView):
     def get(self, request):
         payment_intent = stripe.PaymentIntent.create(
             amount=10000,
-            currency="usd",
+            currency="sek",
             payment_method_types=["card"],
             transfer_group="{ORDER10}",
         )
         transfer = stripe.Transfer.create(
             amount=7000,
-            currency="usd",
+            currency="sek",
             destination="acct_1IO3nh2VgnDoOgtm",
             transfer_group="{ORDER10}",
         )

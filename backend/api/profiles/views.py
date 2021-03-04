@@ -119,3 +119,16 @@ class NGOCreateView(generics.CreateAPIView):
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class StoreSearchView(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    serializer_class = StoreSerializer
+
+    def get_queryset(self):
+        try:
+            title = self.kwargs["title"]
+            return Store.objects.filter(title=title)
+        except:
+            return Response("Store does not exist in the database.")

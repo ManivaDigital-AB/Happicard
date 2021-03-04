@@ -100,6 +100,7 @@ class VendorRegisterSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone_number",
+            "company_name",
             "company_address",
             "company_role",
             "corporate_form",

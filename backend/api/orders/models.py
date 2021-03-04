@@ -126,3 +126,6 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def payout_percentage(self, percent, whole):
+        return (percent * whole) / 100.0

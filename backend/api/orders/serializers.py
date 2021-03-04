@@ -30,12 +30,7 @@ class OrderSerializer(serializers.ModelSerializer):
             "happicard_personal_message",
             "happicard_personal_image",
         )
-
-
-class CheckoutSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Order
-        fields = ("id",)
+        depth = 2
 
 
 class OrderItemSerializer(serializers.ModelSerializer):
@@ -49,6 +44,7 @@ class OrderItemSerializer(serializers.ModelSerializer):
             "price_choice",
             "quantity",
         )
+        depth = 1
 
 
 class StripeChargeSerializer(serializers.Serializer):

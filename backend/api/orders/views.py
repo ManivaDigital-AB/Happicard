@@ -27,18 +27,18 @@ DEFAULT_FROM_NUMBER = settings.DEFAULT_FROM_NUMBER
 stripe.api_key = settings.STRIPE_DEV_SK
 
 
-class OrderItemListView(generics.ListAPIView):
-    permission_classes = (permissions.AllowAny,)
-    authentification_classes = ()
-    queryset = OrderItem.objects.all()
-    serializer_class = OrderItemSerializer
-
-
 class OrderListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
-    authentification_classes = ()
-    queryset = Order.objects.all()
+    authentication_classes = ()
     serializer_class = OrderSerializer
+    queryset = Order.objects.all()
+
+
+class OrderItemListView(generics.ListAPIView):
+    permission_classes = (permissions.AllowAny,)
+    authentication_classes = ()
+    serializer_class = OrderItemSerializer
+    queryset = OrderItem.objects.all()
 
 
 class OrderItemCreateView(generics.CreateAPIView):
@@ -59,9 +59,9 @@ class OrderItemCreateView(generics.CreateAPIView):
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-class OrderCreateView(generics.CreateAPIView):
+class StripePaymentIntentView(generics.GenericAPIView):
     """
-    Create Order View
+    Stripe Payment View
     """
 
     permission_classes = (permissions.AllowAny,)
@@ -72,106 +72,23 @@ class OrderCreateView(generics.CreateAPIView):
         serializer = self.serializer_class(data=order)
         if serializer.is_valid(raise_exception=True):
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        else:
-            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-
-class StripePaymentView(views.APIView):
-    """
-    Stripe Payment View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request):
-        payment_intent = stripe.PaymentIntent.create(
-            amount=10000,
-            currency="sek",
-            payment_method_types=["card"],
-            transfer_group="{ORDER10}",
-        )
-        transfer = stripe.Transfer.create(
-            amount=7000,
-            currency="sek",
-            destination="acct_1IO3nh2VgnDoOgtm",
-            transfer_group="{ORDER10}",
-        )
-
-        return Response(status=status.HTTP_200_OK, data=transfer)
-
-
-class StripeChargeView(views.APIView):
-    """
-    Stripe Charge View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request):
-        charge = stripe.Charge.create(
-            amount=2000,
-            currency="sek",
-            source="tok_se",
-            description="Testing charges with transfers",
-        )
-        return Response(status=status.HTTP_200_OK, data=charge)
-
-
-class StripeTransferView(generics.GenericAPIView):
-    """
-    Stripe Transfer View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = StripeTransferSerializer
-
-    def post(self, request):
-
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        transfer = serializer.data
-        charge_id = transfer.get("charge_id")
-        destination = transfer.get("destination")
-
-        transfer = stripe.Transfer.create(
-            amount=1000,
-            currency="sek",
-            source_transaction=charge_id,
-            destination=destination,
-        )
-        return Response(status=status.HTTP_200_OK, data=transfer)
-
-
-class StripePayoutView(views.APIView):
-    """
-    Stripe Payout View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request):
-        payout = stripe.Payout.create(amount=2100, currency="sek")
-        return Response(status=status.HTTP_200_OK, data=payout)
-
-
-class HappicardCreateView(generics.CreateAPIView):
-    """
-    Create Happicard View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-    serializer_class = OrderSerializer
-
-    def post(self, request):
-        serializer = self.serializer_class(data=request.data)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        recipient = serializer.data
-        order_id = recipient.get("order_id")
-        order = Order.objects.get(id=order_id)
-
-        if order_id:
+        order = serializer.data
+        charge_id = order.get("charge_id")
+        destination = order.get("destination")
+        total = total * 100
+        try:
+            payment_intent = stripe.PaymentIntent.create(
+                amount=total,
+                currency="sek",
+                payment_method_types=["card"],
+                transfer_group="{ORDER10}",
+            )
+            transfer = stripe.Transfer.create(
+                amount=total,
+                currency="sek",
+                destination="acct_1IO3nh2VgnDoOgtm",
+                transfer_group="{ORDER10}",
+            )
             sender_name = order.first_name
             recipient_name = recipient.get("happicard_recipient_name")
             recipient_email_choice = recipient.get("happicard_recipient_email_choice")
@@ -245,6 +162,65 @@ class HappicardCreateView(generics.CreateAPIView):
                     },
                     status=status.HTTP_200_OK,
                 )
+        except:
+            return Response("Payment Could Not Be Processed")
+
+        return Response(status=status.HTTP_200_OK, data=transfer)
+
+
+class StripeChargeView(views.APIView):
+    """
+    Stripe Charge View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        charge = stripe.Charge.create(
+            amount=2000,
+            currency="sek",
+            source="tok_se",
+            description="Testing charges with transfers",
+        )
+        return Response(status=status.HTTP_200_OK, data=charge)
+
+
+class StripeTransferView(generics.GenericAPIView):
+    """
+    Stripe Transfer View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = StripeTransferSerializer
+
+    def post(self, request):
+
+        serializer = self.serializer_class(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        transfer = serializer.data
+        charge_id = transfer.get("charge_id")
+        destination = transfer.get("destination")
+
+        transfer = stripe.Transfer.create(
+            amount=1000,
+            currency="sek",
+            source_transaction=charge_id,
+            destination=destination,
+        )
+
+        return Response(status=status.HTTP_200_OK, data=transfer)
+
+
+class StripePayoutView(views.APIView):
+    """
+    Stripe Payout View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+
+    def get(self, request):
+        payout = stripe.Payout.create(amount=2100, currency="sek")
+        return Response(status=status.HTTP_200_OK, data=payout)
 
 
 class OrderItemDetailView(generics.RetrieveUpdateDestroyAPIView):

@@ -4,29 +4,19 @@ from . import views
 app_name = "orders"
 urlpatterns = [
     path(
-        "list/basket-items/",
-        views.OrderItemListView.as_view(),
-        name="basket-items-list",
+        "list/order/",
+        views.OrderListView.as_view(),
+        name="list-order",
     ),
     path(
-        "list/orders/",
-        views.OrderListView.as_view(),
-        name="list-orders",
+        "list/order-items/",
+        views.OrderItemListView.as_view(),
+        name="list-order-items",
     ),
     path(
         "create/item-to-basket/",
         views.OrderItemCreateView.as_view(),
         name="create-item-to-basket",
-    ),
-    path(
-        "create/order/",
-        views.OrderCreateView.as_view(),
-        name="create-order",
-    ),
-    path(
-        "create/happicard/",
-        views.HappicardCreateView.as_view(),
-        name="create-happicard",
     ),
     path(
         "item-to-basket/<uuid:pk>",
@@ -45,7 +35,7 @@ urlpatterns = [
     ),
     path(
         "create/stripe-payment/",
-        views.StripePaymentView.as_view(),
+        views.StripePaymentIntentView.as_view(),
         name="stripe-payment",
     ),
     path(

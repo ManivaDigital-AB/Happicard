@@ -52,7 +52,6 @@ kappa==0.6.0
 kombu==5.0.2
 MarkupSafe==1.1.1
 mypy-extensions==0.4.3
-mysqlclient==2.0.2
 oauthlib==3.1.0
 openapi-codec==1.3.2
 packaging==20.4

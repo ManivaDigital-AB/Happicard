@@ -61,12 +61,6 @@ class OrderItem(models.Model):
     def get_total_item_price(self):
         return self.quantity * self.item.price
 
-    def get_title_and_img(self):
-        if giftcard:
-            return self.giftcard.title and self.giftcard.image
-        else:
-            return self.campaign.title and self.campaign.image
-
     @property
     def match_price_choice_with_rebate(self):
         if self.price_choice == self.item.price_option_1:
@@ -126,6 +120,27 @@ class Order(models.Model):
 
     def __str__(self):
         return str(self.id)
+
+    def get_basket_items(self):
+        basket = {"giftcards": [], "campaigns": []}
+        for item in self.items:
+            if item.giftcard:
+                basket["giftcards"].append(
+                    {
+                        "giftcard_title": self.item.giftcard.title,
+                        "giftcard_image": self.item.giftcard.image.url,
+                        "giftcard_price_choice": self.price_choice,
+                    }
+                )
+            else:
+                basket["campaigns"].append(
+                    {
+                        "campaign_title": self.item.camapign.title,
+                        "campaign_image": self.item.campaign.image.url,
+                        "campaign_price_choice": self.price_choice,
+                    }
+                )
+        return basket
 
     def payout_percentage(self, percent, whole):
         return (percent * whole) / 100.0

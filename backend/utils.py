@@ -95,12 +95,6 @@ class Util:
             html_content,
             "text/html",
         )
-        img_dir = "backend/api/orders/qr_data/"
-        image = "order_qr.png"
-        file_path = os.path.join(img_dir, image)
-        with open(file_path, "rb") as f:
-            img = MIMEImage(f.read())
-            img.add_header("Content-ID", "<order_qr>")
         EmailThread(email).start()
 
     @staticmethod

@@ -25,6 +25,14 @@ class OrderAdmin(admin.ModelAdmin):
         "region",
         "street_address1",
         "street_address2",
+        "happicard_recipient_myself",
+        "happicard_recipient_name",
+        "happicard_recipient_email_choice",
+        "happicard_recipient_email",
+        "happicard_recipient_sms_choice",
+        "happicard_recipient_number",
+        "happicard_personal_message",
+        "happicard_delivery_date",
     )
 
     list_display = (

@@ -28,9 +28,8 @@ class OrderSerializer(serializers.ModelSerializer):
             "happicard_recipient_sms_choice",
             "happicard_recipient_number",
             "happicard_personal_message",
-            "happicard_personal_image",
+            "happicard_delivery_date",
         )
-        depth = 2
 
 
 class OrderListSerializer(serializers.ModelSerializer):
@@ -56,7 +55,7 @@ class OrderListSerializer(serializers.ModelSerializer):
             "happicard_recipient_sms_choice",
             "happicard_recipient_number",
             "happicard_personal_message",
-            "happicard_personal_image",
+            "happicard_delivery_date",
         )
         depth = 2
 
@@ -88,21 +87,31 @@ class OrderItemListSerializer(serializers.ModelSerializer):
         depth = 2
 
 
-class StripeChargeSerializer(serializers.Serializer):
+class HappicardSerializer(serializers.ModelSerializer):
     class Meta:
         model = Order
-        fields = (
-            "amount",
-            "source",
-        )
+        fields = ("id",)
 
 
-class StripeTransferSerializer(serializers.Serializer):
-    charge_id = serializers.CharField()
+class PayoutSerializer(serializers.Serializer):
+    order_id = serializers.UUIDField()
     destination = serializers.CharField()
 
     class Meta:
         fields = (
-            "charge_id",
+            "order_id",
+            "destination",
+        )
+
+
+class TransferSerializer(serializers.Serializer):
+    order_id = serializers.UUIDField()
+    source = serializers.CharField()
+    destination = serializers.CharField()
+
+    class Meta:
+        fields = (
+            "order_id",
+            "source",
             "destination",
         )

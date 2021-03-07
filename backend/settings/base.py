@@ -2,6 +2,7 @@
 
 import os
 import pathlib
+from celery.schedules import crontab
 from datetime import timedelta
 from decouple import config
 
@@ -198,6 +199,7 @@ LOGGING["loggers"].update(
         for app in INSTALLED_APPS
     }
 )
+
 
 # Different development and production settings
 if DEBUG:

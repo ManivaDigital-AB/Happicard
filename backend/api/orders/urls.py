@@ -29,23 +29,23 @@ urlpatterns = [
         name="order-detail",
     ),
     path(
-        "create/stripe-charge/",
-        views.StripeChargeView.as_view(),
-        name="stripe-charge",
-    ),
-    path(
         "create/stripe-payment/",
         views.StripePaymentIntentView.as_view(),
         name="stripe-payment",
     ),
     path(
-        "create/stripe-transfer/",
-        views.StripeTransferView.as_view(),
-        name="stripe-transfer",
+        "send/happicard/<uuid:pk>",
+        views.HappicardSendView.as_view(),
+        name="send-happicard",
     ),
     path(
         "create/stripe-payout/",
         views.StripePayoutView.as_view(),
         name="stripe-payout",
+    ),
+    path(
+        "create/stripe-transfer/",
+        views.StripeTransferView.as_view(),
+        name="stripe-transfer",
     ),
 ]

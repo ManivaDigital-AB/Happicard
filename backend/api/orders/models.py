@@ -3,6 +3,7 @@ from django.conf import settings
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.db.models import signals
 import uuid
 
 from django.utils.translation import gettext_lazy as _
@@ -13,6 +14,8 @@ from backend.settings.storage_backends import (
     HappicardImageStorage,
     HappicardVideoStorage,
 )
+
+from backend.tasks import send_happicard_email_task, outbound_mms_task
 
 
 class UserProfile(models.Model):
@@ -58,22 +61,38 @@ class OrderItem(models.Model):
         null=True,
     )
 
+    @property
     def get_total_item_price(self):
         return self.quantity * self.item.price
 
     @property
     def match_price_choice_with_rebate(self):
-        if self.price_choice == self.item.price_option_1:
-            return self.item.rebate_code_1
-        elif self.price_choice == self.item.price_option_2:
-            return self.item.rebate_code_2
+        if self.giftcard:
+            if self.price_choice == self.giftcard.price_option_1:
+                return self.giftcard.rebate_code_1
+            elif self.price_choice == self.giftcard.price_option_2:
+                return self.giftcard.rebate_code_2
+            else:
+                return self.giftcard.rebate_code_3
         else:
-            return self.item.rebate_code_3
+            if self.price_choice == self.campaign.price_option_1:
+                return self.campaign.rebate_code_1
+            elif self.price_choice == self.campaign.price_option_2:
+                return self.campaign.rebate_code_2
+            else:
+                return self.campaign.rebate_code_3
+
+    @property
+    def get_redeem_website(self):
+        if self.giftcard:
+            return self.giftcard.redeem_website
+        else:
+            return self.campaign.redeem_website
 
 
 class Order(models.Model):
     """
-    Order Model - Requirements for Klarna Checkouts API
+    Order Model
     """
 
     id = models.UUIDField(
@@ -105,7 +124,9 @@ class Order(models.Model):
 
     happicard_recipient_myself = models.BooleanField(default=True)
     happicard_recipient_name = models.CharField(max_length=50, null=True, blank=True)
-    happicard_delivery_date = models.DateTimeField(auto_now_add=True, null=True)
+    happicard_delivery_date = models.DateTimeField(
+        auto_now_add=False, null=True, blank=True
+    )
     happicard_recipient_email_choice = models.BooleanField(default=False)
     happicard_recipient_email = models.EmailField(max_length=254, null=True, blank=True)
     happicard_recipient_sms_choice = models.BooleanField(default=False)
@@ -121,26 +142,15 @@ class Order(models.Model):
     def __str__(self):
         return str(self.id)
 
-    def get_basket_items(self):
-        basket = {"giftcards": [], "campaigns": []}
-        for item in self.items:
-            if item.giftcard:
-                basket["giftcards"].append(
-                    {
-                        "giftcard_title": self.item.giftcard.title,
-                        "giftcard_image": self.item.giftcard.image.url,
-                        "giftcard_price_choice": self.price_choice,
-                    }
-                )
-            else:
-                basket["campaigns"].append(
-                    {
-                        "campaign_title": self.item.camapign.title,
-                        "campaign_image": self.item.campaign.image.url,
-                        "campaign_price_choice": self.price_choice,
-                    }
-                )
-        return basket
+    @property
+    def get_order_total(self):
+        total_amount = 0
+        for item in self.items.all():
+            total_amount += item.price_choice
+        return total_amount * 100
 
-    def payout_percentage(self, percent, whole):
-        return (percent * whole) / 100.0
+    def delivery_date_post_save(instance, *args, **kwargs):
+        send_happicard_email_task.apply_async(
+            (instance,), eta=instance.happicard_delivery_date
+        )
+        outbound_mms_task.apply_async((instance,), eta=instance.happicard_delivery_date)

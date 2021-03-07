@@ -6,6 +6,8 @@ from .utils import Util
 
 @task(name="send_happicard_email_task")
 def send_happicard_email_task(
+    self,
+    instance,
     data,
     recipient_name,
     rebate_code,
@@ -20,8 +22,10 @@ def send_happicard_email_task(
     )
 
 
-@task(name="outbound_mms")
+@task(name="outbound_mms_task")
 def outbound_mms_task(
+    self,
+    instance,
     to_number,
     from_number,
     personal_message,

@@ -14,7 +14,9 @@ from .serializers import (
     OrderItemSerializer,
     OrderListSerializer,
     OrderItemListSerializer,
-    StripeTransferSerializer,
+    HappicardSerializer,
+    PayoutSerializer,
+    TransferSerializer,
 )
 from .models import (
     Order,
@@ -75,116 +77,176 @@ class StripePaymentIntentView(generics.GenericAPIView):
         if serializer.is_valid(raise_exception=True):
             serializer.save()
         order = serializer.data
-        charge_id = order.get("charge_id")
-        destination = order.get("destination")
-        total = total * 100
+
+        current_order = Order.objects.get(id=order["id"])
+        total = current_order.get_order_total
         try:
-            payment_intent = stripe.PaymentIntent.create(
+            intent = stripe.PaymentIntent.create(
                 amount=total,
                 currency="sek",
                 payment_method_types=["card"],
-                transfer_group="{ORDER10}",
+                receipt_email=current_order.email,
             )
-            transfer = stripe.Transfer.create(
-                amount=total,
-                currency="sek",
-                destination="acct_1IO3nh2VgnDoOgtm",
-                transfer_group="{ORDER10}",
+            return Response(
+                {
+                    "client_secret": intent.client_secret,
+                    "order": order,
+                }
             )
-            sender_name = order.first_name
-            recipient_name = recipient.get("happicard_recipient_name")
-            recipient_email_choice = recipient.get("happicard_recipient_email_choice")
-            recipient_sms_choice = recipient.get("happicard_recipient_sms_choice")
-            personal_message = recipient.get("happicard_personal_message")
-            email_subject = f"{sender_name} sent you a Happicard"
-
-            if recipient.get("happicard_personal_image"):
-                personal_image = recipient.get("happicard_personal_image")
-            if recipient.get("happicard_personal_video"):
-                personal_video = recipient.get("happicard_personal_video")
-
-            rebate_code = [
-                item.match_price_choice_with_rebate for item in order.items.all()
-            ].pop()
-            redeem_website = [item.redeem_website for item in order.items.all()].pop()
-
-            if recipient_email_choice and recipient_sms_choice:
-                recipient_email = recipient.get("happicard_recipient_email")
-                confirmation = {
-                    "to_email": recipient_email,
-                    "email_body": personal_message,
-                    "email_subject": email_subject,
-                }
-                send_happicard_email_task.delay(
-                    confirmation, recipient_name, rebate_code, redeem_website
-                )
-
-                recipient_number = recipient.get("happicard_recipient_number")
-                outbound_mms_task.delay(
-                    to_number=recipient_number,
-                    from_number=DEFAULT_FROM_NUMBER,
-                    personal_message=personal_message,
-                    recipient_name=recipient_name,
-                    sender_name=sender_name,
-                    rebate_code=rebate_code,
-                    redeem_website=redeem_website,
-                )
-                return Response(
-                    {"Success": "Happicard email and SMS successfully sent."},
-                    status=status.HTTP_200_OK,
-                )
-            elif recipient_sms_choice and not recipient_email_choice:
-                recipient_number = recipient.get("happicard_recipient_number")
-                outbound_mms_task.delay(
-                    to_number=recipient_number,
-                    from_number=DEFAULT_FROM_NUMBER,
-                    personal_message=personal_message,
-                    recipient_name=recipient_name,
-                    sender_name=sender_name,
-                    rebate_code=rebate_code,
-                    redeem_website=redeem_website,
-                )
-                return Response(
-                    {"Success": "Happicard SMS successfully sent."},
-                    status=status.HTTP_200_OK,
-                )
-            else:
-                recipient_email = recipient.get("happicard_recipient_email")
-                confirmation = {
-                    "to_email": recipient_email,
-                    "email_body": personal_message,
-                    "email_subject": email_subject,
-                }
-                send_happicard_email_task.delay(
-                    confirmation, recipient_name, rebate_code, redeem_website
-                )
-                return Response(
-                    {
-                        "Success": f"Happicard email will be successfully sent on {happicard_delivery_date}."
-                    },
-                    status=status.HTTP_200_OK,
-                )
-        except:
-            return Response("Payment Could Not Be Processed")
-
-        return Response(status=status.HTTP_200_OK, data=transfer)
+        except stripe.error.CardError as e:
+            body = e.json_body
+            err = body.get("error", {})
+            print("Status is: %s" % e.http_status)
+            print("Type is: %s" % err.get("type"))
+            print("Code is: %s" % err.get("code"))
+            print("Message is %s" % err.get("message"))
+            return Response({"message": err.get("message")}, status=e.http_status)
+        except stripe.error.RateLimitError as e:
+            return Response({"Error": "The API was not able to respond, try again."})
+        except stripe.error.InvalidRequestError as e:
+            return Response({"Error": "Invalid parameters, unable to process payment."})
+        except stripe.error.AuthenticationError as e:
+            pass
+        except stripe.error.APIConnectionError as e:
+            return Response({"Error": "Network communication failed, try again."})
+        except stripe.error.StripeError as e:
+            return Response({"Error": "Internal Stripe Error, contact support."})
+        except Exception as e:
+            return Response({"message": "Unable to process payment, try again."})
 
 
-class StripeChargeView(views.APIView):
+class HappicardSendView(generics.GenericAPIView):
     """
-    Stripe Charge View
+    Happicard Send View
     """
 
     permission_classes = (permissions.AllowAny,)
+    serializer_class = HappicardSerializer
 
-    def get(self, request):
-        charge = stripe.Charge.create(
-            amount=2000,
-            currency="sek",
-            source="tok_se",
-            description="Testing charges with transfers",
-        )
-        return Response(status=status.HTTP_200_OK, data=charge)
+    def get(self, request, pk):
+
+        order = Order.objects.get(id=pk)
+
+        sender_name = order.first_name
+        recipient_name = order.happicard_recipient_name
+        recipient_email_choice = order.happicard_recipient_email_choice
+        recipient_sms_choice = order.happicard_recipient_sms_choice
+        personal_message = order.happicard_personal_message
+        email_subject = f"{sender_name} sent you a Happicard"
+
+        if order.happicard_personal_image:
+            personal_image = order.happicard_personal_image
+        if order.happicard_personal_video:
+            personal_video = order.happicard_personal_video
+
+        try:
+            rebate_code = [
+                item.match_price_choice_with_rebate for item in order.items.all()
+            ].pop()
+        except:
+            return Response(
+                {"Error": "An item in your basket is missing a rebate code."}
+            )
+
+        try:
+            redeem_website = [
+                item.get_redeem_website for item in order.items.all()
+            ].pop()
+        except:
+            return Response(
+                {
+                    "Error": "An item in your basket doesn't include a website for redeeming code."
+                }
+            )
+
+        if recipient_email_choice and recipient_sms_choice:
+            recipient_email = order.happicard_recipient_email
+            confirmation = {
+                "to_email": recipient_email,
+                "email_body": personal_message,
+                "email_subject": email_subject,
+            }
+            Util.send_happicard_email(
+                confirmation, recipient_name, rebate_code, redeem_website
+            )
+
+            recipient_number = order.happicard_recipient_number
+            Util.outbound_mms(
+                to_number=recipient_number,
+                from_number=DEFAULT_FROM_NUMBER,
+                personal_message=personal_message,
+                recipient_name=recipient_name,
+                sender_name=sender_name,
+                rebate_code=rebate_code,
+                redeem_website=redeem_website,
+            )
+            return Response(
+                {"Success": "Happicard email and SMS successfully sent."},
+                status=status.HTTP_200_OK,
+            )
+        elif recipient_sms_choice and not recipient_email_choice:
+            recipient_number = order.happicard_recipient_number
+            Util.outbound_mms(
+                to_number=recipient_number,
+                from_number=DEFAULT_FROM_NUMBER,
+                personal_message=personal_message,
+                recipient_name=recipient_name,
+                sender_name=sender_name,
+                rebate_code=rebate_code,
+                redeem_website=redeem_website,
+            )
+            return Response(
+                {"Success": "Happicard SMS successfully sent."},
+                status=status.HTTP_200_OK,
+            )
+        else:
+            recipient_email = order.happicard_recipient_email
+            confirmation = {
+                "to_email": recipient_email,
+                "email_body": personal_message,
+                "email_subject": email_subject,
+            }
+            Util.send_happicard_email_task(
+                confirmation, recipient_name, rebate_code, redeem_website
+            )
+
+            return Response(
+                {
+                    "Success": f"Happicard email will be successfully sent on {happicard_delivery_date}."
+                },
+                status=status.HTTP_200_OK,
+            )
+
+
+class StripePayoutView(generics.GenericAPIView):
+    """
+    Stripe Payout View
+    """
+
+    permission_classes = (permissions.AllowAny,)
+    serializer_class = PayoutSerializer
+
+    def post(self, request):
+
+        payout = request.data
+        serializer = self.serializer_class(data=payout)
+        serializer.is_valid(raise_exception=True)
+        payout = serializer.data
+        current_order = Order.objects.get(id=payout.get("order_id"))
+        total = current_order.get_order_total
+
+        payout_total = (4 * total) / 100.0
+
+        try:
+            payout = stripe.Payout.create(
+                amount=int(payout_total),
+                currency="sek",
+                destination=payout.get("destination"),
+            )
+        except:
+            return Response({"Error": "Payout Could Not Be Processed"})
+
+        return Response(status=status.HTTP_200_OK, data=payout)
 
 
 class StripeTransferView(generics.GenericAPIView):
@@ -193,35 +255,29 @@ class StripeTransferView(generics.GenericAPIView):
     """
 
     permission_classes = (permissions.AllowAny,)
-    serializer_class = StripeTransferSerializer
+    serializer_class = TransferSerializer
 
     def post(self, request):
 
-        serializer = self.serializer_class(data=request.data)
+        transfer = request.data
+        serializer = self.serializer_class(data=transfer)
         serializer.is_valid(raise_exception=True)
         transfer = serializer.data
-        charge_id = transfer.get("charge_id")
-        destination = transfer.get("destination")
+        current_order = Order.objects.get(id=transfer.get("order_id"))
+        total = current_order.get_order_total
 
-        transfer = stripe.Transfer.create(
-            amount=1000,
-            currency="sek",
-            source_transaction=charge_id,
-            destination=destination,
-        )
+        payout_total = (4 * total) / 100.0
 
-        return Response(status=status.HTTP_200_OK, data=transfer)
+        try:
+            payout = stripe.Transfer.create(
+                amount=int(payout_total),
+                currency="sek",
+                source=transfer.get("source"),
+                destination=transfer.get("destination"),
+            )
+        except:
+            return Response({"Error": "Transfer Could Not Be Completed"})
 
-
-class StripePayoutView(views.APIView):
-    """
-    Stripe Payout View
-    """
-
-    permission_classes = (permissions.AllowAny,)
-
-    def get(self, request):
-        payout = stripe.Payout.create(amount=2100, currency="sek")
         return Response(status=status.HTTP_200_OK, data=payout)
 
 

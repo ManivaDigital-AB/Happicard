@@ -5,7 +5,10 @@ Tech Stack:
 * Django (Backend)
 * SQLite (Dev DB) / Postgresql (Prod DB)
 * AWS (Deployment)
-* NGINX/Gunicorn (Backend Server)
+* Windows (Frontend Server)
+* Linux/NGINX/Gunicorn (Backend Server)
+* Stripe (Payment Service)
+* RabbitMQ (Message Broker)
 
 Our goal for Happicard is to integrate React.js within a Django app and consume a RESTful API with React.js
 
@@ -20,11 +23,13 @@ python manage.py makemigrations authentification orders payments profiles
 python manage.py migrate
 python manage.py runserver
 ```
+For running scheduled tasks with Celery workers:
+```
+celery --app backend.settings.celery worker -l INFO
+```
 ## Front-End Development Workflow
 ```
 npm install
 ```
-## Testing
-To test the Happicard site:
-dev.happicard.se
+
 

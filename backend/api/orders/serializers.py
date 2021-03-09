@@ -15,12 +15,6 @@ class OrderSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone_number",
-            "country",
-            "region",
-            "postcode",
-            "town_or_city",
-            "street_address1",
-            "street_address2",
             "happicard_recipient_myself",
             "happicard_recipient_name",
             "happicard_recipient_email_choice",
@@ -42,12 +36,6 @@ class OrderListSerializer(serializers.ModelSerializer):
             "last_name",
             "email",
             "phone_number",
-            "country",
-            "region",
-            "postcode",
-            "town_or_city",
-            "street_address1",
-            "street_address2",
             "happicard_recipient_myself",
             "happicard_recipient_name",
             "happicard_recipient_email_choice",
@@ -115,3 +103,24 @@ class TransferSerializer(serializers.Serializer):
             "source",
             "destination",
         )
+
+
+"""
+{
+  "items": [
+    "eea58e2b-8b76-44f1-94e6-3d653a0048af"
+  ],
+  "first_name": "Drew",
+  "last_name": "Perkins",
+  "email": "drew@manivadigital.com",
+  "phone_number": "+460720137236",
+  "happicard_recipient_myself": true,
+  "happicard_recipient_name": "Drew",
+  "happicard_recipient_email_choice": true,
+  "happicard_recipient_email": "drew@manivadigital.com",
+  "happicard_recipient_sms_choice": true,
+  "happicard_recipient_number": "+460720137236",
+  "happicard_personal_message": "Hi!",
+  "happicard_delivery_date": "2021-03-09T14:25:24.405Z"
+}
+"""

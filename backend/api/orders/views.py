@@ -166,19 +166,27 @@ class HappicardSendView(generics.GenericAPIView):
                 "email_body": personal_message,
                 "email_subject": email_subject,
             }
-            Util.send_happicard_email(
-                confirmation, recipient_name, rebate_code, redeem_website
+            send_happicard_email_task.apply_async(
+                args=[
+                    confirmation,
+                    recipient_name,
+                    rebate_code,
+                    redeem_website,
+                ],
+                eta=order.happicard_delivery_date,
             )
-
             recipient_number = order.happicard_recipient_number
-            Util.outbound_mms(
-                to_number=recipient_number,
-                from_number=DEFAULT_FROM_NUMBER,
-                personal_message=personal_message,
-                recipient_name=recipient_name,
-                sender_name=sender_name,
-                rebate_code=rebate_code,
-                redeem_website=redeem_website,
+            outbound_mms_task.apply_async(
+                args=[
+                    recipient_number,
+                    DEFAULT_FROM_NUMBER,
+                    personal_message,
+                    recipient_name,
+                    sender_name,
+                    rebate_code,
+                    redeem_website,
+                ],
+                eta=order.happicard_delivery_date,
             )
             return Response(
                 {"Success": "Happicard email and SMS successfully sent."},
@@ -186,14 +194,17 @@ class HappicardSendView(generics.GenericAPIView):
             )
         elif recipient_sms_choice and not recipient_email_choice:
             recipient_number = order.happicard_recipient_number
-            Util.outbound_mms(
-                to_number=recipient_number,
-                from_number=DEFAULT_FROM_NUMBER,
-                personal_message=personal_message,
-                recipient_name=recipient_name,
-                sender_name=sender_name,
-                rebate_code=rebate_code,
-                redeem_website=redeem_website,
+            outbound_mms_task.apply_async(
+                args=[
+                    recipient_number,
+                    DEFAULT_FROM_NUMBER,
+                    personal_message,
+                    recipient_name,
+                    sender_name,
+                    rebate_code,
+                    redeem_website,
+                ],
+                eta=order.happicard_delivery_date,
             )
             return Response(
                 {"Success": "Happicard SMS successfully sent."},
@@ -206,10 +217,15 @@ class HappicardSendView(generics.GenericAPIView):
                 "email_body": personal_message,
                 "email_subject": email_subject,
             }
-            Util.send_happicard_email_task(
-                confirmation, recipient_name, rebate_code, redeem_website
+            send_happicard_email_task.apply_async(
+                args=[
+                    confirmation,
+                    recipient_name,
+                    rebate_code,
+                    redeem_website,
+                ],
+                eta=order.happicard_delivery_date,
             )
-
             return Response(
                 {
                     "Success": f"Happicard email will be successfully sent on {happicard_delivery_date}."

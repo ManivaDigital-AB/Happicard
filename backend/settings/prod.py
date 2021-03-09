@@ -32,6 +32,10 @@ TWILIO_NUMBER = config("TWILIO_NUMBER")
 STRIPE_PROD_PK = config("STRIPE_PROD_PK")
 STRIPE_PROD_SK = config("STRIPE_PROD_SK")
 
+
+# Celery
+BROKER_URL = config("CELERY_PROD_BROKER_URL")
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",

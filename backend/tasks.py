@@ -1,13 +1,11 @@
-from celery.decorators import task
-from celery.utils.log import get_task_logger
+from celery import shared_task
+from celery.utils.log import logger
 
 from .utils import Util
 
 
-@task(name="send_happicard_email_task")
+@shared_task
 def send_happicard_email_task(
-    self,
-    instance,
     data,
     recipient_name,
     rebate_code,
@@ -22,10 +20,8 @@ def send_happicard_email_task(
     )
 
 
-@task(name="outbound_mms_task")
+@shared_task
 def outbound_mms_task(
-    self,
-    instance,
     to_number,
     from_number,
     personal_message,

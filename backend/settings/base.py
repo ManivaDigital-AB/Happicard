@@ -2,7 +2,6 @@
 
 import os
 import pathlib
-from celery.schedules import crontab
 from datetime import timedelta
 from decouple import config
 
@@ -98,22 +97,16 @@ LOGIN_URL = "/login"
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login"
 
-
 # Internationalization
-
 if DEBUG:
     LANGUAGE_CODE = "en-us"
 else:
     LANGUAGE_CODE = "sv-eu"
 
 TIME_ZONE = "Europe/Stockholm"
-
 USE_I18N = True
-
 USE_L10N = True
-
 USE_TZ = True
-
 
 # Storage
 USE_S3 = True
@@ -151,6 +144,13 @@ EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 EMAIL_USE_TLS = True
 EMAIL_HOST = config("EMAIL_HOST")
 EMAIL_PORT = 587
+
+# Task Scheduling
+CELERY_TIMEZONE = "Europe/Stockholm"
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60
+CELERY_ACCEPT_CONTENT = ["json"]
+CELERY_TASK_SERIALIZER = "json"
 
 # Logging
 LOG_DIR = PROJECT_ROOT / "log"
@@ -199,7 +199,6 @@ LOGGING["loggers"].update(
         for app in INSTALLED_APPS
     }
 )
-
 
 # Different development and production settings
 if DEBUG:

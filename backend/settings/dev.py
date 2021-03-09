@@ -14,8 +14,6 @@ CORS_ORIGIN_WHITELIST = [
 
 WSGI_APPLICATION = "backend.settings.wsgi.dev.application"
 
-KLARNA_BASE_URL = "https://api.playground.klarna.com"
-
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.sqlite3",
@@ -33,10 +31,9 @@ TWILIO_ACCOUNT_SID = config("TWILIO_ACCOUNT_SID")
 TWILIO_AUTH_TOKEN = config("TWILIO_AUTH_TOKEN")
 DEFAULT_FROM_NUMBER = config("TWILIO_NUMBER")
 
-# Klarna
-KLARNA_UN = config("KLARNA_UN")
-KLARNA_PW = config("KLARNA_PW")
-
 # Stripe
 STRIPE_DEV_PK = config("STRIPE_DEV_PK")
 STRIPE_DEV_SK = config("STRIPE_DEV_SK")
+
+# Celery
+BROKER_URL = config("CELERY_DEV_BROKER_URL")

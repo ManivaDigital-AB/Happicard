@@ -18,14 +18,6 @@ from backend.settings.storage_backends import (
 from backend.tasks import send_happicard_email_task, outbound_mms_task
 
 
-class UserProfile(models.Model):
-    user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
-    stripe_customer_id = models.CharField(max_length=50, blank=True, null=True)
-
-    def __str__(self):
-        return self.user.first_name
-
-
 class OrderItem(models.Model):
     """
     Order Item Model
@@ -114,12 +106,6 @@ class Order(models.Model):
     last_name = models.CharField(max_length=50, null=False, blank=False)
     email = models.EmailField(max_length=254, null=False, blank=False)
     phone_number = models.CharField(max_length=20, null=False, blank=False)
-    country = CountryField(blank_label="Country *", null=False, blank=False)
-    region = models.CharField(max_length=50, null=True, blank=False)
-    postcode = models.CharField(max_length=20, null=True, blank=True)
-    town_or_city = models.CharField(max_length=50, null=False, blank=False)
-    street_address1 = models.CharField(max_length=80, null=False, blank=False)
-    street_address2 = models.CharField(max_length=80, null=True, blank=True)
     date = models.DateTimeField(auto_now_add=True)
 
     happicard_recipient_myself = models.BooleanField(default=True)
@@ -148,9 +134,3 @@ class Order(models.Model):
         for item in self.items.all():
             total_amount += item.price_choice
         return total_amount * 100
-
-    def delivery_date_post_save(instance, *args, **kwargs):
-        send_happicard_email_task.apply_async(
-            (instance,), eta=instance.happicard_delivery_date
-        )
-        outbound_mms_task.apply_async((instance,), eta=instance.happicard_delivery_date)

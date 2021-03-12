@@ -83,7 +83,8 @@ const contact = () => {
                     backgroundColor: "#ffc541",
                     width: "250px",
                     border: "none",
-                    fontWeight: "700",
+                    fontWeight: "600",
+                    color: "#4A4746"
                   }}
                 />
               </div>

@@ -7,13 +7,15 @@ import instagramMobileImg from "../../assets/images/instagram_mobile_02.PNG";
 import linkedinMobileImg from "../../assets/images/linkedin_mobile_01.PNG";
 import { Link } from "react-router-dom";
 import { Dropdown } from "react-bootstrap";
+import { useForm } from "react-hook-form";
+import { Modal } from "react-bootstrap";
 
 const Ul = styled.ul`
   list-style: none;
   display: flex;
   flex-flow: row nowrap;
   padding-top: 10px;
-  padding-left: 450px;
+  padding-left: 425px;
 
   li {
     padding: 18px 45px;
@@ -46,12 +48,14 @@ const Ul = styled.ul`
     border: 0;
   }
   .dropdown-menu.show {
-    background-color: #ffff;
+    background-color: #ffc542;
     position: absolute;
     inset: 0px auto auto 0px;
     margin: 0px;
     transform: translate(0px, 56px);
+    
     border: none;
+    border-radius: 0;
   }
 
   .btn.focus,
@@ -82,7 +86,7 @@ const Ul = styled.ul`
     text-align: inherit;
     white-space: nowrap;
 
-    border: 0;
+    
 
     font-size: 18px;
     font-weight: bold;
@@ -92,7 +96,8 @@ const Ul = styled.ul`
   a:hover,
   .dropdown-item:hover,
   .dropdown-item:active {
-    color: #ffc542;
+    color: #fff;
+    background-color: transparent;
   }
 
   @media (max-width: 768px) {
@@ -131,11 +136,9 @@ const Ul = styled.ul`
   a {
     text-decoration: none;
     color: #fff;
-    font-size: 16px;
+    font-size: 14px;
   }
-  a:hover {
-    color: #ffc541;
-  }
+  
 `;
 
 const PartnerDropDown = styled.div`
@@ -156,12 +159,13 @@ const PartnerDropDown = styled.div`
     border: 0;
   }
   .dropdown-menu.show {
-    background-color: #ffff;
+    background-color: #ffc542;
     position: absolute;
     inset: 0px auto auto 0px;
     margin: 0px;
     transform: translate(0px, 56px);
     border: none;
+    border-radius: 0;
   }
 
   .btn.focus,
@@ -192,14 +196,14 @@ const PartnerDropDown = styled.div`
     width: 100%;
     padding: 0.25rem 1rem;
     clear: both;
-    color: #fff;
+    
     text-align: inherit;
     white-space: nowrap;
 
     border: 0;
 
     font-size: 18px;
-    font-weight: bold;
+    font-weight: 600;
     text-decoration: none;
     line-height: 22px;
 
@@ -212,15 +216,34 @@ const PartnerDropDown = styled.div`
   a:hover,
   .dropdown-item:hover,
   .dropdown-item:active {
-    color: #ffc542;
+    color: #fff;
+    background-color: transparent;
   }
 `;
 
 const RightNav = ({ open }) => {
+  const { register, handleSubmit, reset} = useForm();
   const [selectedMenu, setSelectedMenu] = useState("Home");
+  const [show, setShow] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
   const handleClick = (param) => {
     setSelectedMenu(param);
+    if (param === "SignIn") { handleShow() ;} 
   };
+
+  const onSubmit = async (data) => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+
+   console.log(data);
+  };
+
+
   return (
     <>
       <Ul
@@ -354,6 +377,32 @@ const RightNav = ({ open }) => {
           }}
         />
       </div>
+      <Modal show={show} onHide={handleClose}>
+        <div style={{ border: "4px solid #ffc542", borderRadius: "15px" }}>
+          <Modal.Header
+            closeButton
+            style={{ backgroundColor: "#FFFF", border: "none" }}
+          ></Modal.Header>
+          <Modal.Body style={{ backgroundColor: "#FFFF", paddingTop: "50px", paddingBottom: "50px" }}>
+          <form style={{textAlign: "center"}}>
+          <div className="form-group col-sm-12">
+            
+            <input style={{ border: "2px solid #ffc542", borderRadius: "15px" }} type="email" className="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="Enter email" />
+            
+          </div>
+          <div className="form-group col-sm-12">
+            
+            <input style={{ border: "2px solid #ffc542", borderRadius: "15px" }} type="password" className="form-control" id="exampleInputPassword1" placeholder="Password" />
+          </div>
+          <div className="form-group form-check">
+            <input type="checkbox" className="form-check-input" id="exampleCheck1" />
+            <label className="form-check-label" htmlFor="exampleCheck1">Check me out</label>
+          </div>
+          <button type="submit" style={{width:"200px", height:"25px", border:"none", backgroundColor:"#ffc542", outline:"none", borderRadius:"15px"}}>Submit</button>
+        </form>
+          </Modal.Body>
+        </div>
+      </Modal>
     </>
   );
 };

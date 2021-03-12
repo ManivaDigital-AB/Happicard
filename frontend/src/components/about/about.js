@@ -9,10 +9,10 @@ import {
 } from "../about/aboutStyle";
 import logoImg from "../../assets/images/logo_yellow.PNG";
 import logo from "../../assets/images/logo.PNG";
-import woman from "../../assets/images/about/Woman.JPG";
-import aboutProcess1 from "../../assets/images/about/about1.PNG";
-import aboutProcess2 from "../../assets/images/about/about2.PNG";
-import aboutProcess3 from "../../assets/images/about/about3.PNG";
+import AboutMain from "../../assets/images/about/AboutMain.PNG";
+import ChooseBrand from "../../assets/images/about/ChooseBrand.PNG";
+import Personalize from "../../assets/images/about/Personalize.PNG";
+import Pay from "../../assets/images/about/Pay.PNG";
 import aboutSection3 from "../../assets/images/about/aboutSection3.PNG";
 import Contact from "../../components/contact/contact";
 class about extends Component {
@@ -33,7 +33,7 @@ class about extends Component {
               style={{ backgroundColor: "#FFFF" }}
             >
               <LeftHeaderContainer>
-                <img src={woman} className="img-header"></img>
+                <img src={AboutMain} className="img-header"></img>
               </LeftHeaderContainer>
               <RightHeaderContainer>
                 <h2>
@@ -70,29 +70,29 @@ class about extends Component {
               </h2>
               <BodyProcess>
                 <ElementProcess>
-                  <img src={aboutProcess1}></img>
-                  <h4>Choose Brand</h4>
+                  <img src={ChooseBrand}></img>
+                  <h4>CHOOSE BRAND</h4>
                   <div>
                     I'm a paragraph. Click here to add your own text and edit
                     me. It’s easy. Just click “Edit Text” or double click me.
                   </div>
                 </ElementProcess>
                 <ElementProcess>
-                  <img src={aboutProcess2}></img>
-                  <h4>Personalize</h4>
+                <img src={Personalize}></img>
+                  <h4>PERSONALIZE</h4>
                   <div>
                     I'm a paragraph. Click here to add your own text and edit
                     me. It’s easy. Just click “Edit Text” or double click me.
                   </div>
                 </ElementProcess>
                 <ElementProcess>
-                  <img src={aboutProcess3}></img>
-                  <h4>Pay & Deliver</h4>
+                <img src={Pay}></img>
+                  <h4>PAY & DELIVER</h4>
                   <div>
                     I'm a paragraph. Click here to add your own text and edit
                     me. It’s easy. Just click “Edit Text” or double click me.
                   </div>
-                </ElementProcess>
+                  </ElementProcess>
               </BodyProcess>
             </div>
             <div className="row " style={{ backgroundColor: "#FFF" }}>

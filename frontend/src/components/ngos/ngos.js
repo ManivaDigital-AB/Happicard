@@ -28,7 +28,7 @@ const ngos = () => {
       <div className="col-sm-4" onClick={() => handleClick(props.props)}>
         <div
           className="card"
-          style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
+          style={{ borderRadius: "0.65rem", marginBottom: "10px", backgroundColor: "#E1DBD8" }}
         >
           <div className="card-body">
             <input type="radio" value={props.props.id} />
@@ -75,8 +75,16 @@ const ngos = () => {
             </p>
           </div>
           <div
-            className="card-footer"
-            style={{ textAlign: "left", fontSize: "12px", lineHeight: "28px" }}
+            className="card-footer truncate"
+            style={{
+              textAlign: "left",
+              fontSize: "12px",
+              lineHeight: "32px",
+              backgroundColor: "#E1DBD8",
+              borderBottomColor: "#E1DBD8",
+              borderTop: "none",
+              borderRadius: "12px"
+            }}
           >
             {props.props.about}
           </div>
@@ -151,7 +159,7 @@ const ngos = () => {
               <div className="col-sm">
                 <h2 style={{ paddingBottom: "25px" }}>NGOS</h2>
               </div>
-              <div className="col-sm">
+              {/* <div className="col-sm">
                 <div className="selectdiv">
                   <label>
                     {" "}
@@ -176,10 +184,10 @@ const ngos = () => {
                     </select>
                   </label>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div
-              className="row justify-content-md-center"
+              className="row justify-content-md-start"
               style={{ textAlign: "center" }}
             >
               {ngos && <NgosList />}

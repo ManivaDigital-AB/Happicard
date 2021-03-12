@@ -8,7 +8,6 @@ const Navbar = () => {
   return (
     <>
       <Nav>
-        {/* <div className="logo">Nav Bar</div> */}
         <div className="logo">
           <Link to="/">
             <img className="logoImg" src={logoImg} />

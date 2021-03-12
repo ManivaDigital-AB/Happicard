@@ -2,34 +2,22 @@ import React, { useState } from "react";
 import giftImg from "../../assets/images/gift_card_01.PNG";
 import offersImg from "../../assets/images/happi_offers_02.PNG";
 import campaignsImg from "../../assets/images/campaigns_01.PNG";
+import oval from "../../assets/images/Oval.PNG";
 import styled from "styled-components";
-import { landingPageService } from "../../_services/landingpage.service";
-import { Modal } from "react-bootstrap";
-import Counter from "./Counter";
 import axios from "../../utils/axios";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
-
-const Button = styled.button`
-  /* Adapt the colors based on primary prop */
-  background: white};
-  color: black;
-
-  font-size: 1em;
-  font-weight: bold;
-  font-family: Helvetica Neue, Helvetica, sans-serif;
-
-  margin: 1em;
-  padding: 0.25em 1em;
-  border: 2px solid  #FFC541;
-  border-radius: 28px;
-  width: 140px;
-  outline: none;
-`;
+import { landingPageService } from "../../_services/landingpage.service";
+import { Modal } from "react-bootstrap";
 
 const ListImg = styled.img`
-  width: 350px;
+  width: 100%;
+  height: auto;
   padding: 5px 5px 5px 5px;
+  &:hover
+  {
+    box-shadow: 12px 12px 0px #118678;
+  }
   @media only screen and (max-width: 600px) {
     width: 200px;
   }
@@ -48,17 +36,17 @@ const LandingPageList = () => {
 
   const [show, setShow] = useState(false);
   const [selectedPrice, setSelectedPrice] = useState(0);
-  const [orderId] = useState("");
+  
   const dispatch = useDispatch();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const [parentCounter, setParentCounter] = useState(0);
-
   const history = useHistory();
+  let columns = [];
 
   const clickGiftCards = () => {
+    columns = [];
     if (displayGiftCards) {
       setDisplayGiftCards(false);
     } else {
@@ -70,6 +58,7 @@ const LandingPageList = () => {
   };
 
   const clickHappiOffers = () => {
+    columns = [];
     if (displayHappiOffers) {
       setDisplayHappiOffers(false);
     } else {
@@ -81,6 +70,7 @@ const LandingPageList = () => {
   };
 
   const clickCampaigns = () => {
+    columns = [];
     if (displayCampaigns) {
       setDisplayCampaigns(false);
     } else {
@@ -91,8 +81,9 @@ const LandingPageList = () => {
     setDisplayHappiOffers(false);
   };
 
-  const handleChange = (params) => {
+  const handleChange = (params) => (event) => {
     let filteredItem = {};
+    console.log(event.target);
 
     if (displayGiftCards)
       filteredItem = giftCards.filter((item) => item.id === params.id);
@@ -113,7 +104,6 @@ const LandingPageList = () => {
 
   const onCreateOrder = async (e) => {
     e.preventDefault();
-
     try {
       const config = {
         headers: {
@@ -122,19 +112,19 @@ const LandingPageList = () => {
         },
       };
 
-      let url = selectedItem.isGiftCardOrOffer
-        ? `http://35.161.152.123/api/orders/create/giftcard-to-basket/`
-        : `http://35.161.152.123/api/orders/create/campaign-to-basket/`;
+      let url = `http://35.161.152.123/api/orders/create/item-to-basket/`
+      let request =   JSON.stringify({
+        giftcard: selectedItem.isGiftCardOrOffer ? selectedItem.id : null,
+        campaign: !selectedItem.isGiftCardOrOffer ? selectedItem.id : null,
+        quantity: 1,
+        price_choice: selectedPrice,
+        ordered: "true",
+      });
 
       await axios
         .post(
           url,
-          JSON.stringify({
-            giftcard: selectedItem.id,
-            quantity: parentCounter,
-            price_choice: selectedPrice,
-            ordered: "true",
-          }),
+          request,
           config
         )
         .then((response) => {
@@ -142,7 +132,9 @@ const LandingPageList = () => {
           if (data != null) {
             dispatch({ type: "CREATE_ORDER_REQUEST", payload: response.data });
             dispatch({ type: "SELECTED_ITEM_ORDER", payload: selectedItem });
-            history.push("/createorder");
+            history.push({
+              pathname: '/createorder',
+          });
           }
         });
     } catch (err) {
@@ -152,23 +144,19 @@ const LandingPageList = () => {
 
   function Card(props) {
     return (
-      <div
-        className="col-sm-3 ml-3 mb-3"
-        onClick={() => handleChange(props)}
-        style={{ cursor: "pointer" }}
+    <div
+        className="col-sm-3"
+        onClick={handleChange(props)}
+        style={{ cursor: "pointer"}}
       >
         <div
           className="card"
-          style={{ borderRadius: "0.65rem", marginBottom: "10px" }}
+          style={{ borderRadius: "0.65rem", marginBottom: "10px", backgroundColor : selectedItem.id == props.id ? "#FFC541" : "#E1DBD8"}}
         >
+          
           <div className="card-body">
-            {/* <input
-              type="radio"
-              value={props.id}
-              checked={selectedItem.id == props.id}
-              onChange={handleChange}
-            /> */}
-            <h6 className="card-title" style={{ color: "#D7383B" }}>
+          <div><img src={oval}/></div>
+            <h6 className="card-title" style={{ color: "#4A4746" }}>
               {props.name}
             </h6>
             <img
@@ -194,7 +182,7 @@ const LandingPageList = () => {
               >
                 Category: {props.title}
               </span>{" "}
-              <span style={{ color: "#D7383B" }}>| </span>{" "}
+              <span style={{ color: "#118678" }}>| </span>{" "}
               <span
                 style={{
                   marginLeft: "2px",
@@ -208,18 +196,19 @@ const LandingPageList = () => {
           </div>
         </div>
       </div>
+     
     );
   }
 
   return (
     <>
       <Modal show={show} onHide={handleClose}>
-        <div style={{ border: "8px solid #ffff", borderRadius: "0.3rem" }}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
           <Modal.Header
             closeButton
-            style={{ backgroundColor: "#ffc541", border: "none" }}
+            style={{ backgroundColor: "#ffff", border: "none" }}
           ></Modal.Header>
-          <Modal.Body style={{ backgroundColor: "#ffc541" }}>
+          <Modal.Body style={{ backgroundColor: "#ffff" }}>
             <div className="row" style={{ fontSize: "12px" }}>
               <div className="col-sm">
                 {" "}
@@ -245,6 +234,7 @@ const LandingPageList = () => {
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Amount:
                   </label>
+                <div className="select">
                   <select onChange={handlePriceChange}>
                     <option value="">select</option>
                     <option value={selectedItem.price_option_1}>
@@ -257,14 +247,19 @@ const LandingPageList = () => {
                       {selectedItem.price_option_3} SEK
                     </option>
                   </select>
+                  </div> 
+              
+
+            
+                
                 </div>
 
-                <div>
+                {/* <div>
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Quantity:
                   </label>
-                  <Counter setParentCounter={setParentCounter} />
-                </div>
+                  <Counter setParentCounter={setParentCounter} initialCount={0}/>
+                </div> */}
               </div>
             </div>
             <div
@@ -284,8 +279,9 @@ const LandingPageList = () => {
               }}
             >
               <button
+                id="ownpurchase"
                 style={{
-                  backgroundColor: "#FFFF",
+                  backgroundColor: "#ffc541",
                   border: "none",
                   height: "35px",
                   borderRadius: "16px",
@@ -295,87 +291,68 @@ const LandingPageList = () => {
                 }}
                 onClick={onCreateOrder}
               >
-                Buy for Myself
+               Donate
               </button>
-              <button
+              {/* <button
                 style={{
-                  backgroundColor: "#B2A8A4",
+                  backgroundColor: "#ffff",
                   border: "none",
                   height: "35px",
                   borderRadius: "16px",
                   width: "200px",
                   outline: "none",
+                  border: "2px solid #ffc541"
                 }}
                 onClick={onCreateOrder}
               >
-                Buy for Someone Else
-              </button>
+                Donate On Behalf Of Someonelse
+              </button> */}
             </div>
           </Modal.Body>
         </div>
       </Modal>
+      
+   <div className="container">
       <div
         className="row justify-content-md-center"
         style={{ paddingTop: "20px" }}
       >
         <div className="col-sm-3">
-          <div style={{ textAlign: "center" }}>
-            <ListImg src={giftImg} />
-            <Button
-              onClick={clickGiftCards}
-              style={{
-                backgroundColor: displayGiftCards ? "#FFC541" : "",
-                outline: "none",
-              }}
-            >
-              Gift Cards
-            </Button>
+          <div>
+            <ListImg src={giftImg} onClick={clickGiftCards}/>
           </div>
         </div>
         <div className="col-sm-3">
-          <div style={{ textAlign: "center" }}>
-            <ListImg src={offersImg} />
-            <Button
-              onClick={clickHappiOffers}
-              style={{
-                backgroundColor: displayHappiOffers ? "#FFC541" : "",
-                outline: "none",
-              }}
-            >
-              Happi Offers
-            </Button>
+          <div>
+            <ListImg src={offersImg} onClick={clickHappiOffers}/>
+            
           </div>
         </div>
         <div className="col-sm-3">
-          <div style={{ textAlign: "center" }}>
-            <ListImg src={campaignsImg} />
-            <Button
-              onClick={clickCampaigns}
-              style={{
-                backgroundColor: displayCampaigns ? "# #FFC541" : "",
-                outline: "none",
-              }}
-            >
-              Campaigns
-            </Button>
+          <div>
+            <ListImg src={campaignsImg} onClick={clickCampaigns}/>
           </div>
         </div>
       </div>
       <div
         className="row justify-content-md-center"
-        style={{ textAlign: "center", paddingBottom: "10px" }}
+        style={{ textAlign: "center", paddingBottom: "10px", paddingTop: "25px" }}
       >
-        {displayGiftCards &&
+      {
+        displayGiftCards &&
           giftCards.length > 0 &&
-          giftCards.map((item, index) => (
-            <Card
+          giftCards.map((item, index) => {
+           
+            columns.push(<Card
               id={item.id}
               name={item.title}
               image={item.image}
               title={item.store_category}
               key={index}
-            />
-          ))}
+            />)
+            if ((index+1)%3===0) {columns.push(<div className="w-100" key={null}></div>)}
+          })}
+          {displayGiftCards && columns}
       </div>
 
       <div
@@ -384,15 +361,17 @@ const LandingPageList = () => {
       >
         {displayHappiOffers &&
           offers.length > 0 &&
-          offers.map((item, index) => (
-            <Card
+          offers.map((item, index) => {
+            columns.push(<Card
               id={item.id}
               name={item.title}
               image={item.image}
               title={item.store_category}
               key={index}
-            />
-          ))}
+            />)
+            if ((index+1)%3===0) {columns.push(<div className="w-100" key={null}></div>)}
+            })}
+             {displayHappiOffers && columns}
       </div>
 
       <div
@@ -401,16 +380,19 @@ const LandingPageList = () => {
       >
         {displayCampaigns &&
           campaigns.length > 0 &&
-          campaigns.map((item, index) => (
-            <Card
+          campaigns.map((item, index) => {
+            columns.push(<Card
               id={item.id}
               name={item.title}
               image={item.image}
-              title={item.ngo_category}
+              title={item.store_category}
               key={index}
-            />
-          ))}
+            />)
+            if ((index+1)%3===0) {columns.push(<div className="w-100" key={null}></div>)}
+            })}
+            {displayCampaigns && columns}
       </div>
+    </div>
     </>
   );
 };

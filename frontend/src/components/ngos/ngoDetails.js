@@ -1,6 +1,4 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import Slider from "react-slick";
-import { BodyContainer } from "../stores/storeStyles";
+import React, {useState} from "react";
 import axios from "../../utils/axios";
 import { Modal } from "react-bootstrap";
 import Counter from "../LandingPageList/Counter";
@@ -173,7 +171,7 @@ const NgoDetails = ({ selectedItem }) => {
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Quantity:
                   </label>
-                  <Counter setParentCounter={setParentCounter} />
+                  <Counter setParentCounter={setParentCounter} initialCount={0}/>
                 </div>
               </div>
             </div>

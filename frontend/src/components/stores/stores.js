@@ -1,9 +1,8 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import Slider from "react-slick";
 import { BodyContainer } from "../stores/storeStyles";
 import axios from "../../utils/axios";
 import StoreDetails from "./storeDetails";
-import { Modal } from "react-bootstrap";
 
 const stores = () => {
   const [stores, setStores] = useState([]);
@@ -35,13 +34,14 @@ const stores = () => {
           className="card"
           style={{
             borderRadius: "14px",
-            border: "2.2px solid #B2A8A4;",
+            border: "2.2px solid #B2A8A4",
             marginBottom: "10px",
+            backgroundColor: "#E1DBD8"
           }}
         >
           <div className="card-body">
             <input type="radio" value={props.props.id} />
-            <h6 className="card-title" style={{ color: "#D7383B" }}></h6>
+            <h6 className="card-title"></h6>
             <div style={{ paddingBottom: "32px" }}>
               <img
                 src={props.props.image}
@@ -68,7 +68,7 @@ const stores = () => {
                 style={{
                   marginLeft: "2px",
                   marginRight: "2px",
-                  color: "#D7383B",
+                  color: "#4A4746",
                 }}
               >
                 {props.props.title}
@@ -89,8 +89,10 @@ const stores = () => {
               textAlign: "left",
               fontSize: "12px",
               lineHeight: "32px",
-              backgroundColor: "#FFFF",
+              backgroundColor: "#E1DBD8",
+              borderBottomColor: "#E1DBD8",
               borderTop: "none",
+              borderRadius: "12px"
             }}
           >
             {props.props.about}
@@ -161,7 +163,7 @@ const stores = () => {
               <div className="col-sm">
                 <h2 style={{ paddingBottom: "25px" }}>STORES</h2>
               </div>
-              <div className="col-sm">
+              {/* <div className="col-sm">
                 <div className="selectdiv">
                   <label>
                     {" "}
@@ -186,10 +188,10 @@ const stores = () => {
                     </select>
                   </label>
                 </div>
-              </div>
+              </div> */}
             </div>
             <div
-              className="row justify-content-md-center"
+              className="row justify-content-md-start"
               style={{ textAlign: "center" }}
             >
               {stores && <StoresList />}

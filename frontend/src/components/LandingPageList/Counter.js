@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect} from "react";
 
-function Counter({ setParentCounter }) {
+function Counter({ setParentCounter, initialCount }) {
   // Set the initial count state to zero, 0
-  const [count, setCount] = useState(0);
+  const [count, setCount] = useState(initialCount);
 
   // Create handleIncrement event handler
   const handleIncrement = () => {
@@ -12,9 +12,10 @@ function Counter({ setParentCounter }) {
 
   //Create handleDecrement event handler
   const handleDecrement = () => {
-    setCount((prevCount) => prevCount - 1);
-    setParentCounter((prevCount) => prevCount - 1);
+    setCount((prevCount) => prevCount - 1 < 0 ? 0 : prevCount - 1);
+    setParentCounter((prevCount) => prevCount - 1 < 0 ? 0 : prevCount - 1);
   };
+
   return (
     <>
       <button
@@ -22,7 +23,10 @@ function Counter({ setParentCounter }) {
         style={{
           backgroundColor: "#B2A8A4",
           border: "none",
-          width: "25px",
+          width: "40px",
+          height: "34px",
+          color: "#FFF",
+          borderRadius: "2px"
         }}
       >
         -
@@ -32,7 +36,8 @@ function Counter({ setParentCounter }) {
           backgroundColor: "#fff",
           border: "none",
           textAlign: "center",
-          width: "25px",
+          width: "40px",
+          height: "34px",
         }}
         readOnly
         value={count}
@@ -41,10 +46,13 @@ function Counter({ setParentCounter }) {
       <button
         onClick={handleIncrement}
         style={{
-          backgroundColor: "#FFBA08",
+          backgroundColor: "#118678",
           border: "none",
-          width: "25px",
+          width: "40px",
+          height: "34px",
           marginRight: "8px",
+          color: "#FFF",
+          borderRadius: "2px"
         }}
       >
         +

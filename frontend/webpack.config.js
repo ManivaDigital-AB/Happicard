@@ -13,7 +13,7 @@ module.exports = {
     publicPath: "",
   },
   resolve: {
-    extensions: [".js", ".jsx"],
+    extensions: ['',".js", ".jsx", '.css'],
   },
   module: {
     rules: [
@@ -60,6 +60,9 @@ module.exports = {
           },
         ],
       },
+      { test: /\.css$/, loader: "style-loader!css-loader" },
+  { test: /\.png$/, loader: "url-loader?limit=100000" },
+  { test: /\.jpg$/, loader: "file-loader" },
       {
         test: /\.(png|jpe?g|gif)$/,
         loader: "url-loader?limit=10000&name=img/[name].[ext]",

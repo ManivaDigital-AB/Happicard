@@ -1,10 +1,7 @@
-import React, { useEffect, useState, useRef, useCallback } from "react";
-import Slider from "react-slick";
-import { BodyContainer } from "../stores/storeStyles";
+import React, { useState } from "react";
 import axios from "../../utils/axios";
 
 import { Modal } from "react-bootstrap";
-import Counter from "../LandingPageList/Counter";
 import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 
@@ -12,7 +9,6 @@ const StoreDetails = ({ selectedItem }) => {
   const [show, setShow] = useState(false);
   const [selectedGiftCard, setSelectedGiftCard] = useState({});
   const [selectedPrice, setSelectedPrice] = useState(0);
-  const [parentCounter, setParentCounter] = useState(0);
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -39,16 +35,19 @@ const StoreDetails = ({ selectedItem }) => {
         },
       };
 
-      let url = `http://35.161.152.123/api/orders/create/giftcard-to-basket/`;
+      let url = `http://35.161.152.123/api/orders/create/item-to-basket/`
+      let request =   JSON.stringify({
+        giftcard: selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.id : null,
+        campaign: !selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.id : null,
+        quantity: 1,
+        price_choice: selectedPrice,
+        ordered: "true",
+      });
+
       await axios
         .post(
           url,
-          JSON.stringify({
-            giftcard: selectedGiftCard.giftcard_id,
-            quantity: parentCounter,
-            price_choice: selectedPrice,
-            ordered: "true",
-          }),
+          request,
           config
         )
         .then((response) => {
@@ -56,7 +55,9 @@ const StoreDetails = ({ selectedItem }) => {
           if (data != null) {
             dispatch({ type: "CREATE_ORDER_REQUEST", payload: response.data });
             dispatch({ type: "SELECTED_ITEM_ORDER", payload: selectedItem });
-            history.push("/createorder");
+            history.push({
+              pathname: '/createorder',
+          });
           }
         });
     } catch (err) {
@@ -79,7 +80,7 @@ const StoreDetails = ({ selectedItem }) => {
           }}
         >
           <div className="card-body">
-            <h6 className="card-title" style={{ color: "#D7383B" }}>
+            <h6 className="card-title" style={{ color: "#4A4746" }}>
               {props.props.giftcard_title}
             </h6>
             <img
@@ -124,12 +125,12 @@ const StoreDetails = ({ selectedItem }) => {
   return (
     <>
       <Modal show={show} onHide={handleClose}>
-        <div style={{ border: "8px solid #ffff", borderRadius: "0.3rem" }}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
           <Modal.Header
             closeButton
-            style={{ backgroundColor: "#ffc541", border: "none" }}
+            style={{ backgroundColor: "#ffff", border: "none" }}
           ></Modal.Header>
-          <Modal.Body style={{ backgroundColor: "#ffc541" }}>
+          <Modal.Body style={{ backgroundColor: "#ffff" }}>
             <div className="row" style={{ fontSize: "12px" }}>
               <div className="col-sm">
                 {" "}
@@ -171,12 +172,12 @@ const StoreDetails = ({ selectedItem }) => {
                   </select>
                 </div>
 
-                <div>
+                {/* <div>
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Quantity:
                   </label>
-                  <Counter setParentCounter={setParentCounter} />
-                </div>
+                  <Counter setParentCounter={setParentCounter} initialCount={0}/>
+                </div> */}
               </div>
             </div>
             <div
@@ -196,8 +197,9 @@ const StoreDetails = ({ selectedItem }) => {
               }}
             >
               <button
+                id="ownpurchase"
                 style={{
-                  backgroundColor: "#FFFF",
+                  backgroundColor: "#ffc541",
                   border: "none",
                   height: "35px",
                   borderRadius: "16px",
@@ -207,20 +209,7 @@ const StoreDetails = ({ selectedItem }) => {
                 }}
                 onClick={onCreateOrder}
               >
-                Buy for Myself
-              </button>
-              <button
-                style={{
-                  backgroundColor: "#B2A8A4",
-                  border: "none",
-                  height: "35px",
-                  borderRadius: "16px",
-                  width: "200px",
-                  outline: "none",
-                }}
-                onClick={onCreateOrder}
-              >
-                Buy for Someone Else
+               Donate
               </button>
             </div>
           </Modal.Body>

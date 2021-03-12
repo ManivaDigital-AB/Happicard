@@ -10,15 +10,16 @@ import Stores from "./components/stores/stores";
 import Ngos from "./components/ngos/ngos";
 import Register from "./components/register/register";
 import "bootstrap/dist/css/bootstrap.min.css";
-import Checkout from "./pages/Checkout";
-import Confirmation from "./pages/Confirmation";
+import StripeCheckout from "./pages/StripeCheckout";
 import Createorder from "./pages/Createorder";
 import Terms from "./pages/Terms";
 import reducers from "./reducers";
 import { Provider } from "react-redux";
 import { createStore } from "redux";
 import { createBrowserHistory } from "history";
-import logoImg from "./assets/images/logo.PNG";
+import "./assets/css/normilize.css";
+import "./assets/css/skeleton.css";
+import "./assets/css/prog-tracker.css";
 
 const store = createStore(reducers, {});
 
@@ -37,9 +38,8 @@ const App = () => {
             <Route path="/stores" component={Stores} />
             <Route path="/ngos" component={Ngos} />
             <Route path="/register" component={Register} />
+            <Route path="/payment" component={StripeCheckout} />
             <Route exact={true} path="/createorder" component={Createorder} />
-            <Route exact={true} path="/checkout" component={Checkout} />
-            <Route exact={true} path="/confirmation" component={Confirmation} />
             <Route exact={true} path="/terms" component={Terms} />
           </Switch>
         </Router>

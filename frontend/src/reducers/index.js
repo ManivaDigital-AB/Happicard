@@ -38,9 +38,30 @@ const setNotificationData = function (state = initState, { type, payload }) {
   }
 };
 
+const getCartItems = function (state = initState, { type, payload }) {
+  switch (type) {
+    case "GET_CART_ITEMS":
+      return { ...payload };
+    default:
+      return state;
+  }
+};
+
+const getFriendsDetails = function (state = initState, {type, payload})
+{
+  switch (type) {
+    case "GET_FRIEND_DETAILS":
+      return { ...payload };
+    default:
+      return state;
+  }
+};
+
 export default combineReducers({
   checkout: checkoutReducer,
   createorder: createOrderReducer,
   selectedItemForOrder: selectedItemForOrder,
   setNotificationData: setNotificationData,
+  getCartItems: getCartItems,
+  getFriendsDetails: getFriendsDetails
 });

@@ -1,9 +1,20 @@
 import React, { useState, useEffect } from "react";
 import {
-  CardElement,
+  // CardElement,
+  CardNumberElement,
+  CardExpiryElement,
+  CardCvcElement,
   useStripe,
   useElements
 } from "@stripe/react-stripe-js";
+import { useSelector } from "react-redux";
+
+import visaImg from "../assets/images/visa.PNG";
+
+import masterImg from "../assets/images/master.PNG";
+import { Card } from "react-bootstrap";
+
+
 
 export default function CheckoutForm({props}) {
   const [succeeded, setSucceeded] = useState(false);
@@ -15,9 +26,12 @@ export default function CheckoutForm({props}) {
   const [validationErrorMessage, setValidationErrorMessage] = useState("");
   const stripe = useStripe();
   const elements = useElements();
+  const selectedItem = useSelector((state) => state.createorder);
+
   useEffect(() => {
      console.log("props from checkout form!");
      console.log(props);
+     console.log(selectedItem);
     }, []);
   const cardStyle = {
     style: {
@@ -57,6 +71,9 @@ export default function CheckoutForm({props}) {
       setValidationError(false);
       setValidationErrorMessage("");
     }
+
+    
+
     window
       .fetch("http://35.161.152.123/api/orders/create/stripe-payment/", {
         method: "POST",
@@ -64,7 +81,7 @@ export default function CheckoutForm({props}) {
           "Content-Type": "application/json"
         },
         body: JSON.stringify({"items": [
-          "eea58e2b-8b76-44f1-94e6-3d653a0048af"
+          selectedItem.id
         ],
         "first_name": props.first_name,
         "last_name": props.last_name,
@@ -85,7 +102,7 @@ export default function CheckoutForm({props}) {
       .then(data => {
         const payload =  stripe.confirmCardPayment(data.client_secret, {
           payment_method: {
-            card: elements.getElement(CardElement)
+            card: elements.getElement(CardNumberElement),
           }
         });
         if (payload.error) {
@@ -106,11 +123,28 @@ export default function CheckoutForm({props}) {
     <form id="payment-form" onSubmit={handleSubmit}>
       
       <div style={{border: "2px solid #ffc542", padding: "10px", borderRadius: "15px"}}>
-        <CardElement id="card-element" options={cardStyle} onChange={handleChange}/></div>
+        {/* <CardElement id="card-element" options={cardStyle} onChange={handleChange}/> */}
+        <CardNumberElement onChange={handleChange}/>
+        </div>
+        <div className="row">
+        <div className="col-sm-4" style={{border: "2px solid #ffc542",marginLeft:"15px", marginRight:"10px", padding: "10px", marginTop: "16px", marginBottom:"20px", borderRadius: "15px"}}>
+          <CardExpiryElement/>
+          </div>
+        <div className="col-sm-3" style={{border: "2px solid #ffc542", padding: "10px", marginTop: "16px", marginBottom:"20px", borderRadius: "15px"}}>
+        <CardCvcElement/>
+         </div>
+         <div className="col-sm-2" style={{ padding: "10px", marginTop: "42px"}}>
+        <img src={visaImg} style={{width:"50px", marginTop: "-35px"}}/>
+         </div>
+         <div className="col-sm-1" style={{padding: "10px", marginTop: "40px"}}>
+         <img src={masterImg} style={{width:"50px", marginTop: "-35px"}}/>
+         </div>
+         </div>
+        
       <button
         disabled={processing || disabled || succeeded}
         id="submit"
-        style={{width: "200px",height:"35px", marginTop: "25px", borderRadius: "49px", backgroundColor: "#118678", color:"#FFF", fontWeight: "700"}}
+        style={{width: "200px",height:"35px", marginTop: "25px", border:"none", borderRadius: "49px", backgroundColor: "#118678", color:"#FFF", fontWeight: "700", outline: "none"}}
       >
         <span id="button-text">
           {processing ? (
@@ -126,7 +160,6 @@ export default function CheckoutForm({props}) {
           {error}
         </div>
       )}
-      
     </form>
     </>
   );

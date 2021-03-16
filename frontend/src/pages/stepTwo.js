@@ -27,6 +27,7 @@ export default ({ setForm, formData }) => {
       }}
     >
       <div className="col-md-6">
+      <h5 style={{paddingTop:"15px", marginRight:"15px", paddingBottom: "25px", textAlign: "center", fontSize: "18"}}>PERSONALIZE</h5>
         <div
           className="row justify-content-md-center"
           style={{
@@ -172,7 +173,9 @@ export default ({ setForm, formData }) => {
                   placeholder="send happicard!"
                   className="form-control"
                   onChange={setForm}
-                  rows="3"
+                  rows="4"
+                  maxLength={140}
+                  
                 />
               </Field>
             </form>

@@ -151,12 +151,12 @@ export default function MultiStep(props) {
   const renderNav = (show) =>
     show && (
       <div style={{textAlign: "center", marginBottom: "25px", backgroundColor: "#F0EEED", marginBottom: "15px"}}>
-        <button
+        {/* <button
           style={buttonsState.showPreviousBtn ? props.prevStyle : { display: 'none' }}
           onClick={previous}
         >
          Back to Checkout
-        </button>
+        </button> */}
 
         <button
           style={buttonsState.showNextBtn ? props.nextStyle : { display: 'none' }}

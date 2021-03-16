@@ -263,6 +263,25 @@
     border: 3px solid #FFC542;
     background-color: rgb(240, 238, 237);
 }
+
+.loading {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  border: 3px solid rgba(255,255,255,.3);
+  border-radius: 50%;
+  border-top-color: #fff;
+  animation: spin 1s ease-in-out infinite;
+  margin-right: 8px;
+  -webkit-animation: spin 1s ease-in-out infinite;
+}
+
+@keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
+@-webkit-keyframes spin {
+  to { -webkit-transform: rotate(360deg); }
+}
 </style>
   <body>
     <div id="root"></div>

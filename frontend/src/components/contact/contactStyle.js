@@ -39,7 +39,7 @@ export const LeftContainer = styled.div`
   input:focus,
   input:active,
   textarea:focus {
-    border: 1px solid #118678;
+    border: 2px solid  rgb(255, 197, 65);
     border-radius: 5px;
     padding: 10px;
     margin: 5px;

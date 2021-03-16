@@ -16,6 +16,7 @@ const StoreDetails = ({ selectedItem }) => {
   const handleShow = () => setShow(true);
   const handleChange = (params) => {
     console.log(params);
+    params.isGiftCardOrOffer = params.giftcard_id != "" ? true : false
     setSelectedGiftCard(params);
 
     handleShow();
@@ -37,8 +38,8 @@ const StoreDetails = ({ selectedItem }) => {
 
       let url = `http://35.161.152.123/api/orders/create/item-to-basket/`
       let request =   JSON.stringify({
-        giftcard: selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.id : null,
-        campaign: !selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.id : null,
+        giftcard: selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.giftcard_id : null,
+        // campaign: !selectedGiftCard.isGiftCardOrOffer ? selectedGiftCard.campaign_id : null,
         quantity: 1,
         price_choice: selectedPrice,
         ordered: "true",

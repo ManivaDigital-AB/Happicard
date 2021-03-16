@@ -58,7 +58,8 @@ const Register = () => {
         style={{  backgroundColor: "#FFFF" }}
       >
         <div className="container" style={{ textAlign: "center" }}>
-        <MultiStepForm />
+        <MultiStepForm /> 
+        {/* <button onClick={handleClick}></button> */}
         </div>
       </div>
     </>

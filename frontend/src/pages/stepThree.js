@@ -52,6 +52,7 @@ export default ({ setForm, formData }) => {
       }}
     >
       <div className="col-md-6">
+        <h4 style={{paddingBottom: "25px", textAlign: "center", fontSize: "18"}}>CHECKOUT</h4>
         <form>
         <div className="form-row">
                     <Field className="form-group col-md-6">

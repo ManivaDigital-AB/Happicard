@@ -20,9 +20,27 @@ const useForm = (initialValues) => {
         const finalData = nestedSegments.reduce(getChildData, dataClone)
         finalData[finalSegment] = isCheckbox ? checked : value
         if(name == "happicard_delivery_date")
-        {dataClone.happicard_delivery_date = value}else{dataClone.happicard_delivery_date = data.happicard_delivery_date}
-        
-        return dataClone
+        {
+          dataClone.happicard_delivery_date = value
+        }
+        else
+        {
+          dataClone.happicard_delivery_date = data.happicard_delivery_date
+        }
+
+       if(isRadio)
+       {
+        if(name == "form_Aktiebolag"){
+          dataClone.checked_Aktiebolag = true;
+          dataClone.checked_Ideella_föreningar = false
+        }
+     
+        if(name == "form_Ideella_föreningar"){
+          dataClone.checked_Aktiebolag = false;
+          dataClone.checked_Ideella_föreningar = true
+        }
+      }
+      return dataClone
       })
     },
   ]

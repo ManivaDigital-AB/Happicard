@@ -19,7 +19,7 @@ export default function StripeCheckout({props}) {
           className="row justify-content-md-center"
           style={{ fontSize: "12px", paddingBottom: "25px", backgroundColor: "#F0EEED", textAlign: "center" }}
         >
-      <div className="col-sm-4">
+      <div className="col-sm-3">
       <Elements stripe={promise}>
         <CheckoutForm props={props}/>
       </Elements>

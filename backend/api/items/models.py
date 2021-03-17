@@ -5,25 +5,12 @@ from django.utils import timezone
 from django.conf import settings
 import uuid
 
+from backend.api.accounts.models import STORE_CHOICES, NGO_CHOICES
 from backend.settings.storage_backends import CampaignStorage, GiftCardStorage
 
 OPTIONS = (
     ("draft", "Draft"),
     ("published", "Published"),
-)
-
-STORE_CHOICES = (
-    ("Electronics", "Electronics"),
-    ("Fashion & Accessories", "Fashion & Accessories"),
-    ("Digital Entertainment", "Digital Entertainment"),
-    ("Home & Garden", "Home & Garden"),
-)
-
-NGO_CHOICES = (
-    ("Non-Profit Organization", "Non-Profit Organization"),
-    ("Youth", "Youth"),
-    ("Educational", "Educational"),
-    ("Literary", "Literary"),
 )
 
 
@@ -71,6 +58,8 @@ class Item(models.Model):
         blank=True,
     )
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
     def __str__(self):
         return f"{self.title} with the unique ID of {self.id}"
@@ -89,11 +78,11 @@ class GiftCard(Item):
     has_offer = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=0)
     store_category = models.CharField(
-        max_length=50,
+        max_length=100,
         choices=STORE_CHOICES,
         null=True,
         blank=True,
-        verbose_name=_("Store Category"),
+        verbose_name=_("Gift Card Category"),
     )
 
 
@@ -108,9 +97,9 @@ class Campaign(Item):
 
     image = models.FileField(storage=CampaignStorage())
     ngo_category = models.CharField(
-        max_length=50,
+        max_length=100,
         choices=NGO_CHOICES,
         null=True,
         blank=True,
-        verbose_name=_("NGO Category"),
+        verbose_name=_("Campaign Category"),
     )

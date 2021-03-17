@@ -22,6 +22,7 @@ from .serializers import (
     VendorSerializer,
     VendorRegisterSerializer,
     VendorLoginSerializer,
+    VendorListSerializer,
     CustomerSerializer,
     CustomerRegisterSerializer,
     CustomerLoginSerializer,
@@ -65,8 +66,8 @@ class SubscriberListView(generics.ListAPIView):
 class VendorListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
     authentication_classes = ()
+    serializer_class = VendorListSerializer
     queryset = Vendor.objects.filter(is_verified=True)
-    serializer_class = VendorSerializer
 
 
 class PendingVendorListView(generics.ListAPIView):

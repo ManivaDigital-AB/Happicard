@@ -17,7 +17,8 @@ class StoreListView(generics.ListAPIView):
                 "id": b.id,
                 "title": b.title,
                 "about": b.about,
-                "image": b.image.url,
+                "banner_image": b.banner_image.url,
+                "header_image": b.header_image.url,
                 "store_category": b.store_category,
                 "giftcards": [
                     {
@@ -55,7 +56,8 @@ class NGOListView(generics.GenericAPIView):
                 "id": b.id,
                 "title": b.title,
                 "about": b.about,
-                "image": b.image.url,
+                "banner_image": b.banner_image.url,
+                "header_image": b.header_image.url,
                 "ngo_category": b.ngo_category,
                 "campaigns": [
                     {

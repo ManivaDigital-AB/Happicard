@@ -26,6 +26,24 @@ class VendorSerializer(serializers.ModelSerializer):
         )
 
 
+class VendorListSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Vendor
+        fields = (
+            "id",
+            "first_name",
+            "last_name",
+            "email",
+            "phone_number",
+            "company_name",
+            "company_store_category",
+            "company_ngo_category",
+            "created_at",
+            "updated_at",
+        )
+        depth = 2
+
+
 class CustomerSerializer(serializers.ModelSerializer):
     class Meta:
         model = Customer
@@ -104,7 +122,8 @@ class VendorRegisterSerializer(serializers.ModelSerializer):
             "company_address",
             "company_role",
             "corporate_form",
-            "company_category",
+            "company_ngo_category",
+            "company_store_category",
             "company_website",
             "comments",
         )

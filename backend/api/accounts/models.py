@@ -7,6 +7,56 @@ from django.db import models
 import uuid
 
 
+STORE_CHOICES = (
+    ("Mode", "Mode"),
+    ("Mode kvinna", "Mode kvinna"),
+    ("Mode herr", "Mode herr"),
+    ("Hus & Hem", "Hus & Hem"),
+    ("Livsmedel", "Livsmedel"),
+    ("Mat & Dryck", "Mat & Dryck"),
+    ("Musik, Böcker & Spel", "Musik, Böcker & Spel"),
+    ("Semester & Resor", "Semester & Resor"),
+    ("Underhållning & Upplevelser", "Underhållning & Upplevelser"),
+    ("Annat", "Annat"),
+)
+
+
+NGO_CHOICES = (
+    ("Anhörigstöd", "Anhörigstöd"),
+    ("Barn", "Barn"),
+    ("Bevarande projekt", "Bevarande projekt"),
+    ("Fadderverksamhet", "Fadderverksamhet"),
+    ("Familjer", "Familjer"),
+    ("Flyktingar", "Flyktingar"),
+    ("Förebyggande arbete", "Förebyggande arbete"),
+    ("Föräldralösa barn", "Föräldralösa barn"),
+    ("Hemlösa", "Hemlösa"),
+    ("Hjälp till enskilda", "Hjälp till enskilda"),
+    ("Jordbruk", "Jordbruk"),
+    ("Jämställdhet", "Jämställdhet"),
+    ("Katastrofhjälp", "Katastrofhjälp"),
+    ("Kvinnor", "Kvinnor"),
+    ("Mikrolån/Mikrokrediter", "Mikrolån/Mikrokrediter"),
+    ("Personalutveckling", "Personalutveckling"),
+    ("Rehabilitering", "Rehabilitering"),
+    ("Rättshjälp", "Rättshjälp"),
+    ("Second hand", "Second hand"),
+    ("Sjukhus/Vårdhem/Äldreboende", "Sjukhus/Vårdhem/Äldreboende"),
+    ("Skyddat boende", "Skyddat boende"),
+    ("Telefonjour", "Telefonjour"),
+    ("Ungdom", "Ungdom"),
+    ("Utbildning - grund", "Utbildning - grund"),
+    ("Utbildning - högre", "Utbildning - högre"),
+    ("Utbildning - yrkes", "Utbildning - yrkes"),
+    ("Vatten/Sanitets projekt", "Vatten/Sanitets projekt"),
+    ("Verksamhet för sjuka", "Verksamhet för sjuka"),
+    ("Volontärer", "Volontärer"),
+    ("Vuxna", "Vuxna"),
+    ("Äldre", "Äldre"),
+    ("Annat", "Annat"),
+)
+
+
 class UserManager(BaseUserManager):
     """
     Base User Manager
@@ -94,12 +144,25 @@ class Vendor(User):
     Vendor Model
     """
 
-    phone_number = models.CharField(max_length=15, unique=True, null=True, blank=True)
+    phone_number = models.CharField(max_length=15, null=True, blank=True)
     company_name = models.CharField(max_length=255, null=True, blank=True)
     company_address = models.CharField(max_length=255, null=True, blank=True)
     company_role = models.CharField(max_length=255, null=True, blank=True)
     corporate_form = models.CharField(max_length=255, null=True, blank=True)
-    company_category = models.CharField(max_length=255, null=True, blank=True)
+    company_store_category = models.CharField(
+        max_length=100,
+        choices=STORE_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("Store Category"),
+    )
+    company_ngo_category = models.CharField(
+        max_length=100,
+        choices=NGO_CHOICES,
+        null=True,
+        blank=True,
+        verbose_name=_("NGO Category"),
+    )
     company_website = models.CharField(
         max_length=255, unique=True, null=True, blank=True
     )

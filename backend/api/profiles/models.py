@@ -5,26 +5,13 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
 from backend.api.items.models import GiftCard, Campaign
+from backend.api.accounts.models import STORE_CHOICES, NGO_CHOICES
 from backend.settings.storage_backends import NGOProfileStorage, StoreProfileStorage
 
 
 OPTIONS = (
     ("draft", "Draft"),
     ("published", "Published"),
-)
-
-STORE_CHOICES = (
-    ("Electronics", "Electronics"),
-    ("Fashion & Accessories", "Fashion & Accessories"),
-    ("Digital Entertainment", "Digital Entertainment"),
-    ("Home & Garden", "Home & Garden"),
-)
-
-NGO_CHOICES = (
-    ("Non-Profit Organization", "Non-Profit Organization"),
-    ("Youth", "Youth"),
-    ("Educational", "Educational"),
-    ("Literary", "Literary"),
 )
 
 
@@ -58,6 +45,8 @@ class Profile(models.Model):
         blank=True,
     )
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
     objects = models.Manager()
     profobjects = ProfileObjects()
 
@@ -74,15 +63,16 @@ class Store(Profile):
         verbose_name = _("Store")
         verbose_name_plural = _("Stores")
 
-    image = models.FileField(storage=StoreProfileStorage())
+    banner_image = models.FileField(storage=StoreProfileStorage())
+    header_image = models.FileField(storage=StoreProfileStorage())
+    giftcards = models.ManyToManyField(GiftCard, blank=True)
     store_category = models.CharField(
-        max_length=50,
+        max_length=100,
         choices=STORE_CHOICES,
         null=True,
         blank=True,
         verbose_name=_("Store Category"),
     )
-    giftcards = models.ManyToManyField(GiftCard, blank=True)
 
 
 class NGO(Profile):
@@ -94,12 +84,13 @@ class NGO(Profile):
         verbose_name = _("NGO")
         verbose_name_plural = _("NGOs")
 
-    image = models.FileField(storage=NGOProfileStorage())
+    banner_image = models.FileField(storage=NGOProfileStorage())
+    header_image = models.FileField(storage=NGOProfileStorage())
+    campaigns = models.ManyToManyField(Campaign, blank=True)
     ngo_category = models.CharField(
-        max_length=50,
+        max_length=100,
         choices=NGO_CHOICES,
         null=True,
         blank=True,
         verbose_name=_("NGO Category"),
     )
-    campaigns = models.ManyToManyField(Campaign, blank=True)

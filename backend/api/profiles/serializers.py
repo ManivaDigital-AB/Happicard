@@ -9,10 +9,11 @@ class StoreSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "image",
+            "banner_image",
+            "header_image",
             "about",
-            "store_category",
             "giftcards",
+            "store_category",
         )
 
 
@@ -22,8 +23,9 @@ class NGOSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "title",
-            "image",
+            "banner_image",
+            "header_image",
             "about",
-            "ngo_category",
             "campaigns",
+            "ngo_category",
         )

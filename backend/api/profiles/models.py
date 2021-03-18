@@ -36,6 +36,9 @@ class Profile(models.Model):
     )
     title = models.CharField(max_length=255, unique=True)
     about = models.TextField("About", max_length=750, blank=True)
+
+    display_first = models.BooleanField(default=False)
+
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

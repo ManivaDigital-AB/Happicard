@@ -14,6 +14,7 @@ class StoreSerializer(serializers.ModelSerializer):
             "about",
             "giftcards",
             "store_category",
+            "created_at",
         )
 
 
@@ -28,4 +29,5 @@ class NGOSerializer(serializers.ModelSerializer):
             "about",
             "campaigns",
             "ngo_category",
+            "created_at",
         )

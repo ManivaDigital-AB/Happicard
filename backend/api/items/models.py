@@ -44,11 +44,13 @@ class Item(models.Model):
     rebate_code_3 = models.CharField(max_length=200, unique=True, null=True, blank=True)
 
     description = models.TextField("Description", max_length=500, blank=True)
-    tax_amount = models.IntegerField(default=0)
 
     online = models.BooleanField(default=True)
     premium = models.BooleanField(default=False)
     redeem_website = models.CharField(max_length=50, blank=True)
+
+    display_first = models.BooleanField(default=False)
+
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
         settings.AUTH_USER_MODEL,

@@ -19,6 +19,7 @@ class GiftCardSerializer(serializers.ModelSerializer):
             "has_offer",
             "discount_price",
             "store_category",
+            "created_at",
         )
 
 
@@ -37,4 +38,5 @@ class CampaignSerializer(serializers.ModelSerializer):
             "image",
             "description",
             "ngo_category",
+            "created_at",
         )

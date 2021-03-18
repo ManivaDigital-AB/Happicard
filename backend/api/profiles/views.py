@@ -20,6 +20,7 @@ class StoreListView(generics.ListAPIView):
                 "banner_image": b.banner_image.url,
                 "header_image": b.header_image.url,
                 "store_category": b.store_category,
+                "created_at": b.created_at,
                 "giftcards": [
                     {
                         "giftcard_id": a.id,
@@ -59,6 +60,7 @@ class NGOListView(generics.GenericAPIView):
                 "banner_image": b.banner_image.url,
                 "header_image": b.header_image.url,
                 "ngo_category": b.ngo_category,
+                "created_at": b.created_at,
                 "campaigns": [
                     {
                         "campaign_id": a.id,

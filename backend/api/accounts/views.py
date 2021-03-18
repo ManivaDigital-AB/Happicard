@@ -254,14 +254,21 @@ class ContactFormView(generics.GenericAPIView):
         serializer.is_valid(raise_exception=True)
         contact = serializer.data
         from_email = contact.get("email")
-        subject = contact.get("subject")
-        message = contact.get("message")
-        data = {
-            "email_body": message,
-            "email_subject": subject,
+        contact_subject = contact.get("subject")
+        contact_message = contact.get("message")
+        contact_data = {
+            "email_body": contact_message,
+            "email_subject": contact_subject,
             "from_email": from_email,
         }
-        Util.send_contactform(data)
+        Util.send_contactform(contact_data)
+        # confirm email
+        confirm_data = {
+            "email_body": "Vi återkommer så snart som möjligt.",
+            "to_email": from_email,
+            "email_subject": "Tack för att du kontaktade oss!",
+        }
+        Util.send_email(confirm_data)
         return Response({"Contact Form": "Successfully Sent"})
 
 

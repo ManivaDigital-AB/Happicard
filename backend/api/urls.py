@@ -23,8 +23,13 @@ urlpatterns = [
         name="profiles",
     ),
     path(
-        "promotionals/",
-        include("backend.api.promotionals.urls"),
-        name="promotionals",
+        "customizations/",
+        include("backend.api.customizations.urls"),
+        name="customizations",
+    ),
+    path(
+        "seo/",
+        include("backend.api.seo.urls"),
+        name="seo",
     ),
 ]

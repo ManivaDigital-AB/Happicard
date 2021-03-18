@@ -56,6 +56,6 @@ class HappicardVideoStorage(S3Boto3Storage):
     location = "videos"
 
 
-class PromoStorage(S3Boto3Storage):
+class CustomStorage(S3Boto3Storage):
     bucket_name = f"happicard-promo-{stage}"
     custom_domain = "{}.s3.amazonaws.com".format(bucket_name)

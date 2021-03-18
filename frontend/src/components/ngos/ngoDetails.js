@@ -17,6 +17,7 @@ const NgoDetails = ({ selectedItem }) => {
   const handleShow = () => setShow(true);
   const handleChange = (params) => {
     console.log(params);
+    params.isCampaign = params.campaign_id != "" ? true : false
     setselectedNgoCard(params);
 
     handleShow();
@@ -36,13 +37,13 @@ const NgoDetails = ({ selectedItem }) => {
         },
       };
 
-      let url = `http://35.161.152.123/api/orders/create/campaign-to-basket/`;
+      let url = `http://35.161.152.123/api/orders/create/item-to-basket/`;
       await axios
         .post(
           url,
           JSON.stringify({
-            campaign: selectedNgoCard.campaign_id,
-            quantity: parentCounter,
+            campaign: selectedNgoCard.isCampaign ? selectedNgoCard.campaign_id : null,
+            quantity: 1,
             price_choice: selectedPrice,
             ordered: "true",
           }),
@@ -119,13 +120,13 @@ const NgoDetails = ({ selectedItem }) => {
   }
   return (
     <>
-      <Modal show={show} onHide={handleClose}>
-        <div style={{ border: "8px solid #ffff", borderRadius: "0.3rem" }}>
+        <Modal show={show} onHide={handleClose}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
           <Modal.Header
             closeButton
-            style={{ backgroundColor: "#ffc541", border: "none" }}
+            style={{ backgroundColor: "#ffff", border: "none" }}
           ></Modal.Header>
-          <Modal.Body style={{ backgroundColor: "#ffc541" }}>
+          <Modal.Body style={{ backgroundColor: "#ffff" }}>
             <div className="row" style={{ fontSize: "12px" }}>
               <div className="col-sm">
                 {" "}
@@ -153,6 +154,7 @@ const NgoDetails = ({ selectedItem }) => {
                   <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Amount:
                   </label>
+                  <div className="select">
                   <select onChange={handlePriceChange}>
                     <option value="">select</option>
                     <option value={selectedNgoCard.price_option_1}>
@@ -166,12 +168,6 @@ const NgoDetails = ({ selectedItem }) => {
                     </option>
                   </select>
                 </div>
-
-                <div>
-                  <label style={{ marginRight: "4px", fontWeight: "bold" }}>
-                    Quantity:
-                  </label>
-                  <Counter setParentCounter={setParentCounter} initialCount={0}/>
                 </div>
               </div>
             </div>
@@ -192,8 +188,9 @@ const NgoDetails = ({ selectedItem }) => {
               }}
             >
               <button
+                id="ownpurchase"
                 style={{
-                  backgroundColor: "#FFFF",
+                  backgroundColor: "#ffc541",
                   border: "none",
                   height: "35px",
                   borderRadius: "16px",
@@ -203,20 +200,7 @@ const NgoDetails = ({ selectedItem }) => {
                 }}
                 onClick={onCreateOrder}
               >
-                Buy for Myself
-              </button>
-              <button
-                style={{
-                  backgroundColor: "#B2A8A4",
-                  border: "none",
-                  height: "35px",
-                  borderRadius: "16px",
-                  width: "200px",
-                  outline: "none",
-                }}
-                onClick={onCreateOrder}
-              >
-                Buy for Someone Else
+               Donate
               </button>
             </div>
           </Modal.Body>

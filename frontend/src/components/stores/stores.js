@@ -6,16 +6,18 @@ import StoreDetails from "./storeDetails";
 
 const stores = () => {
   const [stores, setStores] = useState([]);
+  const [filteredStores, setfilteredStores] = useState([]);
   const [maxRange, setMaxRange] = useState(6);
   const [displayStoreDetail, setDisplayStoreDetail] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
+  const [displayFilteredStores, setdisplayFilteredStores] = useState(false);
 
   const loadMore = useCallback(() => {
     setMaxRange((prevRange) => prevRange + 3);
   }, []);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
@@ -25,6 +27,27 @@ const stores = () => {
   function handleClick(item) {
     setDisplayStoreDetail(!displayStoreDetail);
     setSelectedItem(item);
+  }
+
+  const storeCategories = 
+    [["Mode","Mode"],
+    ["Mode kvinna","Mode kvinna"],
+    ["Mode herr","Mode herr"],
+    ["Hus & Hem","Hus & Hem"],
+    ["Livsmedel","Livsmedel"],
+    ["Mat & Dryck","Mat & Dryck"],
+    ["Musik, Böcker & Spel","Musik, Böcker & Spel"],
+    ["Semester & Resor","Semester & Resor"],
+    ["Underhållning & Upplevelser","Underhållning & Upplevelser"],
+    ["Electronics","Electronics"],
+    ["Home & Garden","Home & Garden"]]
+
+  const handleFilter = (evt) => {
+      evt.target.value != "" ? setdisplayFilteredStores(true) : setdisplayFilteredStores(false);
+      let existingStores = [];
+      stores.filter((item) => {if( item.store_category == evt.target.value){existingStores.push(item);}});
+      setfilteredStores(existingStores);
+      console.log(evt.target.value);
   }
 
   function Card(props) {
@@ -44,7 +67,7 @@ const stores = () => {
             <h6 className="card-title"></h6>
             <div style={{ paddingBottom: "32px" }}>
               <img
-                src={props.props.image}
+                src={props.props.header_image}
                 style={{
                   borderRadius: "50%",
                   width: "125px",
@@ -105,8 +128,13 @@ const stores = () => {
   const StoresList = () =>
     stores.slice(0, maxRange).map((item, index) => {
       return <Card props={item} key={index} />;
-    });
+  });
 
+  const FilteredStoresList = () =>
+    filteredStores.slice(0, maxRange).map((item, index) => {
+      return <Card props={item} key={index} />;
+  });
+  
   useEffect(() => {
     const config = {
       headers: {
@@ -127,30 +155,37 @@ const stores = () => {
   return (
     <>
       <BodyContainer style={{ backgroundColor: "white" }}>
-        <Slider {...settings}>
+        {/* <Slider {...settings}>
           {" "}
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/giftcards/strumpmaskinen.png"
+              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
               style={{ width: "100%" }}
             ></img>
           </div>
-        </Slider>
+        </Slider> */}
+        <div>
+            {" "}
+            <img
+              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
+              style={{ width: "100%" }}
+            ></img>
+          </div>
         {!displayStoreDetail && (
           <div
             className="container"
@@ -163,21 +198,20 @@ const stores = () => {
               <div className="col-sm">
                 <h2 style={{ paddingBottom: "25px" }}>STORES</h2>
               </div>
-              {/* <div className="col-sm">
+              <div className="col-sm-2" style={{marginRight: "92px"}}>
                 <div className="selectdiv">
                   <label>
                     {" "}
-                    <select>
-                      <option>Category</option>
-                      <option>Fashion</option>
-                      <option>Beauty</option>
-                      <option>Home & Garden</option>
-                      <option>Electronics</option>
+                    <select onChange={handleFilter}>
+                    { storeCategories.map(([value, name]) => (
+                          <option style={{border:"2px solid #ffc542"}} value={value} key={value}>{name}</option>
+                        ))
+                    }
                     </select>
                   </label>
                 </div>
               </div>
-              <div className="col-sm">
+              {/* <div className="col-sm-2" style={{marginRight: "92px"}}>
                 <div className="selectdiv">
                   <label>
                     <select>
@@ -194,7 +228,8 @@ const stores = () => {
               className="row justify-content-md-start"
               style={{ textAlign: "center" }}
             >
-              {stores && <StoresList />}
+              {!displayFilteredStores && stores && <StoresList />}
+              {displayFilteredStores && filteredStores && <FilteredStoresList/>}
             </div>
             <div
               className="row"

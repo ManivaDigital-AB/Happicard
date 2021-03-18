@@ -154,11 +154,12 @@ const StoreDetails = ({ selectedItem }) => {
                   </label>{" "}
                   {selectedGiftCard.giftcard_store_category}
                 </div>
-
                 <div>
-                  <label style={{ marginRight: "4px", fontWeight: "bold" }}>
+                <label style={{ marginRight: "4px", fontWeight: "bold" }}>
                     Amount:
                   </label>
+                <div className="select">
+                  
                   <select onChange={handlePriceChange}>
                     <option value="">select</option>
                     <option value={selectedGiftCard.price_option_1}>
@@ -171,6 +172,7 @@ const StoreDetails = ({ selectedItem }) => {
                       {selectedGiftCard.price_option_3} SEK
                     </option>
                   </select>
+                </div>
                 </div>
 
                 {/* <div>

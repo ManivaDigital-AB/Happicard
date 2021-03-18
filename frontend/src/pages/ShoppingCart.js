@@ -87,14 +87,15 @@ return (
                {(cartFriendsDetails.happicard_recipient_name !== "" || 
                 cartFriendsDetails.happicard_recipient_email !== "" || 
                 cartFriendsDetails.happicard_delivery_date !== "" ) && 
-                <td style={{paddingTop: "25px"}}> 
-                 <span> To: {cartFriendsDetails.happicard_recipient_name}</span><br/>
-                 <span> Email: {cartFriendsDetails.happicard_recipient_email}</span><br/>
-                 <span> Delivery Date: {new Date(cartFriendsDetails.happicard_delivery_date).toISOString().substring(0, 10)}</span>
+                <td style={{paddingTop: "25px", fontSize: "12px", fontWeight: "600"}}> 
+                 {cartFriendsDetails.happicard_recipient_name !== "" && (<><span> To: {cartFriendsDetails.happicard_recipient_name}</span><br/></>)}
+                 {cartFriendsDetails.happicard_recipient_email !== "" && (<><span> Email: {cartFriendsDetails.happicard_recipient_email}</span><br/></>)}
+                 {cartFriendsDetails.happicard_delivery_date !== "" && (<><span> Delivery Date: {new Date(cartFriendsDetails.happicard_delivery_date).toISOString().substring(0, 10)}</span><br/></>)}
+                 {cartFriendsDetails.happicard_recipient_number !== "" && (<><span> Phonenumber: {cartFriendsDetails.happicard_recipient_number}</span><br/></>)}
                 </td>}
                 <td style={{paddingTop: "25px"}}> 
-                <div className="select">
-                <select value={selectedPrice} onChange={handlePriceChange} >
+                <div className="cart">
+                <select value={selectedPrice} onChange={handlePriceChange} disabled={cartFriendsDetails.disableAmount}>
                     <option value="">select</option>
                     <option value={cartItem.price_option_1}>
                       {cartItem.price_option_1}

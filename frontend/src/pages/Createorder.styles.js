@@ -1,7 +1,7 @@
 import styled from "styled-components";
 
 export const Field = styled.div`
-  padding-bottom: 25px;
+  padding-bottom: 15px;
   label {
     float: left;
     top: -12px;

@@ -5,7 +5,7 @@ import axios from "axios";
 import { validateYupSchema } from "formik";
 
 const Contact = ({ setForm, formData, navigation }) => {
-  const { first_name, last_name, email, phone_number, comments } = formData;
+  const { first_name, last_name, email, phone_number, company_role, comments } = formData;
   const { previous, go } = navigation;
   const [displaySuccessMessage, setdisplaySuccessMessage] = useState(false);
   const [displayErrorMessage, setdisplayErrorMessage] = useState(false);
@@ -17,6 +17,7 @@ const Contact = ({ setForm, formData, navigation }) => {
   const [disableSubmitButton, setDisableSubmitButton] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [registrationErrors, setRegistrationErrors] = useState([]);
+  const [characterCount, setCharacterCount] = useState(0);
 
   const validateEmail = (mail) => {
     var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -139,7 +140,28 @@ const Contact = ({ setForm, formData, navigation }) => {
         error={phoneNumberError != ""}
         errorMessage={phoneNumberError}
       />
-      <ItemForm label="Comments" name="comments" value={comments} onChange={setForm} placeholder="Your comments"/>
+      <ItemForm
+        label="Company role"
+        name="company_role"
+        value={company_role}
+        onChange={setForm}
+        placeholder="Your role in the company"
+        error={false}
+        errorMessage={""}
+      />
+     <div className="row justify-content-end" style={{marginTop: "15px"}}>
+      <div className="col-sm" style={{textAlign: "right"}}>
+      <label style={{marginRight: "15px", fontSize: "14px", fontWeight: "700", color: "rgb(74, 71, 70)"}}>Comments</label>
+      </div>
+      <div className="col-sm" style={{textAlign: "left"}}>
+      <textarea className="col-sm-6" label="Comments" name="comments" value={comments} onChange={(event) => {
+                    setCharacterCount(event.target.value.length)
+                    setForm(event)
+                    }} placeholder="Your comments" maxLength={140} rows="4" style={{border: "2px solid #ffc542", outline: "none"}}></textarea>
+      <p style={{fontSize:"12px", fontWeight: "600"}}>{characterCount}/140</p>
+<br/>
+</div>
+</div>
       <div>
         <button style={{
           marginBottom: "20px",

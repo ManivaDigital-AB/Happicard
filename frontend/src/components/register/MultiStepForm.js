@@ -21,6 +21,7 @@ const defaultData = {
   company_category: 0,
   company_address: "",
   company_website: "",
+  company_role:"",
   first_name: "",
   last_name: "",
   company_role:"",

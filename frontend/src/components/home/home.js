@@ -24,7 +24,7 @@ class home extends Component {
     return (
       <>
         <BodyContainer>
-          <Slider {...settings}>
+          {/* <Slider {...settings}>
             {" "}
             <div>
               {" "}
@@ -53,7 +53,14 @@ class home extends Component {
                 style={{ width: "100%" }}
               ></img>
             </div>
-          </Slider>
+          </Slider> */}
+          <div>
+            {" "}
+            <img
+              src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+              style={{ width: "100%" }}
+            ></img>
+          </div>
           <div style={{ padding: "30px", backgroundColor: "white" }}>
             <LandingPageList />
           </div>

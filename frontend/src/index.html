@@ -186,6 +186,59 @@
     -o-transition: .25s all ease;
     transition: .25s all ease;
   }
+
+  .select {
+    position: relative;
+    display: flex;
+    width: 108px;
+    height: 3em;
+    line-height: 3;
+    background: #fff;
+    overflow: hidden;
+    border-radius: .25em;
+    color: #FFF
+  }
+
+  .cart {
+    position: relative;
+    display: flex;
+    width: 108px;
+    height: 3em;
+    line-height: 3;
+    background: #fff;
+    overflow: hidden;
+    border-radius: .25em;
+    color: #FFF
+  }
+
+   /* Arrow */
+   .cart::after {
+    content: '\25BC';
+    position: absolute;
+    top: 0;
+    right: 0;
+    padding: 0 1em;
+    background: green;
+    cursor: pointer;
+    pointer-events: none;
+    -webkit-transition: .25s all ease;
+    -o-transition: .25s all ease;
+    transition: .25s all ease;
+  }
+
+  .cart {
+    position: relative;
+    display: flex;
+    width: 108px;
+    height: 3em;
+    line-height: 3;
+    background: #fff;
+    overflow: hidden;
+    border-radius: .25em;
+    color: #FFF
+  }
+
+  
   /* Transition */
   .select:hover::after {
     color: #fff;
@@ -282,6 +335,8 @@
 @-webkit-keyframes spin {
   to { -webkit-transform: rotate(360deg); }
 }
+
+
 </style>
   <body>
     <div id="root"></div>

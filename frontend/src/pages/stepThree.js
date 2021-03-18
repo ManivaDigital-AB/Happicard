@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
   Field,
   FieldInput,
@@ -39,10 +39,19 @@ export default ({ setForm, formData }) => {
         break;
     }
 }
+
+useEffect(() => {
+  
+  window.scroll({
+    top: 0,
+    left: 0,
+    behavior: 'smooth',
+  });
+ }, []);
+
   return (
-   
-<>
-      <div
+   <>
+    <div
       className="row justify-content-md-center"
       style={{
         paddingTop:"50px",
@@ -56,7 +65,7 @@ export default ({ setForm, formData }) => {
         <form>
         <div className="form-row">
                     <Field className="form-group col-md-6">
-                      <label> *Firstname </label>
+                      <label><span style={{color:"red"}}>*</span>Firstname </label>
                       <FieldInput
                         name="first_name"
                         value={first_name}
@@ -65,10 +74,10 @@ export default ({ setForm, formData }) => {
                         placeholder="Your first name - required"
                         className="form-control"
                       />
-                     {firstNameError !== "" && <span>{firstNameError}</span>} 
+                     {firstNameError !== "" && <span style={{color:"red"}}>{firstNameError}</span>} 
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label > *Lastname </label>
+                      <label> <span style={{color:"red"}}>*</span>Lastname </label>
                       <FieldInput
                         name="last_name"
                         value={last_name}
@@ -77,10 +86,10 @@ export default ({ setForm, formData }) => {
                         placeholder="Your last name - required"
                         className="form-control"
                       />
-                     {lastNameError !== "" && <span>{lastNameError}</span>} 
+                     {lastNameError !== "" && <span style={{color:"red"}}>{lastNameError}</span>} 
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label > *Email </label>
+                      <label > <span style={{color:"red"}}>*</span>Email </label>
                       <FieldInput
                         name="email"
                         value={email}
@@ -89,10 +98,10 @@ export default ({ setForm, formData }) => {
                         placeholder="Your email - required"
                         className="form-control"
                       />
-                     {emailError !== ""  && <span>{emailError}</span>} 
+                     {emailError !== ""  && <span style={{color:"red"}}>{emailError}</span>} 
                     </Field>
                     <Field className="form-group col-md-6">
-                      <label > *Phonenumber </label>
+                      <label > <span style={{color:"red"}}>*</span>Phonenumber </label>
                       <FieldInput
                         name="phone_number"
                         value={phone_number}
@@ -101,7 +110,7 @@ export default ({ setForm, formData }) => {
                         placeholder="Your phone number - required"
                         className="form-control"
                       />
-                     {phoneNumberError !== "" && <span>{phoneNumberError}</span>} 
+                     {phoneNumberError !== "" && <span style={{color:"red"}}>{phoneNumberError}</span>} 
                     </Field>
           </div></form></div>
      

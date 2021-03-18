@@ -100,6 +100,7 @@ export default function MultiStep(props) {
   const [compState, setComp] = useState(0)
   const [buttonsState, setButtons] = useState(getButtonsState(0, props.steps.length))
   const [displayError, setdisplayError] = useState(false);
+  const [validationErrorMessage, setvalidationErrorMessage] = useState("");
 
   const setStepState = (indx) => {
     setStyles(getTopNavStyles(indx, props.steps.length))
@@ -108,14 +109,46 @@ export default function MultiStep(props) {
   }
 
   const next = () => {
+    compState == 1 ? props.data.disableAmount = true : props.data.disableAmount = false;
     dispatch({ type: "GET_FRIEND_DETAILS", payload: props.data });
-    if(props.data.first_name_error === true)
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+    if(props.data.happicard_recipient_email_choice)
     {
-      setdisplayError(true);
-    }else{
-      setdisplayError(false);
-      setStepState(compState + 1);
+      if(props.data.happicard_recipient_email == "" || props.data.happicard_recipient_confirm_email == "")
+      {
+        setvalidationErrorMessage("Please enter and confirm friend's email");
+        setdisplayError(true)
+        return
+      }
+
+      if(props.data.happicard_recipient_email !== props.data.happicard_recipient_confirm_email )
+      {
+        setvalidationErrorMessage("Email and confirm email does not match!");
+        setdisplayError(true)
+        return
+      }
+
+      if(!pattern.test((props.data.happicard_recipient_email)))
+      {
+        setvalidationErrorMessage("Please enter a valid email");
+        setdisplayError(true)
+        return
+      }
     }
+
+    if(props.data.happicard_recipient_sms_choice)
+    {
+      if(props.data.happicard_recipient_number == "" || !(/^(([+]46)((70[{0-9}])|(72[{0-9})])|(73[{0-9}])|(76[{0-9}]))([\d]{6}))$/.test(props.data.happicard_recipient_number)))
+      {
+        setvalidationErrorMessage("Please enter friend's phone number in the format +46xxxxxxxxx");
+        setdisplayError(true)
+        return
+      }
+    }
+    
+    setdisplayError(false)
+    setvalidationErrorMessage("");
+    setStepState(compState + 1);
   }
 
   const previous = () => setStepState(compState > 0 ? compState - 1 : compState)
@@ -132,7 +165,19 @@ export default function MultiStep(props) {
     } else {
       setStepState(evt.currentTarget.value)
     }
+    if(evt.currentTarget.value === 1)
+    {
+      props.data.disableAmount = false
+      dispatch({ type: "GET_FRIEND_DETAILS", payload: props.data });
+    }
+    if(evt.currentTarget.value === 2)
+    {
+      props.data.disableAmount = true
+      dispatch({ type: "GET_FRIEND_DETAILS", payload: props.data });
+    }
   }
+
+  
 
   const renderSteps = () => (
     props.steps.map((s, i) => (
@@ -175,8 +220,8 @@ export default function MultiStep(props) {
     <div onKeyDown={handleKeyDown} >
       <Ol style={{textAlign: "center"}}>{renderSteps()}</Ol>
       <div>{props.steps[compState].component}</div>
+      <div style={{textAlign: "center", backgroundColor: "rgb(240, 238, 237)", fontSize: "14px", color: "red", fontWeight: "600"}}>{displayError && (<><span>{validationErrorMessage}</span><br/></>)}</div>
       <div>{renderNav(showNav)}</div>
-      <div>{displayError && <span>Please fill required fields</span>}</div>
-    </div>
+      </div>
   )
 }

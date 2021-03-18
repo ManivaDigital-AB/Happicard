@@ -2,9 +2,13 @@ import React, { useState } from "react";
 import { Field, FieldInput, FieldTextArea } from "./Createorder.styles";
 import DatePicker from "react-datepicker";
 import moment from "moment";
+import PhoneInput from 'react-phone-input-2'
+import 'react-phone-input-2/lib/style.css';
+
 
 export default ({ setForm, formData }) => {
   const [startDate, setStartDate] = useState(new Date());
+  const [characterCount, setCharacterCount] = useState(0);
   const {
     happicard_recipient_name,
     happicard_recipient_email_choice,
@@ -13,43 +17,27 @@ export default ({ setForm, formData }) => {
     happicard_recipient_sms_choice,
     happicard_recipient_number,
     happicard_personal_message,
+    happicard_recipient_email_error,
     happicard_delivery_date
   } = formData;
 
   return (
     <div
-      className="row justify-content-md-center"
-      style={{
-        padding: "15px 15px 15px 15px",
-        backgroundColor: "#F0EEED",
-        borderTopLeftRadius: "100px",
-        borderTopRightRadius: "100px",
-      }}
-    >
-      <div className="col-md-6">
-      <h5 style={{paddingTop:"15px", marginRight:"15px", paddingBottom: "25px", textAlign: "center", fontSize: "18"}}>PERSONALIZE</h5>
-        <div
-          className="row justify-content-md-center"
-          style={{
-            backgroundColor: "#F0EEED",
-            padding: "15px 15px 15px 15px",
-          }}
-        >
-          <div
-            className=""
-            style={{
-              backgroundColor: "#F0EEED",
-              fontSize: "12px",
-              lineHeight: "20px",
-              letterSpacing: "0.49px",
-            }}
-          >
-            <form>
-              <div className="form-group">
-                
-                <Field className="form-group col-sm">
-                <label>Delivery Date</label>
-                <DatePicker
+    className="row justify-content-md-center"
+    style={{
+      paddingTop:"50px",
+      backgroundColor: "#F0EEED",
+      borderTopLeftRadius: "100px",
+      borderTopRightRadius: "100px",
+    }}
+  >
+    <div className="col-md-6">
+      <h4 style={{paddingBottom: "25px", textAlign: "center", fontSize: "18"}}>PERSONALIZE</h4>
+      <form>
+      <div className="form-row">
+                  <Field className="form-group col-md-6">
+                    <label> Delivery Date </label>
+                    <DatePicker
                     name="happicard_delivery_date"
                     className="form-control"
                     selected={happicard_delivery_date == "" ? startDate : happicard_delivery_date}
@@ -64,45 +52,40 @@ export default ({ setForm, formData }) => {
                       border: "1px solid #ffc541",
                       backgroundColor: "#f0eeed",
                     }}
-                  />  
-                </Field>
-              </div>
-              <div className="form-group">
-                <Field className="form-group col-sm">
-                  <label> Friend's name </label>
-                  <FieldInput
+                  /> 
+                  </Field>
+                  <Field className="form-group col-md-6">
+                    <label > Friend's name </label>
+                    <FieldInput
                     name="happicard_recipient_name"
                     value={happicard_recipient_name}
                     onChange={setForm}
                     placeholder="Friends name"
                     className="form-control"
                   />
-                </Field>
-              </div>
-              <div className="form-group">
-                <div className="custom-control custom-switch" style={{marginLeft: "15px"}}>
-                  <input
-                    type="checkbox"
-                    className="custom-control-input"
-                    id="Email"
-                    name="happicard_recipient_email_choice"
-                    value={happicard_recipient_email_choice}
-                    checked={happicard_recipient_email_choice}
-                    onChange={setForm}
-                  />
-                  <label
-                    className="custom-control-label"
-                    htmlFor="Email"
-                  >
-                    Email
-                  </label>
-                </div>
-                {happicard_recipient_email_choice && (
-                  <>
-                    <Field
-                      className="form-group col-sm"
-                      style={{ marginTop: "25px" }}
+                  </Field>
+                
+                  <Field className="form-group col-md-6" style={{ marginTop: "5px" }} >
+                    <div className="custom-control custom-switch" style={{marginLeft: "-6px"}}>
+                    <input
+                      type="checkbox"
+                      className="custom-control-input"
+                      id="Email"
+                      name="happicard_recipient_email_choice"
+                      value={happicard_recipient_email_choice}
+                      checked={happicard_recipient_email_choice}
+                      onChange={setForm}
+                    />
+                    <label
+                      className="custom-control-label"
+                      htmlFor="Email"
                     >
+                      Email
+                    </label>
+                    </div></Field>
+                  <Field className="form-group col-md-6" ></Field>
+                  {happicard_recipient_email_choice && (
+                  <><Field className="form-group col-md-6">
                       <label> Friends email </label>
                       <FieldInput
                         name="happicard_recipient_email"
@@ -111,10 +94,9 @@ export default ({ setForm, formData }) => {
                         placeholder="Friend's email"
                         className="form-control"
                       />
-                    </Field>
+                  </Field>
                     <Field
-                      className="form-group col-sm"
-                      style={{ marginTop: "25px" }}
+                      className="form-group col-md-6"
                     >
                       <label> Confirm friend's email </label>
                       <FieldInput
@@ -125,11 +107,11 @@ export default ({ setForm, formData }) => {
                         className="form-control"
                       />
                     </Field>
-                  </>
+                    </>
                 )}
-              </div>
-              <div className="form-group">
-                <div className="custom-control custom-switch" style={{marginLeft: "15px"}}>
+                  
+                  <Field className="form-group col-md-6" style={{ marginTop: "5px" }} >
+                  <div className="custom-control custom-switch" style={{marginLeft: "-6px"}}>
                   <input
                     type="checkbox"
                     className="custom-control-input"
@@ -145,15 +127,12 @@ export default ({ setForm, formData }) => {
                   >
                     SMS
                   </label>
-                </div>
-
-                {happicard_recipient_sms_choice && (
+                </div></Field>
+                <Field className="form-group col-md-6" ></Field>
+                  {happicard_recipient_sms_choice && (
                   <>
-                    <Field
-                      className="form-group col-sm "
-                      style={{ marginTop: "25px" }}
-                    >
-                      <label htmlFor="lastname"> Friends number </label>
+                  <Field className="form-group col-md-6">
+                       <label htmlFor="lastname"> Friends number </label>
                       <FieldInput
                         name="happicard_recipient_number"
                         value={happicard_recipient_number}
@@ -161,27 +140,29 @@ export default ({ setForm, formData }) => {
                         placeholder="Phone number"
                         className="form-control"
                       />
-                    </Field>
+                  </Field>
+                  <Field className="form-group col-md-6" ></Field>
                   </>
                 )}
-              </div>
-              <Field className="form-group col-sm" style={{marginTop: "30px"}}>
+                <Field className="form-group col-sm" style={{marginTop: "15px"}}>
                 <label htmlFor="message">Message</label>
                 <FieldTextArea
                   name="happicard_personal_message"
                   value={happicard_personal_message}
-                  placeholder="send happicard!"
+                  placeholder="Send Happicard!"
                   className="form-control"
-                  onChange={setForm}
+                  onChange={(event) => {
+                    setCharacterCount(event.target.value.length)
+                    setForm(event)
+                    }}
                   rows="4"
                   maxLength={140}
-                  
                 />
+                <p style={{fontSize:"12px", fontWeight: "600", float: "right"}}>{characterCount}/140</p>
               </Field>
-            </form>
-          </div>
-        </div>
-      </div>
+        </div></form></div>
+   
     </div>
+     
   );
 };

@@ -1,6 +1,7 @@
 import React from "react";
 import Navbar from "./Nav/Navbar";
 import Slider from "react-slick";
+import "../../src/assets/css/style.css"
 
 function App() {
   return (

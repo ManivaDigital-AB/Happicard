@@ -3,25 +3,68 @@ import Slider from "react-slick";
 import { BodyContainer } from "../ngos/ngosStyles";
 import axios from "../../utils/axios";
 import NgoDetails from "./ngoDetails";
+import { stubFalse } from "lodash";
 
 const ngos = () => {
   const [ngos, setNgos] = useState([]);
+  const [filteredNgos, setfilteredNgos] = useState([]);
   const [maxRange, setMaxRange] = useState(6);
   const [displayNgoDetail, setDisplayNgoDetail] = useState(false);
   const [ngoCards, setNgoCards] = useState([]);
   const [selectedItem, setSelectedItem] = useState({});
+  const [displayFilteredNgos, setdisplayFilteredNgos] = useState(false);
 
   const loadMore = useCallback(() => {
     setMaxRange((prevRange) => prevRange + 3);
   }, []);
 
   const settings = {
-    dots: true,
+    dots: false,
     infinite: true,
     speed: 500,
     slidesToShow: 1,
     slidesToScroll: 1,
   };
+
+  const ngoCategories = 
+[["Anhörigstöd","Anhörigstöd"],
+["Barn","Barn"],
+["Mode herr","Mode herr"],
+["Bevarande projekt","Bevarande projekt"],
+["Fadderverksamhet","Fadderverksamhet"],
+["Familjer","Familjer"],
+["Flyktingar","Flyktingar"],
+["Förebyggande arbete","Förebyggande arbete"],
+["Föräldralösa barn","Föräldralösa barn"],
+["Hemlösa","Hemlösa"],
+["Föräldralösa barn","Föräldralösa barn"],
+["Hjälp till enskilda","Hjälp till enskilda"],
+["Föräldralösa barn","Föräldralösa barn"],
+["Hjälp till självhjälp","Hjälp till självhjälp"],
+["Jordbruk","Jordbruk"],
+["Jämställdhet","Jämställdhet"],
+["Jordbruk","Jordbruk"],
+["Katastrofhjälp","Katastrofhjälp"],
+["Kvinnor","Kvinnor"],
+["Mikrolån/Mikrokrediter","Mikrolån/Mikrokrediter"],
+["Personalutveckling","Personalutveckling"],
+["Rehabilitering","Rehabilitering"],
+["Rättshjälp","Rättshjälp"],
+["Second hand","Second hand"],
+["Sjukhus/Vårdhem/Äldreboende","Sjukhus/Vårdhem/Äldreboende"],
+["Skyddat boende","Skyddat boende"],
+["Telefonjour","Telefonjour"],
+["Trafficking","Trafficking"],
+["Ungdom","Ungdom"],
+["Utbildning - grund","Utbildning - grund"],
+["Utbildning - högre","Utbildning - högre"],
+["Utbildning - yrkes","Utbildning - yrkes"],
+["Vatten/Sanitets projekt","Vatten/Sanitets projekt"],
+["Verksamhet för sjuka","Verksamhet för sjuka"],
+["Volontärer","Volontärer"],
+["Vuxna","Vuxna"],
+["Äldre","Äldre"],
+["Annat","Annat"],["Youth","Youth"],["Literary","Literary"]]
 
   function Card(props) {
     return (
@@ -35,7 +78,7 @@ const ngos = () => {
             <h6 className="card-title" style={{ color: "#D7383B" }}></h6>
             <div style={{ paddingBottom: "32px" }}>
               <img
-                src={props.props.image}
+                src={props.props.header_image}
                 style={{
                   borderRadius: "50%",
                   width: "125px",
@@ -59,7 +102,7 @@ const ngos = () => {
                 style={{
                   marginLeft: "2px",
                   marginRight: "2px",
-                  color: "#D7383B",
+                  color: "rgb(74,71,70)",
                 }}
               >
                 {props.props.title}
@@ -98,10 +141,23 @@ const ngos = () => {
     setSelectedItem(item);
   }
 
+  const handleFilter = (evt) => {
+    evt.target.value != "" ? setdisplayFilteredNgos(true) : setdisplayFilteredNgos(false);
+    let existingNgos = [];
+    ngos.filter((item) => {if( item.ngo_category == evt.target.value){existingNgos.push(item);}});
+    setfilteredNgos(existingNgos);
+    console.log(evt.target.value);
+}
+
   const NgosList = () =>
     ngos.slice(0, maxRange).map((item, index) => {
       return <Card props={item} key={index} />;
     });
+
+    const FilteredNgosList = () =>
+    filteredNgos.slice(0, maxRange).map((item, index) => {
+      return <Card props={item} key={index} />;
+  });
 
   useEffect(() => {
     const config = {
@@ -123,7 +179,7 @@ const ngos = () => {
   return (
     <>
       <BodyContainer style={{ backgroundColor: "white" }}>
-        <Slider {...settings}>
+        {/* <Slider {...settings}>
           {" "}
           <div>
             {" "}
@@ -146,7 +202,14 @@ const ngos = () => {
               style={{ width: "100%" }}
             ></img>
           </div>
-        </Slider>
+        </Slider> */}
+         <div>
+            {" "}
+            <img
+              src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+              style={{ width: "100%" }}
+            ></img>
+          </div>
         {!displayNgoDetail && (
           <div
             className="container"
@@ -159,21 +222,20 @@ const ngos = () => {
               <div className="col-sm">
                 <h2 style={{ paddingBottom: "25px" }}>NGOS</h2>
               </div>
-              {/* <div className="col-sm">
-                <div className="selectdiv">
-                  <label>
+            <div className="col-sm">
+            <div className="selectdiv" style={{float: "right"}}>
+                  <label style={{float: "right"}}>
                     {" "}
-                    <select>
-                      <option>Category</option>
-                      <option>Fashion</option>
-                      <option>Beauty</option>
-                      <option>Home & Garden</option>
-                      <option>Electronics</option>
+                    <select onChange={handleFilter}>
+                    { ngoCategories.map(([value, name]) => (
+                          <option style={{border:"2px solid #ffc542"}} value={value} key={value}>{name}</option>
+                        ))
+                    }
                     </select>
                   </label>
                 </div>
               </div>
-              <div className="col-sm">
+              {/* <div className="col-sm">
                 <div className="selectdiv">
                   <label>
                     <select>
@@ -190,7 +252,8 @@ const ngos = () => {
               className="row justify-content-md-start"
               style={{ textAlign: "center" }}
             >
-              {ngos && <NgosList />}
+              {!displayFilteredNgos && ngos && <NgosList />}
+              {displayFilteredNgos && filteredNgos && <FilteredNgosList/>}
             </div>
             <div
               className="row"

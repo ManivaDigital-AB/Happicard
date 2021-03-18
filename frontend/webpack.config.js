@@ -14,12 +14,14 @@ module.exports = {
   },
   resolve: {
     extensions: ['',".js", ".jsx", '.css'],
+    alias: {
+      '~': path.resolve('./node_modules'),
+    }
   },
   module: {
     rules: [
       {
         test: /\.css$/,
-
         loader: "raw-loader",
       },
       {
@@ -38,7 +40,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        exclude: /node_modules/,
+        include: /node_modules/,
         use: [
           { loader: "style-loader" },
           {
@@ -60,7 +62,7 @@ module.exports = {
           },
         ],
       },
-      { test: /\.css$/, loader: "style-loader!css-loader" },
+      // { test: /\.css$/, loader: "style-loader!css-loader" },
   { test: /\.png$/, loader: "url-loader?limit=100000" },
   { test: /\.jpg$/, loader: "file-loader" },
       {

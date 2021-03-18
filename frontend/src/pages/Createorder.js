@@ -21,6 +21,7 @@ const Createorder = () => {
     happicard_recipient_name:"",
     happicard_recipient_email_choice:false,
     happicard_recipient_email:"",
+    happicard_recipient_email_error:"",
     happicard_recipient_confirm_email:"",
     happicard_recipient_sms_choice:false,
     happicard_recipient_number:"",

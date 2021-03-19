@@ -145,7 +145,7 @@
     appearance: none;
     outline: 0;
     box-shadow: none;
-    border: 1px solid #ffc541;
+    border: 2px solid #ffc541;
     background: #ffff;
     background-image: none;
   }
@@ -336,7 +336,9 @@
   to { -webkit-transform: rotate(360deg); }
 }
 
-
+.dropdown-toggle::after{
+  content: none !important;
+}
 </style>
   <body>
     <div id="root"></div>

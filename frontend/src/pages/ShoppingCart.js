@@ -66,7 +66,7 @@ return (
               <tr style={{ fontSize: "16px"}}>
                 <th scope="col" width={120} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Card</th>
                 {displayOrderInfo && <th scope="col" width={220} style={{borderBottom: "2px solid #118678" , borderTop : "none"}}>Order Info</th>}
-                {(cartFriendsDetails.happicard_recipient_name !== "" || cartFriendsDetails.happicard_recipient_email !== "" || cartFriendsDetails.happicard_delivery_date !== "")   && <th scope="col" width={220} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Info</th>}
+                {(cartFriendsDetails.happicard_recipient_name !== "" || cartFriendsDetails.happicard_recipient_email !== "" || cartFriendsDetails.happicard_delivery_date !== "")   && <th scope="col" width={220} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Order Info</th>}
                 <th scope="col" width={200} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Amount</th>
               </tr>
             </thead>
@@ -92,10 +92,11 @@ return (
                  {cartFriendsDetails.happicard_recipient_email !== "" && (<><span> Email: {cartFriendsDetails.happicard_recipient_email}</span><br/></>)}
                  {cartFriendsDetails.happicard_delivery_date !== "" && (<><span> Delivery Date: {new Date(cartFriendsDetails.happicard_delivery_date).toISOString().substring(0, 10)}</span><br/></>)}
                  {cartFriendsDetails.happicard_recipient_number !== "" && (<><span> Phonenumber: {cartFriendsDetails.happicard_recipient_number}</span><br/></>)}
+                 {cartFriendsDetails.happicard_personal_message !== "" && (<><span> Message: {cartFriendsDetails.happicard_personal_message}</span><br/></>)}
                 </td>}
                 <td style={{paddingTop: "25px"}}> 
-                <div className="cart">
-                <select value={selectedPrice} onChange={handlePriceChange} disabled={cartFriendsDetails.disableAmount}>
+                <div className="cart" style={{display: !cartFriendsDetails.disableAmount ? 'flex' : 'none' }}>
+                <select value={selectedPrice} onChange={handlePriceChange}>
                     <option value="">select</option>
                     <option value={cartItem.price_option_1}>
                       {cartItem.price_option_1}
@@ -108,6 +109,9 @@ return (
                     </option>
                   </select>
                   </div>
+                  {
+                    cartFriendsDetails.disableAmount && <input type="text" value={selectedPrice+" SEK"} readOnly style={{border: "none", outline: "none"}}/>
+                  }
                   <div className="row justify-content-start">
           <button 
           style={{width: "150px", height: "35px", borderRadius: "25px", border: "none", backgroundColor: "#FFFF", marginLeft: "15px", outline:"none", cursor:"pointer", marginBottom: "25px", marginTop: "80px"}}>Total: {totalPrice} SEK</button></div>

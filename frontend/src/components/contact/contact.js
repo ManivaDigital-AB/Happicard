@@ -9,8 +9,11 @@ import TelIcon from "../../assets/images/about/Telephone.PNG";
 import EmailIcon from "../../assets/images/about/Email.PNG";
 import { useForm } from "react-hook-form";
 import axios from "axios";
+import { Modal } from "react-bootstrap";
+import successIcon from "../../assets/images/success_icon.PNG";
 
 const contact = () => {
+  const [show, setShow] = useState(false);
   const { register, handleSubmit } = useForm();
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
@@ -22,6 +25,9 @@ const contact = () => {
   const [messageError, setMessageError] = useState(false);
   const [processing, setProcessing] = useState(false);
   const [displaySuccessMessage, setDisplaySuccessMessage] = useState(false);
+  const [characterCount, setCharacterCount] = useState(0);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const onSubmit = async () => {
     const config = {
@@ -30,13 +36,6 @@ const contact = () => {
         Accept: "application/json",
       },
     };
-
-    // data.name == "" ? setNameError(true) : setNameError(false) 
-    // data.email == "" ? setEmailError(true) : setEmailError(false)
-    // data.subjectError == "" ? setSubjectError(true) : setSubjectError(false)
-    // data.messageError == "" ? setMessageError(true) : setMessageError(false)
-
-    // data.name !== "" && data.email !== "" && data.subjectError !== "" && data.messageError !== ""
 
     name == "" ? setNameError(true) : setNameError(false) 
     email == "" ? setEmailError(true) : setEmailError(false)
@@ -55,8 +54,8 @@ const contact = () => {
       )
       .then((response) => {
         console.log(response);
-        setDisplaySuccessMessage(true);
         setProcessing(false);
+        handleShow();
       });
     }
   };
@@ -89,6 +88,18 @@ const contact = () => {
   return (
     <>
       <BodyContainer>
+      <Modal show={show} onHide={handleClose}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
+          <Modal.Header
+            closeButton
+            style={{ backgroundColor: "#ffff", border: "none" }}
+          ></Modal.Header>
+          <Modal.Body style={{ backgroundColor: "#ffff", textAlign : "center", marginBottom: "30px" }}>
+            <div style={{textAlign: "center", marginBottom: "15px"}}><img src={successIcon} style={{width: "150px"}}/></div>
+            <span style={{fontWeight:"600", fontSize: "14px", paddingBottom: "15px"}}>Succesfully sent </span><br/>
+          </Modal.Body>
+        </div>
+      </Modal>
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="row" style={{ marginLeft: "255px" }}>
             <LeftContainer>
@@ -139,8 +150,14 @@ const contact = () => {
                   // ref={register}
                   value={message}
                   placeholder="Message"
-                  onChange={handleOnChange}
+                  onChange={(event) => {
+                    setCharacterCount(event.target.value.length)
+                    handleOnChange(event)
+                  }}
+                  maxLength={140}
+                  rows="4"
                 ></textarea>
+                <p style={{fontSize:"12px", fontWeight: "600"}}>{characterCount}/140</p>
                 { messageError && <span style={{color: "red", fontSize: "12px", fontWeight: "600"}}>{"This field is mandatory"}</span>}
               </div>
               <div className="form-group">

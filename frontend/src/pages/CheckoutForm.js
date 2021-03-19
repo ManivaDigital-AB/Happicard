@@ -10,13 +10,16 @@ import {
 import { useSelector } from "react-redux";
 
 import visaImg from "../assets/images/visa.PNG";
+import successIcon from "../assets/images/success_icon.PNG";
 
 import masterImg from "../assets/images/master.PNG";
 import { Card } from "react-bootstrap";
+import { Modal } from "react-bootstrap";
 
 
 
 export default function CheckoutForm({props}) {
+  const [show, setShow] = useState(false);
   const [succeeded, setSucceeded] = useState(false);
   const [error, setError] = useState(null);
   const [processing, setProcessing] = useState('');
@@ -27,6 +30,9 @@ export default function CheckoutForm({props}) {
   const stripe = useStripe();
   const elements = useElements();
   const selectedItem = useSelector((state) => state.createorder);
+  const [terms, setTerms] = useState(false);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   useEffect(() => {
      console.log("props from checkout form!");
@@ -57,6 +63,10 @@ export default function CheckoutForm({props}) {
     setError(event.error ? event.error.message : "");
   };
 
+  const handleTermsOnchange = (event) => {
+    setTerms(!terms);
+  }
+
   const handleSubmit = ev => {
     ev.preventDefault();
     setProcessing(true);
@@ -72,9 +82,13 @@ export default function CheckoutForm({props}) {
       setValidationErrorMessage("");
     }
 
-    
-
-    window
+   if(!terms){
+      setValidationError(true);
+      setValidationErrorMessage('Please accept terms and conditions!');
+      return;
+   }
+   
+   window
       .fetch("http://35.161.152.123/api/orders/create/stripe-payment/", {
         method: "POST",
         headers: {
@@ -94,7 +108,7 @@ export default function CheckoutForm({props}) {
         "happicard_recipient_sms_choice": props.happicard_recipient_sms_choice,
         "happicard_recipient_number": props.happicard_recipient_number,
         "happicard_personal_message": props.happicard_personal_message,
-        "happicard_delivery_date": new Date(props.happicard_delivery_date)})
+        "happicard_delivery_date": props.happicard_delivery_date == "" ? new Date(): new Date(props.happicard_delivery_date)})
       })
       .then(res => {
         return res.json();
@@ -112,6 +126,7 @@ export default function CheckoutForm({props}) {
           setError(null);
           setProcessing(false);
           setSucceeded(true);
+          handleShow();
         }
         setClientSecret(data.client_secret);
       });
@@ -119,7 +134,28 @@ export default function CheckoutForm({props}) {
   };
   return (
     <>
-    {validationError && <div style={{marginBottom: "15px"}}><span>{validationErrorMessage}</span></div>}
+       <Modal show={show} onHide={handleClose}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
+          <Modal.Header
+            closeButton
+            style={{ backgroundColor: "#ffff", border: "none" }}
+          ></Modal.Header>
+          <Modal.Body style={{ backgroundColor: "#ffff", textAlign : "center", marginBottom: "30px" }}>
+            <div style={{textAlign: "center", marginBottom: "15px"}}><img src={successIcon} style={{width: "150px"}}/></div>
+            <span style={{fontWeight:"600", fontSize: "14px", paddingBottom: "15px"}}>Payment successful.</span><br/>
+            <span style={{fontWeight:"600", fontSize: "14px", paddingBottom: "15px"}}>Please check your email for more information.</span>
+          </Modal.Body>
+        </div>
+      </Modal>
+    
+        <input
+          name="example_1"
+          value={terms}
+          onChange={handleTermsOnchange}
+          type="checkbox"
+        />
+        <label style={{fontWeight: "600", paddingRight: "2px"}}><span style={{color:"red"}}>*</span>Accept terms and conditions</label>
+        {validationError && <div style={{marginBottom: "15px"}}><span style={{color:"red"}}>{validationErrorMessage}</span></div>}
     <form id="payment-form" onSubmit={handleSubmit}>
       
       <div style={{border: "2px solid #ffc542", padding: "10px", borderRadius: "15px"}}>

@@ -48,7 +48,7 @@ const Ul = styled.ul`
     border: 0;
   }
   .dropdown-menu.show {
-    background-color: #ffc542;
+    background-color: #fff;
     position: absolute;
     inset: 0px auto auto 0px;
     margin: 0px;
@@ -96,7 +96,7 @@ const Ul = styled.ul`
   a:hover,
   .dropdown-item:hover,
   .dropdown-item:active {
-    color: #fff;
+    color: #ffc542;
     background-color: transparent;
   }
 
@@ -159,7 +159,7 @@ const PartnerDropDown = styled.div`
     border: 0;
   }
   .dropdown-menu.show {
-    background-color: #ffc542;
+    background-color: #fff;
     position: absolute;
     inset: 0px auto auto 0px;
     margin: 0px;
@@ -216,7 +216,83 @@ const PartnerDropDown = styled.div`
   a:hover,
   .dropdown-item:hover,
   .dropdown-item:active {
-    color: #fff;
+    color: #ffc542;
+    background-color: transparent;
+  }
+`;
+
+
+const SearchDropDown = styled.div`
+  padding-top: 10px;
+  .btn,
+  .btn:hover {
+    font-size: 14px;
+    // margin-top: 11px;
+  }
+
+  .dropdown-item {
+    font-size: 16px;
+  }
+
+  .dropdown-toggle::after {
+    content: "";
+    border: 0;
+  }
+  .dropdown-menu.show {
+    background-color: #fff;
+    position: absolute;
+    inset: 0px auto auto 0px;
+    margin: 0px;
+    transform: translate(0px, 56px);
+    border: none;
+    border-radius: 0;
+  }
+
+  .btn.focus,
+  .btn:focus {
+    outline: 0;
+    box-shadow: none;
+  }
+
+  .btn,
+  .btn:hover {
+    text-decoration: none;
+    color: #000;
+    font-size: 16px;
+    font-weight: bold;
+    margin-top: 18px;
+    padding-top: 0px;
+    padding-bottom: 0px;
+    margin-bottom: 18px;
+    border-radius: 0px;
+  }
+
+  .dropdown-item {
+    display: block;
+    width: 100%;
+    padding: 0.25rem 1rem;
+    clear: both;
+    
+    text-align: inherit;
+    white-space: nowrap;
+
+    border: 0;
+
+    font-size: 18px;
+    font-weight: 600;
+    text-decoration: none;
+    line-height: 22px;
+
+    a {
+      text-decoration: none;
+      color: #000;
+      font-size: 14px;
+    }
+  }
+  a:hover,
+  .dropdown-item:hover,
+  .dropdown-item:active {
+    color: #ffc542;
     background-color: transparent;
   }
 `;
@@ -229,7 +305,7 @@ const RightNav = ({ open }) => {
   const handleShow = () => setShow(true);
   const handleClick = (param) => {
     setSelectedMenu(param);
-    if (param === "SignIn") { handleShow() ;} 
+    if (param === "SignIn") { window.open('http://35.161.152.123/login/login/?next=/login/', '_blank') ;} 
   };
 
   const onSubmit = async (data) => {
@@ -335,14 +411,13 @@ const RightNav = ({ open }) => {
           </Dropdown.Toggle>
           <Dropdown.Menu>
             <Dropdown.Item>
-              <Link
-                to="/SignIn"
+           <Link
                 className={selectedMenu == "SignIn" ? "selected" : "unselected"}
                 onClick={() => handleClick("SignIn")}
               >
                 Sign In
               </Link>
-            </Dropdown.Item>
+              </Dropdown.Item>
             <Dropdown.Item>
               <Link
                 to="/register"
@@ -357,17 +432,68 @@ const RightNav = ({ open }) => {
           </Dropdown.Menu>
         </Dropdown>
       </PartnerDropDown>
-      <div style={{ marginLeft: "15px" }}>
-        <img
+      
+      <SearchDropDown>
+      <Dropdown style={{outline: "none !important"}}>
+          <Dropdown.Toggle variant="" id="dropdown-basic" className="partner">
+          <img
           src={searchImg}
           style={{
             width: "25px",
             height: "25px",
-            marginTop: "28px",
             marginRight: "15px",
-          }}
-        />
-        <img
+          }} />
+          </Dropdown.Toggle>
+          <Dropdown.Menu>
+            <Dropdown.Item>
+            <Link
+                to="/stores"
+                className={selectedMenu == "Stores" ? "selected" : "unselected"}
+                onClick={() => handleClick("Stores")}
+              >
+                Stores
+              </Link>
+              </Dropdown.Item>
+            <Dropdown.Item>
+            <Link
+                to="/ngos"
+                className={selectedMenu == "NGOs" ? "selected" : "unselected"}
+                onClick={() => handleClick("NGOs")}>
+                Ngos
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+            <Link
+            to="/"
+            className={selectedMenu == "Home" ? "selected" : "unselected"}
+            onClick={() => handleClick("Home")}
+          >
+                GiftCards
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+            <Link
+            to="/"
+            className={selectedMenu == "Home" ? "selected" : "unselected"}
+            onClick={() => handleClick("Home")}
+          >
+                Happi offers
+              </Link>
+            </Dropdown.Item>
+            <Dropdown.Item>
+            <Link
+            to="/"
+            className={selectedMenu == "Home" ? "selected" : "unselected"}
+            onClick={() => handleClick("Home")}
+          >
+                Campaigns
+              </Link>
+            </Dropdown.Item>
+          </Dropdown.Menu>
+        </Dropdown>
+        </SearchDropDown>
+       
+        {/* <img
           src={cartImg}
           style={{
             width: "25px",
@@ -375,8 +501,8 @@ const RightNav = ({ open }) => {
             marginTop: "28px",
             marginRight: "10px",
           }}
-        />
-      </div>
+        /> */}
+     
       <Modal show={show} onHide={handleClose}>
         <div style={{ border: "4px solid #ffc542", borderRadius: "15px" }}>
           <Modal.Header

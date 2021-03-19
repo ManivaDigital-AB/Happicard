@@ -64,7 +64,9 @@ export default ({ setForm, formData }) => {
                     className="form-control"
                   />
                   </Field>
-                
+                  <div className="col-md-12">
+                  <h5 style={{paddingBottom: "25px", textAlign: "center", fontSize: "18"}}>NOTIFICATION</h5>
+                  </div>
                   <Field className="form-group col-md-6" style={{ marginTop: "5px" }} >
                     <div className="custom-control custom-switch" style={{marginLeft: "-6px"}}>
                     <input
@@ -125,7 +127,7 @@ export default ({ setForm, formData }) => {
                     className="custom-control-label"
                     htmlFor="SMS"
                   >
-                    SMS
+                    SMS - Carrier charges will apply
                   </label>
                 </div></Field>
                 <Field className="form-group col-md-6" ></Field>

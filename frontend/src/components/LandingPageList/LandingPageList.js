@@ -247,19 +247,8 @@ const LandingPageList = () => {
                       {selectedItem.price_option_3} SEK
                     </option>
                   </select>
-                  </div> 
-              
-
-            
-                
-                </div>
-
-                {/* <div>
-                  <label style={{ marginRight: "4px", fontWeight: "bold" }}>
-                    Quantity:
-                  </label>
-                  <Counter setParentCounter={setParentCounter} initialCount={0}/>
-                </div> */}
+                  </div>
+                  </div>
               </div>
             </div>
             <div
@@ -291,22 +280,8 @@ const LandingPageList = () => {
                 }}
                 onClick={onCreateOrder}
               >
-               Donate
+               Buy
               </button>
-              {/* <button
-                style={{
-                  backgroundColor: "#ffff",
-                  border: "none",
-                  height: "35px",
-                  borderRadius: "16px",
-                  width: "200px",
-                  outline: "none",
-                  border: "2px solid #ffc541"
-                }}
-                onClick={onCreateOrder}
-              >
-                Donate On Behalf Of Someonelse
-              </button> */}
             </div>
           </Modal.Body>
         </div>
@@ -319,18 +294,18 @@ const LandingPageList = () => {
       >
         <div className="col-sm-3">
           <div>
-            <ListImg src={giftImg} onClick={clickGiftCards}/>
+            <ListImg src={giftImg} onClick={clickGiftCards} style={{boxShadow : displayGiftCards ? "12px 12px 0px #118678" : ""}}/>
           </div>
         </div>
         <div className="col-sm-3">
           <div>
-            <ListImg src={offersImg} onClick={clickHappiOffers}/>
+            <ListImg src={offersImg} onClick={clickHappiOffers} style={{boxShadow : displayHappiOffers ? "12px 12px 0px #118678" : ""}}/>
             
           </div>
         </div>
         <div className="col-sm-3">
           <div>
-            <ListImg src={campaignsImg} onClick={clickCampaigns}/>
+            <ListImg src={campaignsImg} onClick={clickCampaigns} style={{boxShadow : displayCampaigns ? "12px 12px 0px #118678" : ""}}/>
           </div>
         </div>
       </div>

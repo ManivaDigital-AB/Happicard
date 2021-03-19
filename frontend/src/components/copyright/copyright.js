@@ -40,11 +40,11 @@ const copyright = () => {
               <img src={LinkedinImg} style={{ width: "22px" }} />
             </a>
           </li>
-          <li className="list-inline-item">
+          {/* <li className="list-inline-item">
             <a href="https://www.youtube.com" target="_blank">
               <img src={YoutubeImg} style={{ width: "22px" }} />
             </a>
-          </li>
+          </li> */}
         </ul>
       </div>
     </>

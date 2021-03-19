@@ -1,10 +1,11 @@
 import React, { useState } from "react";
-import { Circle, Heart } from 'react-spinners-css';
 import ItemForm from "./ItemForm";
 import axios from "axios";
-import { validateYupSchema } from "formik";
+import { Modal } from "react-bootstrap";
+import successIcon from "../../assets/images/success_icon.PNG";
 
 const Contact = ({ setForm, formData, navigation }) => {
+  const [show, setShow] = useState(false);
   const { first_name, last_name, email, phone_number, company_role, comments } = formData;
   const { previous, go } = navigation;
   const [displaySuccessMessage, setdisplaySuccessMessage] = useState(false);
@@ -18,6 +19,8 @@ const Contact = ({ setForm, formData, navigation }) => {
   const [processing, setProcessing] = useState(false);
   const [registrationErrors, setRegistrationErrors] = useState([]);
   const [characterCount, setCharacterCount] = useState(0);
+  const handleClose = () => setShow(false);
+  const handleShow = () => setShow(true);
 
   const validateEmail = (mail) => {
     var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -60,7 +63,8 @@ const Contact = ({ setForm, formData, navigation }) => {
         )
         .then((response) => {
         console.log(response);
-        setdisplaySuccessMessage(true);
+        // setdisplaySuccessMessage(true);
+        handleShow();
         setProcessing(false);
         }).catch(error => {
           console.log(error.response.data);
@@ -99,6 +103,19 @@ const Contact = ({ setForm, formData, navigation }) => {
 
   return (
     <>
+    <Modal show={show} onHide={handleClose}>
+        <div style={{ border: "4px solid #ffc541", borderRadius: "0.3rem" }}>
+          <Modal.Header
+            closeButton
+            style={{ backgroundColor: "#ffff", border: "none" }}
+          ></Modal.Header>
+          <Modal.Body style={{ backgroundColor: "#ffff", textAlign : "center", marginBottom: "30px" }}>
+            <div style={{textAlign: "center", marginBottom: "15px"}}><img src={successIcon} style={{width: "150px"}}/></div>
+            <span style={{fontWeight:"600", fontSize: "14px", paddingBottom: "15px"}}>Registration successful.</span><br/>
+            <span style={{fontWeight:"600", fontSize: "14px", paddingBottom: "15px"}}>Please check your email for more information.</span>
+          </Modal.Body>
+        </div>
+      </Modal>
     <div className="row justify-content-md-center"><h4 style={{fontSize: "14px", paddingBottom: "15px", fontWeight: "700"}}>CONTACT INFORMATION</h4></div>
     <div className="form">
       <ItemForm

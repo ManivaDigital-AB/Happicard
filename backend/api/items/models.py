@@ -46,7 +46,7 @@ class Item(models.Model):
     description = models.TextField("Description", max_length=500, blank=True)
 
     online = models.BooleanField(default=True)
-    premium = models.BooleanField(default=False)
+    in_store = models.BooleanField(default=False)
     redeem_website = models.CharField(max_length=50, blank=True)
 
     display_first = models.BooleanField(default=False)

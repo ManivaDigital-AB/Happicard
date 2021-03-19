@@ -29,7 +29,9 @@ class FooterSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "footer_subscription_details",
+            "social_media",
         )
+        depth = 2
 
 
 class AboutPageSerializer(serializers.ModelSerializer):

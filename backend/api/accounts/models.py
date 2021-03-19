@@ -163,9 +163,7 @@ class Vendor(User):
         blank=True,
         verbose_name=_("NGO Category"),
     )
-    company_website = models.CharField(
-        max_length=255, unique=True, null=True, blank=True
-    )
+    company_website = models.CharField(max_length=255, null=True, blank=True)
     comments = models.TextField(max_length=500, null=True, blank=True)
 
     def __str__(self):

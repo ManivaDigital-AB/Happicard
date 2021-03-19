@@ -16,6 +16,8 @@ class GiftCardSerializer(serializers.ModelSerializer):
             "rebate_code_3",
             "image",
             "description",
+            "online",
+            "in_store",
             "has_offer",
             "discount_price",
             "store_category",
@@ -37,6 +39,8 @@ class CampaignSerializer(serializers.ModelSerializer):
             "rebate_code_3",
             "image",
             "description",
+            "online",
+            "in_store",
             "ngo_category",
             "created_at",
         )

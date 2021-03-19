@@ -4,6 +4,7 @@ from django.db import models
 from django.utils import timezone
 import uuid
 
+
 from backend.settings.storage_backends import CustomStorage
 
 OPTIONS = (
@@ -56,6 +57,19 @@ class HomePage(models.Model):
         return "Home Page Customizations"
 
 
+class SocialMedia(models.Model):
+    class Meta:
+        verbose_name = _("Social Media")
+        verbose_name_plural = _("Social Media")
+
+    name = models.CharField(max_length=20)
+    icon = models.FileField(storage=CustomStorage())
+    link = models.CharField(max_length=200, blank=True)
+
+    def __str__(self):
+        return self.name
+
+
 class Footer(models.Model):
     """
     Footer Customization Model
@@ -79,6 +93,7 @@ class Footer(models.Model):
     )
 
     footer_subscription_details = models.CharField(max_length=50)
+    social_media = models.ManyToManyField(SocialMedia, blank=True)
 
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
@@ -91,7 +106,7 @@ class Footer(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "Home Page Customizations"
+        return "Footer Customizations"
 
 
 class AboutPage(models.Model):

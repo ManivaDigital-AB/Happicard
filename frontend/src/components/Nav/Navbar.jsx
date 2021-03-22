@@ -9,7 +9,12 @@ const Navbar = () => {
     <>
       <Nav>
         <div className="logo">
-          <Link to="/">
+          <Link to={{
+              pathname: '/',
+              state: {
+                selectedValue: ""
+              }
+            }}>
             <img className="logoImg" src={logoImg} />
           </Link>
         </div>

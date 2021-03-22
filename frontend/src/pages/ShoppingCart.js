@@ -115,7 +115,7 @@ return (
                   }
                   <div className="row justify-content-start">
           <button 
-          style={{width: "150px", height: "35px", borderRadius: "25px", border: "none", backgroundColor: "#FFFF", marginLeft: "15px", outline:"none", cursor:"pointer", marginBottom: "25px", marginTop: "80px"}}>Total: {totalPrice} SEK</button></div>
+          style={{width: "250px", height: "35px", borderRadius: "25px", border: "none", backgroundColor: "#FFFF", marginLeft: "15px", outline:"none", cursor:"pointer", marginBottom: "25px", marginTop: "80px"}}>Total: {totalPrice} SEK</button></div>
                 </td>
               </tr>
               </tbody>

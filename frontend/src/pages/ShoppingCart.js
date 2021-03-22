@@ -61,13 +61,14 @@ return (
         <br />  
        <div className="row justify-content-md-center">
         <div style={{backgroundColor: "#ffc542"}}>
+          <h5 style={{paddingLeft: "10px", color: "#4A4746", fontWeight: "600", fontSize: "18px"}}>Your cart contains:</h5>
           <table className="table">
-            <thead className="text-muted">
+            <thead className="">
               <tr style={{ fontSize: "16px"}}>
-                <th scope="col" width={120} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Card</th>
+                <th scope="col" width={120} style={{borderBottom: "2px solid #118678",color: "#4A4746", borderTop : "none"}}>Card</th>
                 {displayOrderInfo && <th scope="col" width={220} style={{borderBottom: "2px solid #118678" , borderTop : "none"}}>Order Info</th>}
                 {(cartFriendsDetails.happicard_recipient_name !== "" || cartFriendsDetails.happicard_recipient_email !== "" || cartFriendsDetails.happicard_delivery_date !== "")   && <th scope="col" width={220} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Order Info</th>}
-                <th scope="col" width={200} style={{borderBottom: "2px solid #118678", borderTop : "none"}}>Amount</th>
+                <th scope="col" width={200} style={{borderBottom: "2px solid #118678", borderTop : "none", color: "#4A4746"}}>Amount</th>
               </tr>
             </thead>
             <tbody>

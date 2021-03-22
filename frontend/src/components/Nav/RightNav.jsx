@@ -464,7 +464,12 @@ const RightNav = ({ open }) => {
             </Dropdown.Item>
             <Dropdown.Item>
             <Link
-            to="/"
+            to={{
+              pathname: '/',
+              state: {
+                selectedValue: "giftCards"
+              }
+            }}
             className={selectedMenu == "Home" ? "selected" : "unselected"}
             onClick={() => handleClick("Home")}
           >
@@ -473,7 +478,12 @@ const RightNav = ({ open }) => {
             </Dropdown.Item>
             <Dropdown.Item>
             <Link
-            to="/"
+            to={{
+              pathname: '/',
+              state: {
+                selectedValue: "happiOffers"
+              }
+            }}
             className={selectedMenu == "Home" ? "selected" : "unselected"}
             onClick={() => handleClick("Home")}
           >
@@ -482,7 +492,12 @@ const RightNav = ({ open }) => {
             </Dropdown.Item>
             <Dropdown.Item>
             <Link
-            to="/"
+            to={{
+              pathname: '/',
+              state: {
+                selectedValue: "campaigns"
+              }
+            }}
             className={selectedMenu == "Home" ? "selected" : "unselected"}
             onClick={() => handleClick("Home")}
           >

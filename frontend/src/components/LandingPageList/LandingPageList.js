@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import giftImg from "../../assets/images/gift_card_01.PNG";
 import offersImg from "../../assets/images/happi_offers_02.PNG";
 import campaignsImg from "../../assets/images/campaigns_01.PNG";
@@ -23,7 +23,7 @@ const ListImg = styled.img`
   }
 `;
 
-const LandingPageList = () => {
+const LandingPageList = ({showMore, setShowMore}) => {
   const [displayGiftCards, setDisplayGiftCards] = useState(false);
   const [displayHappiOffers, setDisplayHappiOffers] = useState(false);
   const [displayCampaigns, setDisplayCampaigns] = useState(false);
@@ -38,11 +38,11 @@ const LandingPageList = () => {
   const [selectedPrice, setSelectedPrice] = useState(0);
   
   const dispatch = useDispatch();
+  const history = useHistory();
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  const history = useHistory();
   let columns = [];
 
   const clickGiftCards = () => {
@@ -53,6 +53,7 @@ const LandingPageList = () => {
       setDisplayGiftCards(true);
       landingPageService.getAllGiftCards().then((x) => setGiftCards(x));
     }
+    
     setDisplayHappiOffers(false);
     setDisplayCampaigns(false);
   };
@@ -65,8 +66,10 @@ const LandingPageList = () => {
       setDisplayHappiOffers(true);
       landingPageService.getAllOffers().then((x) => setOffers(x));
     }
+    
     setDisplayGiftCards(false);
     setDisplayCampaigns(false);
+    // setShowMore(false);
   };
 
   const clickCampaigns = () => {
@@ -77,8 +80,10 @@ const LandingPageList = () => {
       setDisplayCampaigns(true);
       landingPageService.getAllCampaigns().then((x) => setCampaigns(x));
     }
+    
     setDisplayGiftCards(false);
     setDisplayHappiOffers(false);
+    // setShowMore(false);
   };
 
   const handleChange = (params) => (event) => {
@@ -200,6 +205,31 @@ const LandingPageList = () => {
     );
   }
 
+  const scroll = (element) => {
+    window.scrollTo({
+      behavior: element ? "smooth" : "auto",
+      top: element ? element.offsetTop : 0
+    });
+  }
+
+  useEffect(() => {
+    let value = history.location.state != undefined && history.location.state.selectedValue != undefined ? history.location.state.selectedValue : "";
+    console.log(value);
+    if(value == "") {
+      setDisplayGiftCards(false);
+      setDisplayGiftCards(false);
+      setDisplayCampaigns(false);
+    }
+    const element = document.getElementById('categories');
+    if(value == "giftCards") 
+    {
+      clickGiftCards();
+      scroll(element);
+    }
+    if(value == "happiOffers") { clickHappiOffers(); scroll(element);}
+    if(value == "campaigns") { clickCampaigns();  scroll(element);}
+  }, [history.location]);
+
   return (
     <>
       <Modal show={show} onHide={handleClose}>
@@ -287,7 +317,7 @@ const LandingPageList = () => {
         </div>
       </Modal>
       
-   <div className="container">
+   <div className="container" id="categories">
       <div
         className="row justify-content-md-center"
         style={{ paddingTop: "20px" }}

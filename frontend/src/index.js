@@ -34,11 +34,12 @@ const App = () => {
 
           <Switch>
             <Route exact path="/" component={Home} />
+            {/* <Route path="/:search" component={Home} /> */}
             <Route path="/about" component={About} />
             <Route path="/stores" component={Stores} />
             <Route path="/ngos" component={Ngos} />
             <Route path="/register" component={Register} />
-            <Route path="/payment" component={StripeCheckout} />
+            {/* <Route path="/happicard/payment" component={StripeCheckout} /> */}
             <Route exact={true} path="/createorder" component={Createorder} />
             <Route exact={true} path="/terms" component={Terms} />
           </Switch>

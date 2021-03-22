@@ -1,10 +1,54 @@
-import React from "react";
+import React, {useState} from "react";
 import logoImg from "../../assets/images/logo-footer.PNG";
 import "./footer.css";
 import giftBoxImg from "../../assets/images/giftBox.PNG";
 import Copyright from "../copyright/copyright";
+import axios from "axios";
 
 const Footer = () => {
+
+  const [email, setEmail] = useState("");
+  const [successMessage, setSuccessMessage] = useState(false);
+  const [validationMessage, setValidationMessage] = useState("");
+
+  const validateEmail = (mail) => {
+    var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
+   if(pattern.test(mail)) {setValidationMessage(""); return true;} else{setValidationMessage("Please enter a valid email"); return false;} 
+  }
+
+  const handleOnChange = (evt) => {
+    setEmail(evt.target.value);
+  }
+
+  const handleSubmit = async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+
+    let isValidEmail = validateEmail(email); 
+     
+    if(isValidEmail){  await axios
+      .post(
+        `http://35.161.152.123/api/accounts/create/newsletter/`,
+        JSON.stringify({email: email}),
+        config
+      )
+      .then((response) => {
+      console.log(response);
+      setSuccessMessage(true);
+      setTimeout(function(){
+        setSuccessMessage(false);
+    },1000)
+    }).catch(error => {
+        console.log(error.response.data);
+      });}
+
+  
+  }
+
   return (
     <>
       <div className="row " style={{ backgroundColor: "#ffc541" }}>
@@ -12,7 +56,6 @@ const Footer = () => {
           className="my-md-5"
           style={{
             width: "100%",
-
             fontFamily: "Helvetica Neue, Helvetica, sans-serif",
             fontSize: "12px",
           }}
@@ -32,6 +75,8 @@ const Footer = () => {
                   type="text"
                   className="form-control"
                   placeholder="Email"
+                  value={email}
+                  onChange={handleOnChange}
                   style={{
                     borderRadius: "30px",
                     height: "28px",
@@ -43,6 +88,7 @@ const Footer = () => {
                   }}
                 />
                 <button
+                  onClick={handleSubmit}
                   style={{
                     marginTop: "10px",
                     borderColor: "white",
@@ -52,10 +98,15 @@ const Footer = () => {
                     width: "84px",
                     backgroundColor: "#fff",
                     outline: "none",
+                    color:"#4A4746",
+                    fontWeight: "500"
                   }}
                 >
-                  subscribe
+                  Subscribe
                 </button>
+                <br/>
+                {successMessage &&<span style={{paddingLeft: "2px", fontWeight: "600"}}>successfully subscribed!</span>}
+                {validationMessage !== "" &&<span style={{paddingLeft: "2px", fontWeight: "600", color: "red"}}>{validationMessage}</span>}
               </div>
               <div className="col-6 col-md-2">
                 <h7 style={{ fontWeight: "bold", marginLeft: "26px" }}>

@@ -66,8 +66,12 @@ class Store(Profile):
         verbose_name = _("Store")
         verbose_name_plural = _("Stores")
 
-    banner_image = models.FileField(storage=StoreProfileStorage())
-    header_image = models.FileField(storage=StoreProfileStorage())
+    banner_image = models.FileField(
+        storage=StoreProfileStorage(), blank=True, null=True
+    )
+    header_image = models.FileField(
+        storage=StoreProfileStorage(), blank=True, null=True
+    )
     giftcards = models.ManyToManyField(GiftCard, blank=True)
     store_category = models.CharField(
         max_length=100,
@@ -87,8 +91,8 @@ class NGO(Profile):
         verbose_name = _("NGO")
         verbose_name_plural = _("NGOs")
 
-    banner_image = models.FileField(storage=NGOProfileStorage())
-    header_image = models.FileField(storage=NGOProfileStorage())
+    banner_image = models.FileField(storage=NGOProfileStorage(), blank=True, null=True)
+    header_image = models.FileField(storage=NGOProfileStorage(), blank=True, null=True)
     campaigns = models.ManyToManyField(Campaign, blank=True)
     ngo_category = models.CharField(
         max_length=100,

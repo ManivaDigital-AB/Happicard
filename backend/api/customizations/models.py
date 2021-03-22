@@ -35,13 +35,25 @@ class HomePage(models.Model):
         primary_key=True,
     )
 
-    home_page_carousel_img_1 = models.FileField(storage=CustomStorage())
-    home_page_carousel_img_2 = models.FileField(storage=CustomStorage())
-    home_page_carousel_img_3 = models.FileField(storage=CustomStorage())
+    home_page_carousel_img_1 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    home_page_carousel_img_2 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    home_page_carousel_img_3 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
 
-    home_page_giftcards_img = models.FileField(storage=CustomStorage())
-    home_page_happioffers_img = models.FileField(storage=CustomStorage())
-    home_page_campaigns_img = models.FileField(storage=CustomStorage())
+    home_page_giftcards_img = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    home_page_happioffers_img = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    home_page_campaigns_img = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
 
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
@@ -132,7 +144,9 @@ class AboutPage(models.Model):
     )
 
     about_page_title = models.CharField(max_length=50)
-    about_page_title_img = models.FileField(storage=CustomStorage())
+    about_page_title_img = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
 
     about_page_paragraph_top = models.TextField(max_length=250)
     about_page_paragraph_bottom = models.TextField(max_length=250)
@@ -187,8 +201,10 @@ class PartnersPage(models.Model):
     )
 
     partners_page_title = models.CharField(max_length=50)
-    partners_page_img = models.FileField(storage=CustomStorage())
-    partners_page_banner = models.FileField(storage=CustomStorage())
+    partners_page_img = models.FileField(storage=CustomStorage(), blank=True, null=True)
+    partners_page_banner = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
     partners_page_paragraph = models.TextField(max_length=500)
 
     published = models.DateTimeField(default=timezone.now)
@@ -227,9 +243,15 @@ class StorePage(models.Model):
         primary_key=True,
     )
 
-    main_store_banner_1 = models.FileField(storage=CustomStorage())
-    main_store_banner_2 = models.FileField(storage=CustomStorage())
-    main_store_banner_3 = models.FileField(storage=CustomStorage())
+    main_store_banner_1 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    main_store_banner_2 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
+    main_store_banner_3 = models.FileField(
+        storage=CustomStorage(), blank=True, null=True
+    )
 
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
@@ -267,9 +289,9 @@ class NGOPage(models.Model):
         primary_key=True,
     )
 
-    main_ngo_banner_1 = models.FileField(storage=CustomStorage())
-    main_ngo_banner_2 = models.FileField(storage=CustomStorage())
-    main_ngo_banner_3 = models.FileField(storage=CustomStorage())
+    main_ngo_banner_1 = models.FileField(storage=CustomStorage(), blank=True, null=True)
+    main_ngo_banner_2 = models.FileField(storage=CustomStorage(), blank=True, null=True)
+    main_ngo_banner_3 = models.FileField(storage=CustomStorage(), blank=True, null=True)
 
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(

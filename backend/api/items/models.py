@@ -76,7 +76,7 @@ class GiftCard(Item):
         verbose_name = _("Gift Card")
         verbose_name_plural = _("Gift Cards")
 
-    image = models.FileField(storage=GiftCardStorage())
+    image = models.FileField(storage=GiftCardStorage(), blank=True, null=True)
     has_offer = models.BooleanField(default=False)
     discount_price = models.IntegerField(default=0)
     store_category = models.CharField(
@@ -97,7 +97,7 @@ class Campaign(Item):
         verbose_name = _("Campaign")
         verbose_name_plural = _("Campaigns")
 
-    image = models.FileField(storage=CampaignStorage())
+    image = models.FileField(storage=CampaignStorage(), blank=True, null=True)
     ngo_category = models.CharField(
         max_length=100,
         choices=NGO_CHOICES,

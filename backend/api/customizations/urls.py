@@ -9,29 +9,9 @@ urlpatterns = [
         name="list-homepage",
     ),
     path(
-        "create/homepage/",
-        views.HomePageCreateView.as_view(),
-        name="create-customization",
-    ),
-    path(
-        "detail/homepage",
-        views.HomePageDetailView.as_view(),
-        name="detail-seo",
-    ),
-    path(
         "list/footer/",
         views.FooterListView.as_view(),
         name="list-footer",
-    ),
-    path(
-        "create/footer/",
-        views.FooterCreateView.as_view(),
-        name="create-footer",
-    ),
-    path(
-        "detail/footer",
-        views.FooterDetailView.as_view(),
-        name="detail-footer",
     ),
     path(
         "list/aboutpage/",
@@ -39,29 +19,9 @@ urlpatterns = [
         name="list-aboutpage",
     ),
     path(
-        "create/aboutpage/",
-        views.AboutPageCreateView.as_view(),
-        name="create-aboutpage",
-    ),
-    path(
-        "detail/aboutpage",
-        views.AboutPageDetailView.as_view(),
-        name="detail-aboutpage",
-    ),
-    path(
         "list/partnerspage/",
         views.PartnersPageListView.as_view(),
         name="list-partnerspage",
-    ),
-    path(
-        "create/partnerspage/",
-        views.PartnersPageCreateView.as_view(),
-        name="create-partnerspage",
-    ),
-    path(
-        "detail/partnerspage",
-        views.HomePageDetailView.as_view(),
-        name="detail-partnerspage",
     ),
     path(
         "list/storepage/",
@@ -69,28 +29,8 @@ urlpatterns = [
         name="list-storepage",
     ),
     path(
-        "create/storepage/",
-        views.StorePageCreateView.as_view(),
-        name="create-storepage",
-    ),
-    path(
-        "detail/storepage",
-        views.StorePageDetailView.as_view(),
-        name="detail-storepage",
-    ),
-    path(
         "list/ngopage/",
         views.NGOPageListView.as_view(),
         name="list-ngopage",
-    ),
-    path(
-        "create/ngopage/",
-        views.NGOPageCreateView.as_view(),
-        name="create-ngopage",
-    ),
-    path(
-        "detail/ngopage",
-        views.NGOPageDetailView.as_view(),
-        name="detail-ngopage",
     ),
 ]

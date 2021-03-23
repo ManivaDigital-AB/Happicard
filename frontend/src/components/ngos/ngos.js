@@ -13,6 +13,7 @@ const ngos = () => {
   const [ngoCards, setNgoCards] = useState([]);
   const [selectedItem, setSelectedItem] = useState({});
   const [displayFilteredNgos, setdisplayFilteredNgos] = useState(false);
+  const [ngoCMS, setNgosCMS] = useState({});
 
   const loadMore = useCallback(() => {
     setMaxRange((prevRange) => prevRange + 3);
@@ -27,45 +28,45 @@ const ngos = () => {
   };
 
   const ngoCategories = 
-[["Alla kategorier","Alla kategorier"],
-["Anhörigstöd","Anhörigstöd"],
-["Barn","Barn"],
-["Mode herr","Mode herr"],
-["Bevarande projekt","Bevarande projekt"],
-["Fadderverksamhet","Fadderverksamhet"],
-["Familjer","Familjer"],
-["Flyktingar","Flyktingar"],
-["Förebyggande arbete","Förebyggande arbete"],
-["Föräldralösa barn","Föräldralösa barn"],
-["Hemlösa","Hemlösa"],
-["Föräldralösa barn","Föräldralösa barn"],
-["Hjälp till enskilda","Hjälp till enskilda"],
-["Föräldralösa barn","Föräldralösa barn"],
-["Hjälp till självhjälp","Hjälp till självhjälp"],
-["Jordbruk","Jordbruk"],
-["Jämställdhet","Jämställdhet"],
-["Jordbruk","Jordbruk"],
-["Katastrofhjälp","Katastrofhjälp"],
-["Kvinnor","Kvinnor"],
-["Mikrolån/Mikrokrediter","Mikrolån/Mikrokrediter"],
-["Personalutveckling","Personalutveckling"],
-["Rehabilitering","Rehabilitering"],
-["Rättshjälp","Rättshjälp"],
-["Second hand","Second hand"],
-["Sjukhus/Vårdhem/Äldreboende","Sjukhus/Vårdhem/Äldreboende"],
-["Skyddat boende","Skyddat boende"],
-["Telefonjour","Telefonjour"],
-["Trafficking","Trafficking"],
-["Ungdom","Ungdom"],
-["Utbildning - grund","Utbildning - grund"],
-["Utbildning - högre","Utbildning - högre"],
-["Utbildning - yrkes","Utbildning - yrkes"],
-["Vatten/Sanitets projekt","Vatten/Sanitets projekt"],
-["Verksamhet för sjuka","Verksamhet för sjuka"],
-["Volontärer","Volontärer"],
-["Vuxna","Vuxna"],
-["Äldre","Äldre"],
-["Annat","Annat"],["Youth","Youth"],["Literary","Literary"]]
+      [["Alla kategorier","Alla kategorier"],
+      ["Anhörigstöd","Anhörigstöd"],
+      ["Barn","Barn"],
+      ["Mode herr","Mode herr"],
+      ["Bevarande projekt","Bevarande projekt"],
+      ["Fadderverksamhet","Fadderverksamhet"],
+      ["Familjer","Familjer"],
+      ["Flyktingar","Flyktingar"],
+      ["Förebyggande arbete","Förebyggande arbete"],
+      ["Föräldralösa barn","Föräldralösa barn"],
+      ["Hemlösa","Hemlösa"],
+      ["Föräldralösa barn","Föräldralösa barn"],
+      ["Hjälp till enskilda","Hjälp till enskilda"],
+      ["Föräldralösa barn","Föräldralösa barn"],
+      ["Hjälp till självhjälp","Hjälp till självhjälp"],
+      ["Jordbruk","Jordbruk"],
+      ["Jämställdhet","Jämställdhet"],
+      ["Jordbruk","Jordbruk"],
+      ["Katastrofhjälp","Katastrofhjälp"],
+      ["Kvinnor","Kvinnor"],
+      ["Mikrolån/Mikrokrediter","Mikrolån/Mikrokrediter"],
+      ["Personalutveckling","Personalutveckling"],
+      ["Rehabilitering","Rehabilitering"],
+      ["Rättshjälp","Rättshjälp"],
+      ["Second hand","Second hand"],
+      ["Sjukhus/Vårdhem/Äldreboende","Sjukhus/Vårdhem/Äldreboende"],
+      ["Skyddat boende","Skyddat boende"],
+      ["Telefonjour","Telefonjour"],
+      ["Trafficking","Trafficking"],
+      ["Ungdom","Ungdom"],
+      ["Utbildning - grund","Utbildning - grund"],
+      ["Utbildning - högre","Utbildning - högre"],
+      ["Utbildning - yrkes","Utbildning - yrkes"],
+      ["Vatten/Sanitets projekt","Vatten/Sanitets projekt"],
+      ["Verksamhet för sjuka","Verksamhet för sjuka"],
+      ["Volontärer","Volontärer"],
+      ["Vuxna","Vuxna"],
+      ["Äldre","Äldre"],
+      ["Annat","Annat"],["Youth","Youth"],["Literary","Literary"]]
 
   function Card(props) {
     return (
@@ -160,6 +161,20 @@ const ngos = () => {
       return <Card props={item} key={index} />;
   });
 
+  const getNgosList = async (config) =>
+      await axios
+        .get(` http://35.161.152.123/api/profiles/list/ngos/`, config)
+        .then((response) => {
+          setNgos(response.data);
+        });
+
+  const getNgoCMS = async (config) =>
+        await axios
+          .get(`http://35.161.152.123/api/customizations/list/ngopage/`, config)
+          .then((response) => {
+          setNgosCMS(response.data[0]);
+        });
+
   useEffect(() => {
     const config = {
       headers: {
@@ -167,50 +182,44 @@ const ngos = () => {
         Accept: "application/json",
       },
     };
-
-    const getNgosList = async () =>
-      await axios
-        .get(` http://35.161.152.123/api/profiles/list/ngos/`, config)
-        .then((response) => {
-          setNgos(response.data);
-        });
-    getNgosList();
+    getNgosList(config);
+    getNgoCMS(config);
   }, []);
 
   return (
     <>
       <BodyContainer style={{ backgroundColor: "white" }}>
-        {/* <Slider {...settings}>
+       <Slider {...settings}>
           {" "}
           <div>
             {" "}
             <img
-              src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+              src={ngoCMS.main_ngo_banner_1}
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+              src={ngoCMS.main_ngo_banner_2}
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+              src={ngoCMS.main_ngo_banner_3}
               style={{ width: "100%" }}
             ></img>
           </div>
-        </Slider> */}
-         <div>
+        </Slider>
+         {/* <div>
             {" "}
             <img
               src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
               style={{ width: "100%" }}
             ></img>
-          </div>
+          </div> */}
         {!displayNgoDetail && (
           <div
             className="container"

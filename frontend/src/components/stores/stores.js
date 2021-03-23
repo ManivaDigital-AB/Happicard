@@ -11,6 +11,7 @@ const stores = () => {
   const [displayStoreDetail, setDisplayStoreDetail] = useState(false);
   const [selectedItem, setSelectedItem] = useState({});
   const [displayFilteredStores, setdisplayFilteredStores] = useState(false);
+  const [storesCMS, setStoresCMS] = useState({});
 
   const loadMore = useCallback(() => {
     setMaxRange((prevRange) => prevRange + 3);
@@ -135,6 +136,20 @@ const stores = () => {
     filteredStores.slice(0, maxRange).map((item, index) => {
       return <Card props={item} key={index} />;
   });
+
+  const getStoresCMS = async (config) =>
+    await axios
+          .get(`http://35.161.152.123/api/customizations/list/storepage/`, config)
+          .then((response) => {
+          setStoresCMS(response.data[0]);
+  });
+
+  const getstoreList = async (config) =>
+      await axios
+        .get(`http://35.161.152.123/api/profiles/list/stores/`, config)
+        .then((response) => {
+          setStores(response.data);
+  });
   
   useEffect(() => {
     const config = {
@@ -143,50 +158,37 @@ const stores = () => {
         Accept: "application/json",
       },
     };
-
-    const getstoreList = async () =>
-      await axios
-        .get(`http://35.161.152.123/api/profiles/list/stores/`, config)
-        .then((response) => {
-          setStores(response.data);
-        });
-    getstoreList();
+    getStoresCMS(config);
+    getstoreList(config);
   }, []);
 
   return (
     <>
       <BodyContainer style={{ backgroundColor: "white" }}>
-        {/* <Slider {...settings}>
+        <Slider {...settings}>
           {" "}
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
+              src={storesCMS.main_store_banner_1}
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
+              src={storesCMS.main_store_banner_2}
               style={{ width: "100%" }}
             ></img>
           </div>
           <div>
             {" "}
             <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
+              src={storesCMS.main_store_banner_3}
               style={{ width: "100%" }}
             ></img>
           </div>
-        </Slider> */}
-        <div>
-            {" "}
-            <img
-              src="https://happicard-stores-dev.s3.amazonaws.com/profiles/strump-maskinen-adjust.png"
-              style={{ width: "100%" }}
-            ></img>
-          </div>
+        </Slider>
         {!displayStoreDetail && (
           <div
             className="container"

@@ -23,7 +23,7 @@ const ListImg = styled.img`
   }
 `;
 
-const LandingPageList = ({showMore, setShowMore}) => {
+const LandingPageList = ({props}) => {
   const [displayGiftCards, setDisplayGiftCards] = useState(false);
   const [displayHappiOffers, setDisplayHappiOffers] = useState(false);
   const [displayCampaigns, setDisplayCampaigns] = useState(false);
@@ -324,18 +324,18 @@ const LandingPageList = ({showMore, setShowMore}) => {
       >
         <div className="col-sm-3">
           <div>
-            <ListImg src={giftImg} onClick={clickGiftCards} style={{boxShadow : displayGiftCards ? "12px 12px 0px #118678" : ""}}/>
+            <ListImg src={props.home_page_giftcards_img} onClick={clickGiftCards} style={{boxShadow : displayGiftCards ? "12px 12px 0px #118678" : ""}}/>
           </div>
         </div>
         <div className="col-sm-3">
           <div>
-            <ListImg src={offersImg} onClick={clickHappiOffers} style={{boxShadow : displayHappiOffers ? "12px 12px 0px #118678" : ""}}/>
+            <ListImg src={props.home_page_happioffers_img} onClick={clickHappiOffers} style={{boxShadow : displayHappiOffers ? "12px 12px 0px #118678" : ""}}/>
             
           </div>
         </div>
         <div className="col-sm-3">
           <div>
-            <ListImg src={campaignsImg} onClick={clickCampaigns} style={{boxShadow : displayCampaigns ? "12px 12px 0px #118678" : ""}}/>
+            <ListImg src={props.home_page_campaigns_img} onClick={clickCampaigns} style={{boxShadow : displayCampaigns ? "12px 12px 0px #118678" : ""}}/>
           </div>
         </div>
       </div>

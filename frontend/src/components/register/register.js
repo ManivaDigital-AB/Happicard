@@ -1,10 +1,29 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import aboutSection4 from "../../assets/images/about/Shape.PNG";
 import registerImg from "../../assets/images/register-img.PNG";
 import MultiStepForm from "./MultiStepForm";
 import { TopContainer, InnerContainer, MiddleContainer } from "./register.styles";
+import axios from "../../utils/axios";
 
 const Register = () => {
+
+  const [registerPageCMS, setregisterPageCMS] = useState({});
+
+  useEffect(async () => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    };
+    await axios
+          .get(`http://35.161.152.123/api/customizations/list/partnerspage/`, config)
+          .then((response) => {
+           setregisterPageCMS(response.data[0]);
+        })
+  }, []);
+
+
   return (
     <>
       <TopContainer className="row justify-content-md-center">
@@ -12,8 +31,8 @@ const Register = () => {
           className="container"
         > 
           <InnerContainer className="col-sm">
-          <h4>Title</h4>
-          <img src={aboutSection4}/>
+          <h4>{registerPageCMS.partners_page_title}</h4>
+          <img src={registerPageCMS.partners_page_banner}/>
         </InnerContainer>
         </div>
       </TopContainer>
@@ -31,20 +50,12 @@ const Register = () => {
               />
             </div>
             <div className="col-sm">
-              <h4>Title</h4>
+              <h4>{registerPageCMS.partners_page_title}</h4>
               <p>
-                Happicard is simply dummy text of the printing and typesetting
-                industry. Lorem Ipsum has been the industry's standard dummy
-                text ever since the 1500s, when an unknown printer took a galley
-                of type and scrambled it to make a type specimen book.
+               {registerPageCMS.partners_page_paragraph}
               </p>
               <p>
-                It has survived not only five centuries, but also the leap into
-                electronic typesetting, remaining essentially unchanged. It was
-                popularised in the 1960s with the release of Letraset sheets
-                containing Lorem Ipsum passages, and more recently with desktop
-                publishing software like Aldus PageMaker including versions of
-                Lorem Ipsum.
+               {registerPageCMS.partners_page_paragraph}
               </p>
             </div>
           </div>

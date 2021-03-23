@@ -5,9 +5,12 @@ import LandingImg from "../../assets/images/landingpage_image.PNG";
 import { Link, useParams } from "react-router-dom";
 import { BodyContainer } from "../home/homeStyle";
 import { useHistory } from "react-router-dom";
+
+import axios from "../../utils/axios";
+
 const home = () => {
     const settings = {
-      dots: true,
+      dots: false,
       infinite: true,
       speed: 500,
       slidesToShow: 1,
@@ -15,9 +18,8 @@ const home = () => {
     };
 
     const [showMore, setShowMore] = useState(false);
-    // const [showHappiOffers, setShowHappiOffers] = useState(false);
-    // const [showGiftCard, setShowGiftCard] = useState(false);
-    // const [showCampaigns, setShowCampaigns] = useState(false);
+    const [homePageCMS, sethomePageCMS] = useState({});
+    
     const history = useHistory();
     
     const handleClick = () => {
@@ -28,25 +30,42 @@ const home = () => {
         }
       });
     }
-
-    // const { search } = useParams();
-
-    // useEffect(() => {
-    //   search == "giftCards" ? setShowMore(true) : setShowMore(false);
-    //   search == "happiOffers" ? setShowHappiOffers(true) : setShowHappiOffers(false);
-    //   search == "campaigns" ? setShowCampaigns(true) : setShowCampaigns(false);
-    // }, [search]);
+    
+    useEffect(() => {
+      const config = {
+        headers: {
+          "Content-Type": "application/json",
+          Accept: "application/json",
+        },
+      }
+      axios
+          .get(`http://35.161.152.123/api/customizations/list/homepage/`, config)
+          .then((response) => {
+            sethomePageCMS(response.data[0]);
+          });
+    }, []);
 
     return (
       <>
         <BodyContainer>
-          {/* <Slider {...settings}>
+           <Slider {...settings}>
             {" "}
             <div>
               {" "}
               <img
+                src=
+                  {
+                    homePageCMS.home_page_carousel_img_1
+                  }
+                
+                style={{ width: "100%" }}
+              ></img>
+            </div>
+            <div>
+              {" "}
+              <img
                 src={
-                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+                  homePageCMS.home_page_carousel_img_2
                 }
                 style={{ width: "100%" }}
               ></img>
@@ -55,28 +74,14 @@ const home = () => {
               {" "}
               <img
                 src={
-                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
+                  homePageCMS.home_page_carousel_img_3
                 }
                 style={{ width: "100%" }}
               ></img>
             </div>
-            <div>
-              {" "}
-              <img
-                src={
-                  "https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
-                }
-                style={{ width: "100%" }}
-              ></img>
-            </div>
-          </Slider> */}
+          </Slider>
           <div>
             {" "}
-            <img
-              // src="https://happicard-ngos-dev.s3.amazonaws.com/profiles/afrika-grupperna.png"
-              src={LandingImg}
-              style={{ width: "100%", height: "550px"}}
-            ></img>
             <h1 style={{
               position: "absolute",
               top: "40%",
@@ -104,7 +109,7 @@ const home = () => {
             }} onClick={handleClick}>See more</button>
           </div>
           <div style={{ padding: "30px", backgroundColor: "white" }}>
-            <LandingPageList showMore={showMore} setShowMore={setShowMore}/>
+            <LandingPageList showMore={showMore} setShowMore={setShowMore} props={homePageCMS}/>
           </div>
         </BodyContainer>
       </>

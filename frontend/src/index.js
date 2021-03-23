@@ -10,7 +10,6 @@ import Stores from "./components/stores/stores";
 import Ngos from "./components/ngos/ngos";
 import Register from "./components/register/register";
 import "bootstrap/dist/css/bootstrap.min.css";
-import StripeCheckout from "./pages/StripeCheckout";
 import Createorder from "./pages/Createorder";
 import Terms from "./pages/Terms";
 import reducers from "./reducers";

@@ -209,10 +209,13 @@ const StoreDetails = ({ selectedItem }) => {
                   width: "200px",
                   marginRight: "30px",
                   outline: "none",
+                  fontWeight: "600",
+                  color: "#4A4746"
                 }}
+                disabled={selectedPrice == ""}
                 onClick={onCreateOrder}
               >
-               Donate
+               Buy
               </button>
             </div>
           </Modal.Body>

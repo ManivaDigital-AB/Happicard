@@ -11,8 +11,11 @@ import axios from "axios";
 // loadStripe is initialized with a fake API key.
 // Sign in to see examples pre-filled with your key.
 import "./StripeCheckout.css";
-const promise = loadStripe("pk_test_51IMWZ3FT5MzPJVBFP8b9vL5qQ90T3exM39xldCCkNgbVxMZcdHVKTUkG642VxcOJkIT2Ww8k3Ue4dixJHlaIOPv900tSyer9lE");
+
 export default function StripeCheckout({props}) {
+  const selectedItem = useSelector((state) => state.createorder);
+  const promise = selectedItem.campaign == null ? loadStripe("pk_test_51IMWZ3FT5MzPJVBFP8b9vL5qQ90T3exM39xldCCkNgbVxMZcdHVKTUkG642VxcOJkIT2Ww8k3Ue4dixJHlaIOPv900tSyer9lE")
+  : loadStripe("pk_test_51IQZMGLrSplbJp0IDb70TnM1Hf8eeBBLRMv311YhtaK6cbY1wym2SLbIqCA6LMoBksqQHcnbXSYSeFcqlvQNJqg2007up4n9l6");
   return (
     <>
         <div
@@ -26,6 +29,5 @@ export default function StripeCheckout({props}) {
       </div>
       </div>
       </>
-
-  );
+);
 }

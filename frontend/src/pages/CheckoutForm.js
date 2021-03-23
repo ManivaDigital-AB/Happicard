@@ -130,8 +130,7 @@ export default function CheckoutForm({props}) {
         }
         setClientSecret(data.client_secret);
       });
-   
-  };
+    };
   return (
     <>
        <Modal show={show} onHide={handleClose}>

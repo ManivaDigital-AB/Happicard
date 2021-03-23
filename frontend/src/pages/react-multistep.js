@@ -155,6 +155,20 @@ export default function MultiStep(props) {
         return
       }
     }
+
+    if(props.data.happicard_recipient_name == "" && compState !== 0 )
+    {
+        setvalidationErrorMessage("Please enter the recepient name!");
+        setdisplayError(true)
+        return
+    }
+
+    if(!props.data.happicard_recipient_sms_choice && !props.data.happicard_recipient_email_choice && compState !== 0)
+    {
+        setvalidationErrorMessage("Please select atleast one notification method!");
+        setdisplayError(true)
+        return
+    }
     
     setdisplayError(false)
     setvalidationErrorMessage("");

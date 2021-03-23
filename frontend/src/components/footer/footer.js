@@ -1,9 +1,10 @@
 import React, {useState, useEffect} from "react";
 import logoImg from "../../assets/images/logo-footer.PNG";
-import "./footer.css";
+// import "./footer.css";
 import giftBoxImg from "../../assets/images/giftBox.PNG";
 import Copyright from "../copyright/copyright";
 import axios from "axios";
+import { BodyContainer } from "./footer.styles"
 
 const Footer = () => {
 
@@ -67,7 +68,7 @@ const Footer = () => {
 
   return (
     <>
-      <div className="row " style={{ backgroundColor: "#ffc541" }}>
+      <BodyContainer className="row " style={{ backgroundColor: "#ffc541" }}>
         <footer
           className="my-md-5"
           style={{
@@ -258,7 +259,7 @@ const Footer = () => {
               </div>
             </div>{" "}
           </div>
-          <div className="footerMobile" style={{ display: "none" }}>
+          <div className="footerMobile">
             <div className="row">
               <div className="col-12 col-md">
                 <div className="accordion" id="accordionExample">
@@ -271,19 +272,8 @@ const Footer = () => {
                         data-bs-target="#collapseOne"
                         aria-expanded="true"
                         aria-controls="collapseOne"
-                        style={{
-                          marginLeft: "10px",
-                          height: " 50px",
-                          paddingTop: "10px",
-                          paddingBottom: "10px",
-                          borderStyle: "solid",
-                          borderColor: "#fff",
-                          borderLeftStyle: "none",
-                          borderRightStyle: "none",
-                          borderTopStyle: "none",
-                        }}
-                      >
-                        Browse
+                        >
+                        Browse <i class="fas fa-chevron-down" style={{float: "right", color: "#FFFFFF"}}></i>
                       </div>
                     </h5>
                     <div
@@ -312,19 +302,8 @@ const Footer = () => {
                         data-bs-target="#collapseTwo"
                         aria-expanded="false"
                         aria-controls="collapseTwo"
-                        style={{
-                          marginLeft: "10px",
-                          height: " 50px",
-                          paddingTop: "10px",
-                          paddingBottom: "10px",
-                          borderStyle: "solid",
-                          borderColor: "#fff",
-                          borderLeftStyle: "none",
-                          borderRightStyle: "none",
-                          borderTopStyle: "none",
-                        }}
                       >
-                        About
+                        About <i class="fas fa-chevron-down" style={{float: "right", color: "#FFFFFF"}}></i>
                       </div>
                     </h5>
                     <div
@@ -353,19 +332,8 @@ const Footer = () => {
                         data-bs-target="#collapseThree"
                         aria-expanded="false"
                         aria-controls="collapseThree"
-                        style={{
-                          marginLeft: "10px",
-                          height: " 50px",
-                          paddingTop: "10px",
-                          paddingBottom: "10px",
-                          borderBottomStyle: "solid",
-                          borderColor: "#fff",
-                          borderLeftStyle: "none",
-                          borderRightStyle: "none",
-                          borderTopStyle: "none",
-                        }}
                       >
-                        Support
+                        Support <i class="fas fa-chevron-down" style={{float: "right", color: "#FFFFFF"}}></i>
                       </div>
                     </h5>
                     <div
@@ -388,11 +356,53 @@ const Footer = () => {
                     </div>
                   </div>
                 </div>
-              </div>
+                </div>
+            </div>
+            <div className="row justify-content-md-center">
+            <div className="col-12 col-md" align="center">
+            <input
+                  type="text"
+                  className="form-control"
+                  placeholder="Enter your email"
+                  value={email}
+                  onChange={handleOnChange}
+                  style={{
+                    borderRadius: "30px",
+                    height: "45px",
+                    width: "260px",
+                    border: "2px solid #FFF",
+                    backgroundColor: "rgb(251, 204, 81)",
+                    borderWidth: "2px",
+                    fontSize: "16px",
+                    marginTop: "40px"
+                  }}
+                />
+              <button
+                  onClick={handleSubmit}
+                  style={{
+                    marginTop: "10px",
+                    border: "2px solid #FFF",
+                    // borderWidth: "thin",
+                    marginTop: "10px",
+                    borderRadius: "30px",
+                    width: "260px",
+                    backgroundColor: "#fff",
+                    outline: "none",
+                    color:"#4A4746",
+                    height: "45px",
+                    fontWeight: "600",
+                    marginTop: "25px",
+                    marginBottom: "25px",
+                    fontSize: "16px",
+                  }}
+                >
+                  Subscribe
+                </button>
+            </div>
             </div>
           </div>
         </footer>
-      </div>
+      </BodyContainer>
       <div>
         <Copyright props={footerCMS}/>
       </div>

@@ -1,10 +1,11 @@
 import React from "react";
 import {isEmpty} from "lodash"
+import {BodyContainer} from "./copyright.styles"
 
 const copyright = ({props}) => {
   return (
-    <>
-      <div className="row" style={{ backgroundColor: "#fff" }}>
+    <BodyContainer>
+      <div className="row copyrightDesktop" style={{ backgroundColor: "#fff" }}>
         <div style={{ marginLeft: "275px" }}>
           <p
             style={{
@@ -31,7 +32,28 @@ const copyright = ({props}) => {
             ))}
         </ul>
       </div>
-    </>
+
+      <div className="row copyrightMobile" style={{ backgroundColor: "#fff" }}>
+        <ul
+          style={{ marginTop: "10px" }}
+        >
+          {!isEmpty(props) &&
+          props.map((item, index) => (
+            <li className="list-inline-item">
+            <a href={item.link} target="_blank">
+              <img src={item.icon} style={{ width: "35px", paddingTop: "15px" }} />
+            </a>
+          </li>
+            ))}
+        </ul>
+        <br/>
+      </div>
+       <div className="row copyrightMobile" style={{ backgroundColor: "#fff" }}>
+         <p style={{paddingLeft: "20px" }}>
+            @ 2021 Happicard. All rights reserved
+        </p>
+      </div>
+    </BodyContainer>
   );
 };
 

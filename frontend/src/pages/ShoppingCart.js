@@ -52,6 +52,8 @@ const handlePriceChange = async (e) => {
 useEffect(() => {
   console.log('from shopping bag');
   console.log(friendsDetails);
+  console.log(selectedItem);
+  console.log(cartItems);
   setCartFriendsDetails(friendsDetails);
 }, [friendsDetails]);
 
@@ -76,7 +78,9 @@ return (
                 <td style={{paddingTop: "25px"}}>
                   <figure className="media">
                     <div className="img-wrap"><img src={cartItem.image} style={{width: "250px", height: "150px"}}/></div>
+                    
                   </figure> 
+                  <div style={{fontSize:"16px", fontWeight: "600", color: "#4A4746"}}>*{cartItems.campaign == null ? cartItems.giftcard.title : cartItems.campaign.title}</div>
                 </td>
                 {
                 displayOrderInfo && <td style={{color:"#4A4746"}}> 

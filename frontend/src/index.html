@@ -59,6 +59,8 @@
       integrity="sha384-pQQkAEnwaBkjpqZ8RU1fF1AKtTcHJwFl3pblpTlHXybJjHpMYo79HY3hIi4NKxyj"
       crossorigin="anonymous"
     ></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.8.2/css/all.css">
   </head>
   <style>
     #root {
@@ -339,6 +341,12 @@
 .dropdown-toggle::after{
   content: none !important;
 }
+
+[aria-expanded="true"] i {
+            -webkit-transform: rotate(180deg);
+            -moz-transform: rotate(180deg);
+            transform: rotate(180deg);
+        }
 </style>
   <body>
     <div id="root"></div>

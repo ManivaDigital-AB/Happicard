@@ -9,15 +9,15 @@ const Register = () => {
 
   const [registerPageCMS, setregisterPageCMS] = useState({});
 
-  useEffect(async () => {
+  useEffect(() => {
     const config = {
       headers: {
         "Content-Type": "application/json",
         Accept: "application/json",
       },
     };
-    await axios
-          .get(`http://35.161.152.123/api/customizations/list/partnerspage/`, config)
+    
+    axios.get(`http://35.161.152.123/api/customizations/list/partnerspage/`, config)
           .then((response) => {
            setregisterPageCMS(response.data[0]);
         })

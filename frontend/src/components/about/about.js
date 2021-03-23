@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { useState, useEffect } from "react";
 import {
   BodyContainer,
   LeftHeaderContainer,
@@ -15,15 +15,28 @@ import Personalize from "../../assets/images/about/Personalize.PNG";
 import Pay from "../../assets/images/about/Pay.PNG";
 import aboutSection3 from "../../assets/images/about/aboutSection3.PNG";
 import Contact from "../../components/contact/contact";
-class about extends Component {
-  constructor(props) {
-    super(props);
-    this.state = {};
-  }
+import axios from "axios";
 
-  componentDidMount() {}
+const about = () => {
 
-  render() {
+  const [aboutCMS, setAboutCMS] = useState({});
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+    axios
+        .get(`http://35.161.152.123/api/customizations/list/aboutpage/`, config)
+        .then((response) => {
+          setAboutCMS(response.data[0]);
+        });
+  
+  },[]);
+
+
     return (
       <>
         <div>
@@ -37,23 +50,19 @@ class about extends Component {
               </LeftHeaderContainer>
               <RightHeaderContainer>
                 <h2>
-                  Om <img src={logoImg} className="happicard-img"></img>
+                  {/* Om <img src={logoImg} className="happicard-img"></img> */}
+                  { aboutCMS.about_page_title } <img src={logoImg} className="happicard-img"></img>
                 </h2>
                 <div className="about-div">
                   <p>
-                    Happicard är en digital plattform som ger användare
-                    möjlighet att köpa, spara, ta emot och lagra digitala
-                    presentkort. Användaren kan köpa gåvor som hos
-                    samarbetspartners som är både företag och
-                    välgörenhetsorganisationer.
+                    {
+                      aboutCMS.about_page_paragraph_top
+                    }
                   </p>
                   <p>
-                    Happicard är utvecklat med ett hållbarhetsfokus i alla
-                    aspekter. Det är en digital presentkortstjänst helt fri från
-                    plastkort. Men dessutom är samarbetspartners mycket noggrant
-                    utvalda utifrån sin hållbarhetsprofil. Det gör Happicard
-                    till en tjänst där en hållbarhetsmedveten konsument snabbt
-                    kan hitta favoriter i en unik utbudsmix.
+                    {
+                      aboutCMS.about_page_paragraph_bottom
+                    }
                   </p>
                   <p>
                     Happicard gör det roligt och enkelt att ge. Kontakt oss för
@@ -66,44 +75,41 @@ class about extends Component {
             <div className="process-body">
               <h2>
                 <img src={logo} className="happicard-img"></img>{" "}
-                <span style={{ color: "#4A4746" }}>Process</span>
+                <span style={{ color: "#4A4746" }}>{ aboutCMS.about_page_process_main_title}</span>
               </h2>
               <BodyProcess>
                 <ElementProcess>
                   <img src={ChooseBrand}></img>
-                  <h4>CHOOSE BRAND</h4>
+                  <h4>{aboutCMS.about_page_process_title_1}</h4>
                   <div>
-                    I'm a paragraph. Click here to add your own text and edit
-                    me. It’s easy. Just click “Edit Text” or double click me.
+                    { aboutCMS.about_page_process_paragraph_1}
                   </div>
                 </ElementProcess>
                 <ElementProcess>
                 <img src={Personalize}></img>
-                  <h4>PERSONALIZE</h4>
+                  <h4>{aboutCMS.about_page_process_title_2}</h4>
                   <div>
-                    I'm a paragraph. Click here to add your own text and edit
-                    me. It’s easy. Just click “Edit Text” or double click me.
+                    { aboutCMS.about_page_process_paragraph_2}
                   </div>
                 </ElementProcess>
                 <ElementProcess>
                 <img src={Pay}></img>
-                  <h4>PAY & DELIVER</h4>
+                  <h4>{aboutCMS.about_page_process_title_3}</h4>
                   <div>
-                    I'm a paragraph. Click here to add your own text and edit
-                    me. It’s easy. Just click “Edit Text” or double click me.
+                     { aboutCMS.about_page_process_paragraph_3}
                   </div>
                   </ElementProcess>
               </BodyProcess>
             </div>
             <div className="row " style={{ backgroundColor: "#FFF" }}>
               {" "}
-              <Contact />
+              <Contact props={aboutCMS}/>
             </div>
           </BodyContainer>
         </div>
       </>
     );
   }
-}
+
 
 export default about;

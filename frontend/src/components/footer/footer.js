@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useState, useEffect} from "react";
 import logoImg from "../../assets/images/logo-footer.PNG";
 import "./footer.css";
 import giftBoxImg from "../../assets/images/giftBox.PNG";
@@ -10,6 +10,7 @@ const Footer = () => {
   const [email, setEmail] = useState("");
   const [successMessage, setSuccessMessage] = useState(false);
   const [validationMessage, setValidationMessage] = useState("");
+  const [footerCMS, setFooterCMS] = useState({});
 
   const validateEmail = (mail) => {
     var pattern = new RegExp(/^(("[\w-\s]+")|([\w-]+(?:\.[\w-]+)*)|("[\w-\s]+")([\w-]+(?:\.[\w-]+)*))(@((?:[\w-]+\.)*\w[\w-]{0,66})\.([a-z]{2,6}(?:\.[a-z]{2})?)$)|(@\[?((25[0-5]\.|2[0-4][0-9]\.|1[0-9]{2}\.|[0-9]{1,2}\.))((25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\.){2}(25[0-5]|2[0-4][0-9]|1[0-9]{2}|[0-9]{1,2})\]?$)/i);
@@ -48,6 +49,21 @@ const Footer = () => {
 
   
   }
+
+  useEffect(() => {
+    const config = {
+      headers: {
+        "Content-Type": "application/json",
+        Accept: "application/json",
+      },
+    }
+    axios
+        .get(`http://35.161.152.123/api/customizations/list/footer/`, config)
+        .then((response) => {
+          setFooterCMS(response.data[0].social_media);
+        });
+  
+  },[]);
 
   return (
     <>
@@ -378,7 +394,7 @@ const Footer = () => {
         </footer>
       </div>
       <div>
-        <Copyright />
+        <Copyright props={footerCMS}/>
       </div>
     </>
   );

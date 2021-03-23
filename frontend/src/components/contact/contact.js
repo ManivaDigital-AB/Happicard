@@ -12,7 +12,7 @@ import axios from "axios";
 import { Modal } from "react-bootstrap";
 import successIcon from "../../assets/images/success_icon.PNG";
 
-const contact = () => {
+const contact = ({props}) => {
   const [show, setShow] = useState(false);
   const { register, handleSubmit } = useForm();
   const [name, setName] = useState("");
@@ -161,22 +161,8 @@ const contact = () => {
                 { messageError && <span style={{color: "red", fontSize: "12px", fontWeight: "600"}}>{"This field is mandatory"}</span>}
               </div>
               <div className="form-group">
-                {/* <input
-                  type="Submit"
-                  value="Send Request"
-                  style={{
-                    textAlign: "center",
-                    borderRadius: "34px",
-                    backgroundColor: "#ffc541",
-                    width: "250px",
-                    border: "none",
-                    fontWeight: "600",
-                    color: "#4A4746"
-                  }}
-                /><div className="loading"></div> */}
                 <button
                   type="Submit"
-                  
                   onClick={handleSubmit}
                   style={{
                     textAlign: "center",
@@ -194,18 +180,18 @@ const contact = () => {
               </div>
             </LeftContainer>
             <RightContainer>
-              <h4>GET IN TOUCH</h4>
+              <h4>{props.contact_title}</h4>
               <div className="form-group form-row">
                 <img src={MapIcon} />
-                <span>Address</span>
+                <span>{props.contact_address}</span>
               </div>
               <div className="form-group">
                 <img src={TelIcon} />
-                <span>+46 1234 567 98</span>
+                <span>{props.contact_number}</span>
               </div>
               <div className="form-group">
                 <img src={EmailIcon} />
-                <span>help@happicard.se</span>
+                <span>{props.contact_email}</span>
               </div>
             </RightContainer>
           </div>

@@ -20,6 +20,7 @@ import { createBrowserHistory } from "history";
 import "./assets/css/normilize.css";
 import "./assets/css/skeleton.css";
 import "./assets/css/prog-tracker.css";
+import "./web.config"
 
 const store = createStore(reducers, {});
 

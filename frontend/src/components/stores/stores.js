@@ -30,7 +30,8 @@ const stores = () => {
   }
 
   const storeCategories = 
-    [["Mode","Mode"],
+    [["Alla kategorier","Alla kategorier"],
+    ["Mode","Mode"],
     ["Mode kvinna","Mode kvinna"],
     ["Mode herr","Mode herr"],
     ["Hus & Hem","Hus & Hem"],
@@ -43,7 +44,7 @@ const stores = () => {
     ["Home & Garden","Home & Garden"]]
 
   const handleFilter = (evt) => {
-      evt.target.value != "" ? setdisplayFilteredStores(true) : setdisplayFilteredStores(false);
+      evt.target.value != "Alla kategorier" ? setdisplayFilteredStores(true) : setdisplayFilteredStores(false);
       let existingStores = [];
       stores.filter((item) => {if( item.store_category == evt.target.value){existingStores.push(item);}});
       setfilteredStores(existingStores);

@@ -27,7 +27,8 @@ const ngos = () => {
   };
 
   const ngoCategories = 
-[["Anhörigstöd","Anhörigstöd"],
+[["Alla kategorier","Alla kategorier"],
+["Anhörigstöd","Anhörigstöd"],
 ["Barn","Barn"],
 ["Mode herr","Mode herr"],
 ["Bevarande projekt","Bevarande projekt"],
@@ -142,7 +143,7 @@ const ngos = () => {
   }
 
   const handleFilter = (evt) => {
-    evt.target.value != "" ? setdisplayFilteredNgos(true) : setdisplayFilteredNgos(false);
+    evt.target.value != "Alla kategorier" ? setdisplayFilteredNgos(true) : setdisplayFilteredNgos(false);
     let existingNgos = [];
     ngos.filter((item) => {if( item.ngo_category == evt.target.value){existingNgos.push(item);}});
     setfilteredNgos(existingNgos);

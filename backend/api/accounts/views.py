@@ -115,17 +115,24 @@ class VendorRegistrationView(generics.GenericAPIView):
         serializer.save()
         form = serializer.data
         email = form["email"]
-        onboard_body = f"Denna leverantör väntar på verifiering med det här e-postmeddelandet: {email}. Uppdatera deras status nu på Happicard-adminpanelen!"
-
-        onboard_data = {
-            "email_body": onboard_body,
+        name = form["first_name"]
+        onboard_staff_body = f"Denna leverantör väntar på verifiering med det här e-postmeddelandet: {email}. Uppdatera deras status nu på Happicard-adminpanelen!"
+        onboard_staff_data = {
+            "email_body": onboard_staff_body,
             "to_email": settings.DEFAULT_FROM_EMAIL,
             "email_subject": "Ombordstigningsprocess",
         }
-        Util.send_email(onboard_data)
+        Util.send_email(onboard_staff_data)
+        onboard_vendor_body = f"Tack för att du registrerade dig, {name}! Vår administration kommer snart tillbaka till dig för att uppdatera din partnerstatus."
+        onboard_vendor_data = {
+            "email_body": onboard_vendor_body,
+            "to_email": settings.DEFAULT_FROM_EMAIL,
+            "email_subject": "Ombordstigningsprocess",
+        }
+        Util.send_email(onboard_vendor_data)
 
         return Response(
-            {"Success": "Onboarding Email Delivered"}, status=status.HTTP_201_CREATED
+            {"Success": "Onboarding Emails Delivered"}, status=status.HTTP_201_CREATED
         )
 
 

@@ -28,8 +28,6 @@ from backend.utils import Util
 
 DEFAULT_FROM_NUMBER = settings.DEFAULT_FROM_NUMBER
 
-stripe.api_key = settings.STRIPE_DEV_SK
-
 
 class OrderListView(generics.ListAPIView):
     permission_classes = (permissions.AllowAny,)
@@ -80,7 +78,14 @@ class StripePaymentIntentView(generics.GenericAPIView):
 
         current_order = Order.objects.get(id=order["id"])
         total = current_order.get_order_total
+        for item in current_order.items.all():
+            print(item)
         try:
+            for item in current_order.items.all():
+                if item.giftcard:
+                    stripe.api_key = settings.STRIPE_DEV_STORE_SK
+                else:
+                    stripe.api_key = settings.STRIPE_DEV_NGO_SK
             intent = stripe.PaymentIntent.create(
                 amount=total,
                 currency="sek",

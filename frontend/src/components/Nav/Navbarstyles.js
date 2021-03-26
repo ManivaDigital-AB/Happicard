@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { device } from "../../components/common/device";
 
 export const Nav = styled.nav`
   width: 100%;
@@ -22,5 +23,15 @@ export const Nav = styled.nav`
     height: 60px;
     padding-bottom: 5px;
     padding-left: 104px;
+  }
+
+  @media ${device.mobileS} {
+    display: none;
+  }
+  @media ${device.mobileM} {
+    display: none;
+  }
+  @media ${device.mobileL} {
+    display: none;
   }
 `;

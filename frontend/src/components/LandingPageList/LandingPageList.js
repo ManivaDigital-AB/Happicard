@@ -9,6 +9,7 @@ import { useHistory } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { landingPageService } from "../../_services/landingpage.service";
 import { Modal } from "react-bootstrap";
+import { Categories } from "./LandingPageListStyles";
 
 const ListImg = styled.img`
   width: 100%;
@@ -19,11 +20,17 @@ const ListImg = styled.img`
     box-shadow: 12px 12px 0px #118678;
   }
   @media only screen and (max-width: 600px) {
-    width: 200px;
+    width: 275px;
+    height: 200px;
   }
 `;
 
-const LandingPageList = ({props}) => {
+const LandingPageList = ({
+  props,
+  setisMobileGiftCardClicked,
+  setmobileGiftCardItems,
+  handleMobileClickGiftCards
+  }) => {
   const [displayGiftCards, setDisplayGiftCards] = useState(false);
   const [displayHappiOffers, setDisplayHappiOffers] = useState(false);
   const [displayCampaigns, setDisplayCampaigns] = useState(false);
@@ -47,15 +54,24 @@ const LandingPageList = ({props}) => {
 
   const clickGiftCards = () => {
     columns = [];
-    if (displayGiftCards) {
+    if (displayGiftCards) 
+    {
       setDisplayGiftCards(false);
-    } else {
+    } 
+    else 
+    {
       setDisplayGiftCards(true);
-      landingPageService.getAllGiftCards().then((x) => setGiftCards(x));
+      landingPageService.getAllGiftCards().then((x) => {
+        setGiftCards(x);
+      });
     }
-    
     setDisplayHappiOffers(false);
     setDisplayCampaigns(false);
+  };
+
+  const mobileClickGiftCards = () => {
+    setisMobileGiftCardClicked(true);
+    handleMobileClickGiftCards();
   };
 
   const clickHappiOffers = () => {
@@ -321,8 +337,9 @@ const LandingPageList = ({props}) => {
       </Modal>
       
    <div className="container" id="categories">
+   <Categories> 
       <div
-        className="row justify-content-md-center"
+        className="row justify-content-md-center desktop"
         style={{ paddingTop: "20px" }}
       >
         <div className="col-sm-3">
@@ -333,7 +350,6 @@ const LandingPageList = ({props}) => {
         <div className="col-sm-3">
           <div>
             <ListImg src={props.home_page_happioffers_img} onClick={clickHappiOffers} style={{boxShadow : displayHappiOffers ? "12px 12px 0px #118678" : ""}}/>
-            
           </div>
         </div>
         <div className="col-sm-3">
@@ -342,8 +358,30 @@ const LandingPageList = ({props}) => {
           </div>
         </div>
       </div>
+      </Categories>
+      <Categories>
       <div
-        className="row justify-content-md-center"
+        className="row justify-content-md-center mobile">
+        <div className="col-sm-3">
+          <div>
+            <ListImg src={props.home_page_giftcards_img} onClick={mobileClickGiftCards} style={{boxShadow : displayGiftCards ? "12px 12px 0px #118678" : ""}}/>
+          </div>
+        </div>
+        <div className="col-sm-3">
+          <div>
+            <ListImg src={props.home_page_happioffers_img} onClick={clickHappiOffers} style={{boxShadow : displayHappiOffers ? "12px 12px 0px #118678" : ""}}/>
+          </div>
+        </div>
+        <div className="col-sm-3">
+          <div>
+            <ListImg src={props.home_page_campaigns_img} onClick={clickCampaigns} style={{boxShadow : displayCampaigns ? "12px 12px 0px #118678" : ""}}/>
+          </div>
+        </div>
+      </div>
+      </Categories>
+      <Categories>
+      <div
+        className="row justify-content-md-center desktop"
         style={{ textAlign: "center", paddingBottom: "10px", paddingTop: "25px" }}
       >
       {
@@ -362,9 +400,10 @@ const LandingPageList = ({props}) => {
           })}
           {displayGiftCards && columns}
       </div>
-
+      </Categories>
+      <Categories>
       <div
-        className="row justify-content-md-center"
+        className="row justify-content-md-center desktop"
         style={{ textAlign: "center", paddingBottom: "10px" }}
       >
         {displayHappiOffers &&
@@ -381,7 +420,7 @@ const LandingPageList = ({props}) => {
             })}
              {displayHappiOffers && columns}
       </div>
-
+      </Categories>
       <div
         className="row justify-content-md-center"
         style={{ textAlign: "center", paddingBottom: "10px" }}

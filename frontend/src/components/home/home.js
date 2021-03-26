@@ -3,8 +3,12 @@ import LandingPageList from "../../components/LandingPageList/LandingPageList";
 import Slider from "react-slick";
 import LandingImg from "../../assets/images/landingpage_image.PNG";
 import { Link, useParams } from "react-router-dom";
-import { BodyContainer } from "../home/homeStyle";
+import { BodyContainer, SeeMore } from "../home/homeStyle";
 import { useHistory } from "react-router-dom";
+import logo from "../../assets/images/logo.PNG";
+import { landingPageService } from "../../_services/landingpage.service";
+import oval from "../../assets/images/Oval.PNG";
+
 
 import axios from "../../utils/axios";
 
@@ -18,6 +22,8 @@ const home = () => {
     };
 
     const [showMore, setShowMore] = useState(false);
+    const [isMobileGiftCardClicked, setisMobileGiftCardClicked] = useState(false);
+    const [mobileGiftCardItems, setmobileGiftCardItems] = useState([]);
     const [homePageCMS, sethomePageCMS] = useState({});
     
     const history = useHistory();
@@ -29,6 +35,38 @@ const home = () => {
           selectedValue: "giftCards"
         }
       });
+    }
+
+    const handleMobileClickGiftCards = () => {
+      landingPageService.getAllGiftCards().then((x) => {
+        setmobileGiftCardItems(x);
+      });
+    }
+
+    function Card(props) {
+      return (
+      <div class="col-5">
+      <div class="card image-container" style={{backgroundColor: "#E1DBD8", marginBottom: "25px"}}>
+        <div class="card-body ingredients" style={{padding: "5px"}}>
+        <div style={{textAlign: "center"}}>
+          <img src={oval} style={{width: "12px", paddingBottom: "2px"}}/>
+          <h6 className="card-title" style={{ color: "#4A4746", fontSize: "12px" }}>
+                 {props.name}
+              </h6></div>
+        <img src={props.image} style={{ borderRadius: "0.65rem", width: "100%", height: "auto" }}/>
+          <p class="card-text" style={{
+                  paddingTop: "10px",
+                  fontSize: "9px",
+                  letterSpacing: "0.2px",
+                  color: "grey",
+                  fontFamily: "Helvetica Neue, Helvetica, sans-serif",
+                  textAlign: "center"
+                }}>{props.title}{" "}|{" "}Online</p>
+        </div>
+      </div>
+    </div>
+   
+      );
     }
     
     useEffect(() => {
@@ -48,7 +86,8 @@ const home = () => {
     return (
       <>
         <BodyContainer>
-           <Slider {...settings}>
+          <img className="mobileLogo" src={logo} style={{top : "2%", width: "120px", margin: "25px"}}/>
+          {!isMobileGiftCardClicked && <Slider {...settings}>
             {" "}
             <div>
               {" "}
@@ -57,10 +96,9 @@ const home = () => {
                   {
                     homePageCMS.home_page_carousel_img_1
                   }
-                
-                style={{ width: "100%" }}
+                  style={{ width: "100%" }}
               ></img>
-            </div>
+              </div>
             <div>
               {" "}
               <img
@@ -79,39 +117,39 @@ const home = () => {
                 style={{ width: "100%" }}
               ></img>
             </div>
-          </Slider>
-          <div>
+          </Slider>}
+          {
+            isMobileGiftCardClicked && <div className="col-sm"><img style={{width: "100%"}} src={homePageCMS.home_page_giftcards_img}/></div> 
+          }
+          <SeeMore>
             {" "}
-            <h1 style={{
-              position: "absolute",
-              top: "40%",
-              left: "75%",
-              transform: "translate(-50%, -50%)",
-              color: "#FFF",
-              fontStyle: "italic",
-              letterSpacing :"1px",
-              fontSize: "60px"
-            }}>Welcome to happicard</h1>
-            <button style={{
-              position: "absolute",
-              top: "58%",
-              left: "69%",
-              transform: "translate(-50%, -50%)",
-              backgroundColor: "transparent",
-              border:"3px solid #fff",
-              borderRadius: "25px",
-              outline: "none",
-              fontSize: "18px",
-              fontWeight:"500",
-              width: "200px",
-              height: "45px",
-              color: "#FFF"
-            }} onClick={handleClick}>See more</button>
-          </div>
+            <h1>Welcome to happicard</h1>
+            <button onClick={handleClick}>See more</button>
+          </SeeMore>
           <div style={{ padding: "30px", backgroundColor: "white" }}>
-            <LandingPageList showMore={showMore} setShowMore={setShowMore} props={homePageCMS}/>
+            <LandingPageList 
+              showMore={showMore}
+              setShowMore={setShowMore}
+              props={homePageCMS}
+              setisMobileGiftCardClicked={setisMobileGiftCardClicked}
+              setmobileGiftCardItems={setmobileGiftCardItems}
+              handleMobileClickGiftCards={handleMobileClickGiftCards}
+              />
           </div>
         </BodyContainer>
+        <div className="row justify-content-center" style={{backgroundColor: "#FFF"}}>
+          { 
+            mobileGiftCardItems.length > 0 && mobileGiftCardItems.map((item, index) => {
+              return <Card
+             id={item.id}
+             name={item.title}
+             image={item.image}
+             title={item.store_category}
+             key={index}
+           />
+          })
+          }
+          </div>
       </>
     );
   }

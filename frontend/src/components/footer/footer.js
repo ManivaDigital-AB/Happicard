@@ -5,6 +5,8 @@ import giftBoxImg from "../../assets/images/giftBox.PNG";
 import Copyright from "../copyright/copyright";
 import axios from "axios";
 import { BodyContainer } from "./footer.styles"
+import footerLogo from "../../assets/images/logo-footer.PNG"
+
 
 const Footer = () => {
 
@@ -260,6 +262,13 @@ const Footer = () => {
             </div>{" "}
           </div>
           <div className="footerMobile">
+          <div className="row">
+          <div className="col-12 col-md">
+            <div ><img src={footerLogo} style={{paddingTop: "45px",paddingLeft: "50px",paddingRight: "50px",paddingBottom: "20px", width: "280px"}}/>
+            <img src={giftBoxImg} style={{float:"right", width: "68px", height: "75px", margin: "25px 35px 25px 15px"}}/>
+            </div>
+          </div>
+           </div>
             <div className="row">
               <div className="col-12 col-md">
                 <div className="accordion" id="accordionExample">
@@ -398,6 +407,9 @@ const Footer = () => {
                 >
                   Subscribe
                 </button>
+                <br/>
+                {successMessage &&<span style={{paddingLeft: "2px", fontWeight: "600"}}>successfully subscribed!</span>}
+                {validationMessage !== "" &&<span style={{paddingLeft: "2px", fontWeight: "600", color: "red"}}>{validationMessage}</span>}
             </div>
             </div>
           </div>

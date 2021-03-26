@@ -126,7 +126,7 @@ class VendorRegistrationView(generics.GenericAPIView):
         onboard_vendor_body = f"Tack för att du registrerade dig, {name}! Vår administration kommer snart tillbaka till dig för att uppdatera din partnerstatus."
         onboard_vendor_data = {
             "email_body": onboard_vendor_body,
-            "to_email": settings.DEFAULT_FROM_EMAIL,
+            "to_email": email,
             "email_subject": "Ombordstigningsprocess",
         }
         Util.send_email(onboard_vendor_data)

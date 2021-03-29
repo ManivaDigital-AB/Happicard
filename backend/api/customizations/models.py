@@ -66,7 +66,7 @@ class HomePage(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "Home Page Customizations"
+        return _("Home Page Anpassningar")
 
 
 class SocialMedia(models.Model):
@@ -118,7 +118,7 @@ class Footer(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "Footer Customizations"
+        return "Footer Anpassningar"
 
 
 class AboutPage(models.Model):
@@ -148,8 +148,8 @@ class AboutPage(models.Model):
         storage=CustomStorage(), blank=True, null=True
     )
 
-    about_page_paragraph_top = models.TextField(max_length=250)
-    about_page_paragraph_bottom = models.TextField(max_length=250)
+    about_page_paragraph_top = models.TextField(max_length=750)
+    about_page_paragraph_bottom = models.TextField(max_length=750)
 
     about_page_process_main_title = models.CharField(max_length=50)
     about_page_process_title_1 = models.CharField(max_length=50)
@@ -175,7 +175,7 @@ class AboutPage(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "About Page Customizations"
+        return "About Page Anpassningar"
 
 
 class PartnersPage(models.Model):
@@ -205,7 +205,7 @@ class PartnersPage(models.Model):
     partners_page_banner = models.FileField(
         storage=CustomStorage(), blank=True, null=True
     )
-    partners_page_paragraph = models.TextField(max_length=500)
+    partners_page_paragraph = models.TextField(max_length=750)
 
     published = models.DateTimeField(default=timezone.now)
     author = models.ForeignKey(
@@ -218,7 +218,7 @@ class PartnersPage(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "Partner Page Customizations"
+        return "Partner Page Anpassningar"
 
 
 class StorePage(models.Model):
@@ -264,7 +264,7 @@ class StorePage(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "Store Page Customizations"
+        return "Store Page Anpassningar"
 
 
 class NGOPage(models.Model):
@@ -304,4 +304,4 @@ class NGOPage(models.Model):
     status = models.CharField(max_length=10, choices=OPTIONS, default="published")
 
     def __str__(self):
-        return "NGO Page Customizations"
+        return "NGO Page Anpassningar"

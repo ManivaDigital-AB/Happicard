@@ -99,10 +99,7 @@ LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/login"
 
 # Internationalization
-if DEBUG:
-    LANGUAGE_CODE = "en-us"
-else:
-    LANGUAGE_CODE = "sv-eu"
+LANGUAGE_CODE = "sv-eu"
 
 TIME_ZONE = "Europe/Stockholm"
 USE_I18N = True

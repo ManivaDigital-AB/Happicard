@@ -41,8 +41,8 @@ admin.site.register(Customer)
 admin.site.register(Vendor, VendorAdmin)
 admin.site.register(Subscriber)
 
-admin.site.site_header = "Happicard Admin"
-admin.site.site_title = "Happicard Admin"
+admin.site.site_header = "Happicard CMS"
+admin.site.site_title = "Happicard CMS"
 admin.site.site_url = "https://happicard.se/"
-admin.site.index_title = "Manage Happicard"
+admin.site.index_title = "Hantera Happicard"
 admin.empty_value_display = "**Empty**"
